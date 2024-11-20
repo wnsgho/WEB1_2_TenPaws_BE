@@ -1,10 +1,11 @@
 package com.example.tenpaws.faq.service;
 
-import com.example.tenpaws.faq.dto.FaqRequest;
-import com.example.tenpaws.faq.dto.FaqResponse;
-import com.example.tenpaws.faq.entity.Faq;
-import com.example.tenpaws.faq.exception.FaqTaskException;
-import com.example.tenpaws.faq.repository.FaqRepository;
+import com.example.tenpaws.domain.faq.dto.FaqRequest;
+import com.example.tenpaws.domain.faq.dto.FaqResponse;
+import com.example.tenpaws.domain.faq.entity.Faq;
+import com.example.tenpaws.domain.faq.exception.FaqTaskException;
+import com.example.tenpaws.domain.faq.repository.FaqRepository;
+import com.example.tenpaws.domain.faq.service.FaqService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -131,6 +132,4 @@ public class FaqServiceTests {
             faqService.delete(faqId);
         });
     }
-
-
 }

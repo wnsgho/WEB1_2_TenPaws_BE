@@ -1,7 +1,7 @@
-package com.example.tenpaws.faq.service;
+package com.example.tenpaws.domain.faq.service;
 
-import com.example.tenpaws.faq.dto.FaqRequest;
-import com.example.tenpaws.faq.dto.FaqResponse;
+import com.example.tenpaws.domain.faq.dto.FaqRequest;
+import com.example.tenpaws.domain.faq.dto.FaqResponse;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.example.tenpaws.faq.entity;
+package com.example.tenpaws.domain.faq.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

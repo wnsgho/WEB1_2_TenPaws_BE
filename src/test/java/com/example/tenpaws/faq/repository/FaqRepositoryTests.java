@@ -1,6 +1,7 @@
 package com.example.tenpaws.faq.repository;
 
-import com.example.tenpaws.faq.entity.Faq;
+import com.example.tenpaws.domain.faq.entity.Faq;
+import com.example.tenpaws.domain.faq.repository.FaqRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

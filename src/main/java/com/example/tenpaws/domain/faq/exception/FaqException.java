@@ -1,4 +1,4 @@
-package com.example.tenpaws.faq.exception;
+package com.example.tenpaws.domain.faq.exception;
 
 import org.springframework.http.HttpStatus;
 

@@ -1,10 +1,10 @@
-package com.example.tenpaws.faq.service;
+package com.example.tenpaws.domain.faq.service;
 
-import com.example.tenpaws.faq.dto.FaqRequest;
-import com.example.tenpaws.faq.dto.FaqResponse;
-import com.example.tenpaws.faq.entity.Faq;
-import com.example.tenpaws.faq.exception.FaqException;
-import com.example.tenpaws.faq.repository.FaqRepository;
+import com.example.tenpaws.domain.faq.dto.FaqRequest;
+import com.example.tenpaws.domain.faq.dto.FaqResponse;
+import com.example.tenpaws.domain.faq.repository.FaqRepository;
+import com.example.tenpaws.domain.faq.entity.Faq;
+import com.example.tenpaws.domain.faq.exception.FaqException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

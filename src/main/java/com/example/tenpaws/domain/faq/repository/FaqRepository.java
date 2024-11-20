@@ -1,6 +1,6 @@
-package com.example.tenpaws.faq.repository;
+package com.example.tenpaws.domain.faq.repository;
 
-import com.example.tenpaws.faq.entity.Faq;
+import com.example.tenpaws.domain.faq.entity.Faq;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

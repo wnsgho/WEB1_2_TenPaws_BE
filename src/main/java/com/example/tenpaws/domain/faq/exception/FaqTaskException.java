@@ -1,4 +1,4 @@
-package com.example.tenpaws.faq.exception;
+package com.example.tenpaws.domain.faq.exception;
 
 public class FaqTaskException extends RuntimeException {
     private final int statusCode;

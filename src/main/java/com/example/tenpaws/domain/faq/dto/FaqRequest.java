@@ -1,6 +1,6 @@
-package com.example.tenpaws.faq.dto;
+package com.example.tenpaws.domain.faq.dto;
 
-import com.example.tenpaws.faq.entity.Faq;
+import com.example.tenpaws.domain.faq.entity.Faq;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
