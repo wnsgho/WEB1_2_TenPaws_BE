@@ -15,6 +15,13 @@ public enum ErrorCode {
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "Access denied"),
     INVALID_INPUT(HttpStatus.BAD_REQUEST, "Invalid input"),
 
+    // Faq
+    FAQ_NOT_FOUND(HttpStatus.NOT_FOUND, "Faq not found"),
+    FAQ_NOT_REGISTERED(HttpStatus.BAD_REQUEST, "Faq not registered"),
+    FAQ_NOT_MODIFIED(HttpStatus.BAD_REQUEST, "Faq not modified"),
+    FAQ_NOT_DELETE(HttpStatus.BAD_REQUEST, "Faq not deleted"),
+    FAQ_NO_CHILD(HttpStatus.BAD_REQUEST, "This Faq has no children"),
+
     // Announcement
     ANNOUNCEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Announcement not found");
 

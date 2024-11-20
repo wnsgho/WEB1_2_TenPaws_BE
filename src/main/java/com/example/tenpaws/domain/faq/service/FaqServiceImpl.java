@@ -5,6 +5,8 @@ import com.example.tenpaws.domain.faq.dto.FaqResponse;
 import com.example.tenpaws.domain.faq.repository.FaqRepository;
 import com.example.tenpaws.domain.faq.entity.Faq;
 import com.example.tenpaws.domain.faq.exception.FaqException;
+import com.example.tenpaws.global.exception.BaseException;
+import com.example.tenpaws.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,14 +25,14 @@ public class FaqServiceImpl implements FaqService {
         try {
             return new FaqResponse(faqRepository.save(faqRequest.toEntity()));
         } catch (Exception e) {
-            throw FaqException.FAQ_NOT_REGISTERED.getFaqTaskException();
+            throw new BaseException(ErrorCode.FAQ_NOT_REGISTERED);
         }
     }
 
     @Override
     public FaqResponse read(Long faqId) {
         return new FaqResponse(faqRepository.findById(faqId)
-                .orElseThrow(FaqException.FAQ_NOT_FOUND::getFaqTaskException)
+                .orElseThrow(() -> new BaseException(ErrorCode.FAQ_NOT_FOUND))
         );
     }
 
@@ -42,20 +44,20 @@ public class FaqServiceImpl implements FaqService {
                 faq.get().changeContent(faqRequest.getContent());
                 return new FaqResponse(faq.get());
             } else {
-                throw FaqException.FAQ_NOT_FOUND.getFaqTaskException();
+                throw new BaseException(ErrorCode.FAQ_NOT_FOUND);
             }
         } catch (Exception e) {
-            throw FaqException.FAQ_NOT_MODIFIED.getFaqTaskException();
+            throw new BaseException(ErrorCode.FAQ_NOT_MODIFIED);
         }
     }
 
     @Override
     public void delete(Long faqId) {
         try {
-            faqRepository.findById(faqId).orElseThrow(FaqException.FAQ_NOT_FOUND::getFaqTaskException);
+            faqRepository.findById(faqId).orElseThrow(() -> new BaseException(ErrorCode.FAQ_NOT_FOUND));
             faqRepository.deleteById(faqId);
         } catch (Exception e) {
-            throw FaqException.FAQ_NOT_DELETE.getFaqTaskException();
+            throw new BaseException(ErrorCode.FAQ_NOT_DELETE);
         }
     }
 
@@ -63,7 +65,7 @@ public class FaqServiceImpl implements FaqService {
     public List<FaqResponse> findByParentId(Long parentId) {
         List<FaqResponse> faqResponseList = faqRepository.findByParentId(parentId).stream().map(FaqResponse::new).toList();
         if (faqResponseList.isEmpty()) {
-            throw FaqException.FAQ_NO_CHILD.getFaqTaskException();
+            throw new BaseException(ErrorCode.FAQ_NO_CHILD);
         }
         return faqResponseList;
     }
