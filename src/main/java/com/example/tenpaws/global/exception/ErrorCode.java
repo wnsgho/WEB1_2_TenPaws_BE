@@ -23,7 +23,10 @@ public enum ErrorCode {
     FAQ_NO_CHILD(HttpStatus.BAD_REQUEST, "This Faq has no children"),
 
     // Announcement
-    ANNOUNCEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Announcement not found");
+    ANNOUNCEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Announcement not found"),
+
+    // Notification
+    NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "Notification not found");
 
     private final HttpStatus httpStatus;
     private final String message;
