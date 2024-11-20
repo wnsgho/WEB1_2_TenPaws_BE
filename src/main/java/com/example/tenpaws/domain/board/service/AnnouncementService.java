@@ -13,14 +13,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AnnouncementService {
 
     private final AnnouncementRepository announcementRepository;
 
+    @Transactional
     public Announcement save(CreateAnnouncementRequest request) {
         return announcementRepository.save(request.toEntity());
     }
@@ -44,6 +44,7 @@ public class AnnouncementService {
         return announcement;
     }
 
+    @Transactional
     public void delete(long id) {
         announcementRepository.deleteById(id);
     }
