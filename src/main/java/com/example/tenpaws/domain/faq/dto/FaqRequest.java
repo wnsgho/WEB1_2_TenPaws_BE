@@ -20,16 +20,16 @@ public class FaqRequest {
     private Long parentId;
 
     public FaqRequest(Faq faq) {
-        this.faqId = faq.getFaqId();
+        this.faqId = faq.getId();
         this.content = faq.getContent();
-        this.parentId = faq.getParent().getFaqId();
+        this.parentId = faq.getParent().getId();
     }
 
     public Faq toEntity() {
         return Faq.builder()
-                .faqId(faqId)
+                .id(faqId)
                 .content(content)
-                .parent(Faq.builder().faqId(parentId).build())
+                .parent(Faq.builder().id(parentId).build())
                 .build();
     }
 }

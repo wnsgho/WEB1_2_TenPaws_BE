@@ -22,7 +22,7 @@ public class FaqRepositoryTests {
             faqRepository.save(faq);
         });
         IntStream.rangeClosed(1,3).forEach(i -> {
-            Faq faq = Faq.builder().content("child" + i).parent(Faq.builder().faqId(1L).build()).build();
+            Faq faq = Faq.builder().content("child" + i).parent(Faq.builder().id(1L).build()).build();
             faqRepository.save(faq);
         });
 

@@ -15,7 +15,7 @@ import java.util.List;
 public class Faq {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long faqId;
+    private Long id;
 
     @Column(nullable = false)
     private String content;
@@ -29,9 +29,5 @@ public class Faq {
 
     public void changeContent(String content) {
         this.content = content;
-    }
-
-    public void changeParent(Faq parent) {
-        this.parent = parent;
     }
 }

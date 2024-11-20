@@ -21,8 +21,8 @@ public class FaqResponse {
     private Long refFaqId;
 
     public FaqResponse(Faq faq) {
-        this.faqId = faq.getFaqId();
+        this.faqId = faq.getId();
         this.content = faq.getContent();
-        this.refFaqId = faq.getParent() == null ? null : faq.getParent().getFaqId();
+        this.refFaqId = faq.getParent() == null ? null : faq.getParent().getId();
     }
 }
