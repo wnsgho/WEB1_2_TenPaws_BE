@@ -13,7 +13,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/faqs")
+@RequestMapping("/api/v1/faqs")
 public class FaqController {
     private final FaqService faqService;
 
