@@ -2,11 +2,13 @@ package com.example.tenpaws.domain.faq.repository;
 
 import com.example.tenpaws.domain.faq.entity.Faq;
 import com.example.tenpaws.domain.faq.repository.FaqRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.stream.IntStream;
 
 @SpringBootTest
@@ -28,8 +30,8 @@ public class FaqRepositoryTests {
 
         Long parentId = 1L;
 
-        faqRepository.findByParentId(parentId).forEach(faq -> {
-            System.out.println(faq.toString());
-        });
+        List<Faq> byParentId = faqRepository.findByParentId(parentId);
+
+        Assertions.assertEquals(3, byParentId.size());
     }
 }
