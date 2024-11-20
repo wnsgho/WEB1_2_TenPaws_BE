@@ -1,4 +1,4 @@
-package com.example.tenpaws.faq.repository;
+package com.example.tenpaws.domain.faq.repository;
 
 import com.example.tenpaws.domain.faq.entity.Faq;
 import com.example.tenpaws.domain.faq.repository.FaqRepository;
