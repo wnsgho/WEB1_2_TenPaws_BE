@@ -3,10 +3,12 @@ package com.example.tenpaws.domain.faq.service;
 import com.example.tenpaws.domain.faq.dto.FaqRequest;
 import com.example.tenpaws.domain.faq.dto.FaqResponse;
 import com.example.tenpaws.domain.faq.entity.Faq;
-import com.example.tenpaws.domain.faq.exception.FaqTaskException;
 import com.example.tenpaws.domain.faq.repository.FaqRepository;
-import com.example.tenpaws.domain.faq.service.FaqService;
-import org.junit.jupiter.api.*;
+import com.example.tenpaws.global.exception.BaseException;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +29,7 @@ public class FaqServiceTests {
     public static void setUp(@Autowired FaqRepository faqRepository) {
         Faq parentFaq = Faq.builder().content("parent").build();
         Faq saved = faqRepository.save(parentFaq);
-        IntStream.rangeClosed(1,3).forEach(i -> {
+        IntStream.rangeClosed(1, 3).forEach(i -> {
             Faq childFaq = Faq.builder().content("child" + i).parent(saved).build();
             faqRepository.save(childFaq);
         });
@@ -80,7 +82,7 @@ public class FaqServiceTests {
 
         faqService.delete(faqId);
 
-        assertThrows(FaqTaskException.class, () -> {
+        assertThrows(BaseException.class, () -> {
             faqService.read(faqId);
         });
     }
