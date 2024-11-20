@@ -21,13 +21,13 @@ public class FaqRepositoryTests {
             faqRepository.save(faq);
         });
         IntStream.rangeClosed(1,3).forEach(i -> {
-            Faq faq = Faq.builder().content("child" + i).refFaqId(1L).build();
+            Faq faq = Faq.builder().content("child" + i).parent(Faq.builder().faqId(1L).build()).build();
             faqRepository.save(faq);
         });
 
-        Long refFaqId = 1L;
+        Long parentId = 1L;
 
-        faqRepository.findByRefFaqId(refFaqId).forEach(faq -> {
+        faqRepository.findByParentId(parentId).forEach(faq -> {
             System.out.println(faq.toString());
         });
     }

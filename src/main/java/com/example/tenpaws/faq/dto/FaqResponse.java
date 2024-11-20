@@ -23,6 +23,6 @@ public class FaqResponse {
     public FaqResponse(Faq faq) {
         this.faqId = faq.getFaqId();
         this.content = faq.getContent();
-        this.refFaqId = faq.getRefFaqId();
+        this.refFaqId = faq.getParent() == null ? null : faq.getParent().getFaqId();
     }
 }

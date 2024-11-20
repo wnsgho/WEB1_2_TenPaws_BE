@@ -20,13 +20,18 @@ public class Faq {
     @Column(nullable = false)
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Faq.class)
-    private Long refFaqId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private Faq parent;
 
-    @OneToMany(mappedBy = "refFaqId", cascade = CascadeType.ALL)
-    private List<Faq> subFaqs;
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Faq> children;
 
     public void changeContent(String content) {
         this.content = content;
+    }
+
+    public void changeParent(Faq parent) {
+        this.parent = parent;
     }
 }

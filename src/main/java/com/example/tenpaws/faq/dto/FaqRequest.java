@@ -17,19 +17,19 @@ public class FaqRequest {
     @NotBlank
     private String content;
 
-    private Long refFaqId;
+    private Long parentId;
 
     public FaqRequest(Faq faq) {
         this.faqId = faq.getFaqId();
         this.content = faq.getContent();
-        this.refFaqId = faq.getRefFaqId();
+        this.parentId = faq.getParent().getFaqId();
     }
 
     public Faq toEntity() {
         return Faq.builder()
                 .faqId(faqId)
                 .content(content)
-                .refFaqId(refFaqId)
+                .parent(Faq.builder().faqId(parentId).build())
                 .build();
     }
 }

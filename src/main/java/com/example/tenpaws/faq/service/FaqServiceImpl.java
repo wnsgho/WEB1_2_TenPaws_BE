@@ -29,7 +29,9 @@ public class FaqServiceImpl implements FaqService {
 
     @Override
     public FaqResponse read(Long faqId) {
-        return new FaqResponse(faqRepository.findById(faqId).orElseThrow(FaqException.FAQ_NOT_FOUND::getFaqTaskException));
+        return new FaqResponse(faqRepository.findById(faqId)
+                .orElseThrow(FaqException.FAQ_NOT_FOUND::getFaqTaskException)
+        );
     }
 
     @Override
@@ -58,8 +60,8 @@ public class FaqServiceImpl implements FaqService {
     }
 
     @Override
-    public List<FaqResponse> findByRefFaqId(Long refFaqId) {
-        List<FaqResponse> faqResponseList = faqRepository.findByRefFaqId(refFaqId).stream().map(FaqResponse::new).toList();
+    public List<FaqResponse> findByParentId(Long parentId) {
+        List<FaqResponse> faqResponseList = faqRepository.findByParentId(parentId).stream().map(FaqResponse::new).toList();
         if (faqResponseList.isEmpty()) {
             throw FaqException.FAQ_NO_CHILD.getFaqTaskException();
         }

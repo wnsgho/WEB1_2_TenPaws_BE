@@ -10,5 +10,5 @@ public interface FaqService {
     FaqResponse read(Long faqId);
     FaqResponse update(FaqRequest faqRequest);
     void delete(Long faqId);
-    List<FaqResponse> findByRefFaqId(Long refFaqId);
+    List<FaqResponse> findByParentId(Long parentId);
 }
