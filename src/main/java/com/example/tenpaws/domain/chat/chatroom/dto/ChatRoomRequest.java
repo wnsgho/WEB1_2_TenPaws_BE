@@ -10,10 +10,10 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class ChatRoomRequest {
-    @NotBlank
+    @NonNull
     private Long userId;
 
-    @NotBlank
+    @NonNull
     private Long shelterId;
 
     public ChatRoomRequest(ChatRoom chatRoom) {
