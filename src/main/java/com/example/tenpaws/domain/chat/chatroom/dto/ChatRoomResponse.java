@@ -5,8 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 @ToString
 public class ChatRoomResponse {
@@ -22,5 +20,12 @@ public class ChatRoomResponse {
         this.chatRoomId = chatRoom.getId();
         this.userId = chatRoom.getUserId();
         this.shelterId = chatRoom.getShelterId();
+    }
+
+    @Builder
+    public ChatRoomResponse(Long chatRoomId, Long userId, Long shelterId) {
+        this.chatRoomId = chatRoomId;
+        this.userId = userId;
+        this.shelterId = shelterId;
     }
 }

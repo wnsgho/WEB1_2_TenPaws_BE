@@ -1,12 +1,9 @@
 package com.example.tenpaws.domain.chat.chatroom.dto;
 
 import com.example.tenpaws.domain.chat.chatroom.entity.ChatRoom;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 @ToString
 public class ChatRoomRequest {
@@ -15,6 +12,12 @@ public class ChatRoomRequest {
 
     @NonNull
     private Long shelterId;
+
+    @Builder
+    public ChatRoomRequest(@NonNull Long userId, @NonNull Long shelterId) {
+        this.userId = userId;
+        this.shelterId = shelterId;
+    }
 
     public ChatRoomRequest(ChatRoom chatRoom) {
         this.userId = chatRoom.getUserId();

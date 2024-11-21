@@ -6,9 +6,7 @@ import lombok.*;
 @Entity
 @Table(name = "chatrooms")
 @Getter
-@Builder
 @ToString
-@AllArgsConstructor
 @NoArgsConstructor
 public class ChatRoom {
     @Id
@@ -20,4 +18,11 @@ public class ChatRoom {
 
     @Column(nullable = false)
     private Long shelterId;
+
+    @Builder
+    public ChatRoom(Long id, Long userId, Long shelterId) {
+        this.id = id;
+        this.userId = userId;
+        this.shelterId = shelterId;
+    }
 }
