@@ -1,4 +1,11 @@
-## Pull Request Template
+---
+name: Default PullRequest
+about: 풀리퀘스트 템플릿 입니다. pr 생성 시 템플릿을 사용해주세요!
+title: ''
+labels: ''
+assignees: ''
+
+---
 
 ## 🛰️ Issue Number
 
@@ -13,4 +20,3 @@
 - [ ] Label을 지정했나요?
 
 ## ✅ PR 포인트 & 궁금한 점
-
