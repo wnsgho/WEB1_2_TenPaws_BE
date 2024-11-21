@@ -29,9 +29,7 @@ public enum ErrorCode {
     CHATROOM_NOT_DELETED(HttpStatus.BAD_REQUEST, "ChatRoom not deleted"),
 
     // ChatMessage
-    CHAT_MESSAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "ChatMessages not found"),
     CHAT_MESSAGE_NOT_REGISTERED(HttpStatus.BAD_REQUEST, "ChatMessage not registered"),
-    CHAT_MESSAGE_NOT_DELETED(HttpStatus.BAD_REQUEST, "ChatMessages not deleted"),
 
     // Announcement
     ANNOUNCEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Announcement not found");
