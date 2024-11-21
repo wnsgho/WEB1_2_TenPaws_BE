@@ -2,6 +2,7 @@ package com.example.tenpaws.shelter.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder //일단 여기 넣어두고
 @Table(name = "shelters")
 public class Shelter {
 
@@ -35,9 +37,5 @@ public class Shelter {
     @Column(name = "email", nullable = false, length = 255)
     private String email;
 
-    private boolean canRegisterPets;
-
-    @OneToMany(mappedBy = "shelter", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PetRegistration> petRegistrations;
 }
 
