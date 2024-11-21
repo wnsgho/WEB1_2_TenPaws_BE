@@ -22,7 +22,7 @@ public class ChatRoomController {
         return ResponseEntity.ok(chatRoomService.getChatRoom(chatRoomId));
     }
 
-    @GetMapping("/{userId}-{shelterId}")
+    @GetMapping("/{userId}/{shelterId}")
     public ResponseEntity<ChatRoomResponse> findChatRoomByUserIdAndShelterId(@PathVariable("userId") Long userId, @PathVariable("shelterId") Long shelterId) {
         return ResponseEntity.ok(chatRoomService.getChatRoomByUserIdAndShelterId(userId, shelterId));
     }
