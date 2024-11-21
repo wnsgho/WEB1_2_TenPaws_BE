@@ -1,4 +1,4 @@
-package com.example.tenpaws.domain.chatroom.repository;
+package com.example.tenpaws.domain.chat.chatroom.repository;
 
 import com.example.tenpaws.domain.chat.chatroom.entity.ChatRoom;
 import com.example.tenpaws.domain.chat.chatroom.repository.ChatRoomRepository;
