@@ -1,5 +1,6 @@
 package com.example.tenpaws.domain.chat.chatmessage.entity;
 
+import com.example.tenpaws.domain.chat.chatroom.entity.ChatRoom;
 import com.example.tenpaws.global.entity.UserRole;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -32,11 +33,16 @@ public class ChatMessage {
     @Enumerated(EnumType.STRING)
     private UserRole senderType;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "chatroom_id")
+    private ChatRoom chatRoom;
+
     @Builder
-    public ChatMessage(Long id, String message, Long senderId, UserRole senderType) {
+    public ChatMessage(Long id, String message, Long senderId, UserRole senderType, Long chatRoomId) {
         this.id = id;
         this.message = message;
         this.senderId = senderId;
         this.senderType = senderType;
+        this.chatRoom = ChatRoom.builder().id(chatRoomId).build();
     }
 }
