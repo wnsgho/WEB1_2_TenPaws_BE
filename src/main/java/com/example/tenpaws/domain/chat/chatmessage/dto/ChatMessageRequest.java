@@ -7,7 +7,6 @@ import lombok.*;
 
 @Data
 @NoArgsConstructor
-@ToString
 public class ChatMessageRequest {
     @NotBlank
     private String message;
