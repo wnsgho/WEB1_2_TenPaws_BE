@@ -16,12 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class AnnouncementService {
+public class AnnouncementServiceImpl implements AnnouncementService {
 
     private final AnnouncementRepository announcementRepository;
 
     @Transactional
-    public Announcement save(CreateAnnouncementRequest request) {
+    public Announcement createAnnouncement(CreateAnnouncementRequest request) {
         return announcementRepository.save(request.toEntity());
     }
 
@@ -30,14 +30,14 @@ public class AnnouncementService {
                 .map(AnnouncementListViewResponse::new);
     }
 
-    public Announcement findById(long id) {
-        return announcementRepository.findById(id)
+    public Announcement findById(Long announcementId) {
+        return announcementRepository.findById(announcementId)
                 .orElseThrow(() -> new BaseException(ErrorCode.ANNOUNCEMENT_NOT_FOUND));
     }
 
     @Transactional
-    public Announcement update(long id, UpdateAnnouncementRequest request) {
-        Announcement announcement = announcementRepository.findById(id)
+    public Announcement update(Long announcementId, UpdateAnnouncementRequest request) {
+        Announcement announcement = announcementRepository.findById(announcementId)
                 .orElseThrow(() -> new BaseException(ErrorCode.ANNOUNCEMENT_NOT_FOUND));
 
         announcement.update(request.getTitle(), request.getContent());
@@ -45,7 +45,7 @@ public class AnnouncementService {
     }
 
     @Transactional
-    public void delete(long id) {
-        announcementRepository.deleteById(id);
+    public void delete(Long announcementId) {
+        announcementRepository.deleteById(announcementId);
     }
 }
