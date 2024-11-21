@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface AnnouncementService {
-    Announcement createAnnouncement(CreateAnnouncementRequest request);
+    Announcement create(CreateAnnouncementRequest request);
     Page<AnnouncementListViewResponse> getList(Pageable pageable);
     Announcement findById(Long announcementId);
     Announcement update(Long announcementId, UpdateAnnouncementRequest request);
