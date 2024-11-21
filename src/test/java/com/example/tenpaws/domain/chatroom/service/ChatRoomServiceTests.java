@@ -6,6 +6,7 @@ import com.example.tenpaws.domain.chat.chatroom.entity.ChatRoom;
 import com.example.tenpaws.domain.chat.chatroom.repository.ChatRoomRepository;
 import com.example.tenpaws.domain.chat.chatroom.service.ChatRoomService;
 import com.example.tenpaws.global.exception.BaseException;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,11 @@ public class ChatRoomServiceTests {
                 chatRoomRepository.save(chatRoom);
             }
         }
+    }
+
+    @AfterAll
+    public static void tearDown(@Autowired ChatRoomRepository chatRoomRepository) {
+        chatRoomRepository.deleteAll(chatRoomRepository.findAll());
     }
 
     @Test
