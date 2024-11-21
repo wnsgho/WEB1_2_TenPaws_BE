@@ -29,7 +29,10 @@ public enum ErrorCode {
     CHATROOM_NOT_DELETE(HttpStatus.BAD_REQUEST, "ChatRoom not deleted"),
 
     // Announcement
-    ANNOUNCEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Announcement not found");
+    ANNOUNCEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Announcement not found"),
+
+    // Notification
+    NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "Notification not found");
 
     private final HttpStatus httpStatus;
     private final String message;
