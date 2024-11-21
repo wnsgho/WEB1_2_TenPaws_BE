@@ -47,7 +47,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void registerUser_shouldSaveUser_whenValidData() {
+    void 적절한_회원가입_절차() {
         when(userRepository.existsByUsername(userJoinDTO.getUsername())).thenReturn(false);
 
         // Given: BCryptPasswordEncoder가 비밀번호를 암호화하도록 설정
@@ -71,7 +71,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void registerUser_shouldThrowException_whenUsernameExists() {
+    void 이미_존재하는_유저일_때_예외발생() {
         // Given: 이미 존재하는 사용자 이름이 있을 경우를 시뮬레이션
         when(userRepository.existsByUsername(userJoinDTO.getUsername())).thenReturn(true);
 
