@@ -4,7 +4,6 @@ import com.example.tenpaws.domain.faq.dto.FaqRequest;
 import com.example.tenpaws.domain.faq.dto.FaqResponse;
 import com.example.tenpaws.domain.faq.repository.FaqRepository;
 import com.example.tenpaws.domain.faq.entity.Faq;
-import com.example.tenpaws.domain.faq.exception.FaqException;
 import com.example.tenpaws.global.exception.BaseException;
 import com.example.tenpaws.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -57,7 +56,7 @@ public class FaqServiceImpl implements FaqService {
             faqRepository.findById(faqId).orElseThrow(() -> new BaseException(ErrorCode.FAQ_NOT_FOUND));
             faqRepository.deleteById(faqId);
         } catch (Exception e) {
-            throw new BaseException(ErrorCode.FAQ_NOT_DELETE);
+            throw new BaseException(ErrorCode.FAQ_NOT_DELETED);
         }
     }
 

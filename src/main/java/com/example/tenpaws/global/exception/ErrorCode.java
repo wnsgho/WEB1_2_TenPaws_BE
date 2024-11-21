@@ -19,19 +19,19 @@ public enum ErrorCode {
     FAQ_NOT_FOUND(HttpStatus.NOT_FOUND, "Faq not found"),
     FAQ_NOT_REGISTERED(HttpStatus.BAD_REQUEST, "Faq not registered"),
     FAQ_NOT_MODIFIED(HttpStatus.BAD_REQUEST, "Faq not modified"),
-    FAQ_NOT_DELETE(HttpStatus.BAD_REQUEST, "Faq not deleted"),
+    FAQ_NOT_DELETED(HttpStatus.BAD_REQUEST, "Faq not deleted"),
     FAQ_NO_CHILD(HttpStatus.BAD_REQUEST, "This Faq has no children"),
 
     // ChatRoom
     CHATROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "ChatRoom not found"),
     CHATROOM_NOT_REGISTERED(HttpStatus.BAD_REQUEST, "ChatRoom not registered"),
     CHATROOM_NOT_MODIFIED(HttpStatus.BAD_REQUEST, "ChatRoom not modified"),
-    CHATROOM_NOT_DELETE(HttpStatus.BAD_REQUEST, "ChatRoom not deleted"),
+    CHATROOM_NOT_DELETED(HttpStatus.BAD_REQUEST, "ChatRoom not deleted"),
 
     // ChatMessage
     CHAT_MESSAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "ChatMessages not found"),
-    CHAT_MESSAGE_REGISTERED(HttpStatus.BAD_REQUEST, "ChatMessage not registered"),
-    CHAT_MESSAGE_DELETE(HttpStatus.BAD_REQUEST, "ChatMessages not deleted"),
+    CHAT_MESSAGE_NOT_REGISTERED(HttpStatus.BAD_REQUEST, "ChatMessage not registered"),
+    CHAT_MESSAGE_NOT_DELETED(HttpStatus.BAD_REQUEST, "ChatMessages not deleted"),
 
     // Announcement
     ANNOUNCEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Announcement not found");
