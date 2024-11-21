@@ -1,4 +1,4 @@
-package com.example.tenpaws.domain.chatroom.service;
+package com.example.tenpaws.domain.chat.chatroom.service;
 
 import com.example.tenpaws.domain.chat.chatroom.dto.ChatRoomRequest;
 import com.example.tenpaws.domain.chat.chatroom.dto.ChatRoomResponse;

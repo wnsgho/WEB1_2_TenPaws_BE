@@ -40,7 +40,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         try {
             chatRoomRepository.delete(chatRoom);
         } catch (Exception e) {
-            throw new BaseException(ErrorCode.CHATROOM_NOT_DELETE);
+            throw new BaseException(ErrorCode.CHATROOM_NOT_DELETED);
         }
     }
 
