@@ -9,17 +9,14 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-
     @Override
-    public void configureMessageBroker(MessageBrokerRegistry registry) {
-        // 메시지 브로커 설정
-        registry.enableSimpleBroker("/topic", "/queue");    // 구독 엔드포인트
-        registry.setApplicationDestinationPrefixes("/app");                     // 클라이언트 전송 엔드포인트
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        registry.addEndpoint("/ws").setAllowedOrigins("http://localhost:3000");
     }
 
     @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        // WebSocket 엔드포인트 등록
-        registry.addEndpoint("/ws").setAllowedOrigins("*").withSockJS();    // SockJS fallback 지원
+    public void configureMessageBroker(MessageBrokerRegistry registry) {
+        registry.enableSimpleBroker("/topic");
+        registry.setApplicationDestinationPrefixes("/app");
     }
 }
