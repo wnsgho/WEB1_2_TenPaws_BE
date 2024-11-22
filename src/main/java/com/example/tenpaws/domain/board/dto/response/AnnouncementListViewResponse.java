@@ -9,7 +9,7 @@ import java.time.LocalDate;
 public class AnnouncementListViewResponse {
     private final Long id;
     private final String title;
-    private LocalDate created_at;
+    private final LocalDate created_at;
 
     public AnnouncementListViewResponse(Announcement announcement) {
         this.id = announcement.getId();
