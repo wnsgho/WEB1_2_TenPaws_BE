@@ -23,8 +23,8 @@ public class ChatMessageRepositoryTests {
     static void setUpBeforeClass(@Autowired ChatMessageRepository chatMessageRepository, @Autowired ChatRoomRepository chatRoomRepository) throws Exception {
         ChatRoom chatRoom = chatRoomRepository.save(
                 ChatRoom.builder()
-                        .userId(1L)
-                        .shelterId(1L)
+                        .user1("user1")
+                        .user2("user2")
                         .build());
         chatMessageRepository.save(
                 ChatMessage.builder()

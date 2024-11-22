@@ -11,21 +11,21 @@ public class ChatRoomResponse {
     private Long chatRoomId;
 
     @NotBlank
-    private Long userId;
+    private String user1;
 
     @NotBlank
-    private Long shelterId;
+    private String user2;
 
     public ChatRoomResponse(ChatRoom chatRoom) {
         this.chatRoomId = chatRoom.getId();
-        this.userId = chatRoom.getUserId();
-        this.shelterId = chatRoom.getShelterId();
+        this.user1 = chatRoom.getUser1();
+        this.user2 = chatRoom.getUser2();
     }
 
     @Builder
-    public ChatRoomResponse(Long chatRoomId, Long userId, Long shelterId) {
+    public ChatRoomResponse(Long chatRoomId, String user1, String user2) {
         this.chatRoomId = chatRoomId;
-        this.userId = userId;
-        this.shelterId = shelterId;
+        this.user1 = user1;
+        this.user2 = user2;
     }
 }

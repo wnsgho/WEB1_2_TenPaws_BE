@@ -6,7 +6,6 @@ import lombok.*;
 @Entity
 @Table(name = "chatrooms")
 @Getter
-@ToString
 @NoArgsConstructor
 public class ChatRoom {
     @Id
@@ -14,15 +13,15 @@ public class ChatRoom {
     private Long id;
 
     @Column(nullable = false)
-    private Long userId;
+    private String user1;
 
     @Column(nullable = false)
-    private Long shelterId;
+    private String user2;
 
     @Builder
-    public ChatRoom(Long id, Long userId, Long shelterId) {
+    public ChatRoom(Long id, String user1, String user2) {
         this.id = id;
-        this.userId = userId;
-        this.shelterId = shelterId;
+        this.user1 = user1;
+        this.user2 = user2;
     }
 }
