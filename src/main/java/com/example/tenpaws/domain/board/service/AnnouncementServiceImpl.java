@@ -1,12 +1,12 @@
 package com.example.tenpaws.domain.board.service;
 
+import com.example.tenpaws.domain.admin.entity.Admin;
+import com.example.tenpaws.domain.admin.repository.AdminRepository;
 import com.example.tenpaws.domain.board.dto.request.CreateAnnouncementRequest;
 import com.example.tenpaws.domain.board.dto.request.UpdateAnnouncementRequest;
 import com.example.tenpaws.domain.board.dto.response.AnnouncementListViewResponse;
 import com.example.tenpaws.domain.board.entity.Announcement;
 import com.example.tenpaws.domain.board.repository.AnnouncementRepository;
-import com.example.tenpaws.domain.user.entity.User;
-import com.example.tenpaws.domain.user.repositoty.UserRepository;
 import com.example.tenpaws.global.exception.BaseException;
 import com.example.tenpaws.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -20,15 +20,15 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AnnouncementServiceImpl implements AnnouncementService {
 
-    private final UserRepository userRepository;
+    private final AdminRepository adminRepository;
     private final AnnouncementRepository announcementRepository;
 
     @Transactional
     public Announcement create(CreateAnnouncementRequest request) {
-        User user = userRepository.findById(request.getUserId())
+        Admin admin = adminRepository.findById(request.getAdminId())
                 .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
 
-        return announcementRepository.save(request.toEntity(user));
+        return announcementRepository.save(request.toEntity(admin));
     }
 
     public Page<AnnouncementListViewResponse> getList(Pageable pageable) {
