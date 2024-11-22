@@ -24,7 +24,7 @@ public class UserJoinDTO {
     private String email;
 
     @NotBlank(message = "사용자 비밀번호는 필수입니다")
-    @Size(min = 7, max = 20, message = "사용자 아이디는 7글자 이상, 20글자 이하로 제한됩니다")
+    @Size(min = 7, max = 20, message = "사용자 비밀번호는 7글자 이상, 20글자 이하로 제한됩니다")
     private String password;
 
     @NotNull(message = "생년월일 정보는 필수입니다")
