@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class UpdateAnnouncementRequest {
-    private Long userId;
     private String title;
     private String content;
 }
