@@ -1,7 +1,6 @@
 package com.example.tenpaws.domain.shelter.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
