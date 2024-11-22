@@ -17,7 +17,7 @@ public class PetController {
     @Autowired
     private PetService petService;
 
-    @GetMapping("/slist/{shelterId}")
+    @GetMapping("/slist/{shelterId}") // 쉘터id 로 전체 조회기능인데, 전체 목록에 반영할 all list로 변경할 예정입니다
     public List<PetResponseDTO> getAllPets(@PathVariable Long shelterId) {
         return petService.getAllPets(shelterId);
     }
