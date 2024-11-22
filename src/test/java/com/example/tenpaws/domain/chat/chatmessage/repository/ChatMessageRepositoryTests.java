@@ -3,7 +3,6 @@ package com.example.tenpaws.domain.chat.chatmessage.repository;
 import com.example.tenpaws.domain.chat.chatmessage.entity.ChatMessage;
 import com.example.tenpaws.domain.chat.chatroom.entity.ChatRoom;
 import com.example.tenpaws.domain.chat.chatroom.repository.ChatRoomRepository;
-import com.example.tenpaws.global.entity.UserRole;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -22,7 +21,7 @@ public class ChatMessageRepositoryTests {
 
     @BeforeAll
     static void setUpBeforeClass(@Autowired ChatMessageRepository chatMessageRepository, @Autowired ChatRoomRepository chatRoomRepository) throws Exception {
-        chatRoomRepository.save(
+        ChatRoom chatRoom = chatRoomRepository.save(
                 ChatRoom.builder()
                         .userId(1L)
                         .shelterId(1L)
@@ -30,23 +29,23 @@ public class ChatMessageRepositoryTests {
         chatMessageRepository.save(
                 ChatMessage.builder()
                         .message("user first chat")
-                        .senderId(1L)
-                        .senderType(UserRole.ROLE_USER)
-                        .chatRoomId(1L)
+                        .sender("user")
+//                        .receiver("shelter")
+                        .chatRoom(chatRoom)
                         .build());
         chatMessageRepository.save(
                 ChatMessage.builder()
                         .message("shelter first chat")
-                        .senderId(1L)
-                        .senderType(UserRole.ROLE_SHELTER)
-                        .chatRoomId(1L)
+                        .sender("shelter")
+//                        .receiver("user")
+                        .chatRoom(chatRoom)
                         .build());
         chatMessageRepository.save(
                 ChatMessage.builder()
                         .message("user second chat")
-                        .senderId(1L)
-                        .senderType(UserRole.ROLE_USER)
-                        .chatRoomId(1L)
+                        .sender("user")
+//                        .receiver("shelter")
+                        .chatRoom(chatRoom)
                         .build());
     }
 
