@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 @Getter
 @RequiredArgsConstructor
 public enum ErrorCode {
@@ -35,7 +37,13 @@ public enum ErrorCode {
     ANNOUNCEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Announcement not found"),
 
     // Notification
-    NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "Notification not found");
+    NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "Notification not found"),
+
+    // Shelter
+    SHELTER_NOT_FOUND(HttpStatus.NOT_FOUND, "Shelter not found with ID"),
+    // Pet
+    PET_NOT_FOUND(HttpStatus.NOT_FOUND,"Pet not found with ID"),
+    NOT_ASSIGNED(HttpStatus.BAD_REQUEST,"The pet is not assigned to this shelter." );
 
     private final HttpStatus httpStatus;
     private final String message;
