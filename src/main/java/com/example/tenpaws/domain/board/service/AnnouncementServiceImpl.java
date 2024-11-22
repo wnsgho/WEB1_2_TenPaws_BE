@@ -1,5 +1,7 @@
 package com.example.tenpaws.domain.board.service;
 
+import com.example.tenpaws.domain.admin.entity.Admin;
+import com.example.tenpaws.domain.admin.repository.AdminRepository;
 import com.example.tenpaws.domain.board.dto.request.CreateAnnouncementRequest;
 import com.example.tenpaws.domain.board.dto.request.UpdateAnnouncementRequest;
 import com.example.tenpaws.domain.board.dto.response.AnnouncementListViewResponse;
@@ -18,11 +20,15 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AnnouncementServiceImpl implements AnnouncementService {
 
+    private final AdminRepository adminRepository;
     private final AnnouncementRepository announcementRepository;
 
     @Transactional
-    public Announcement createAnnouncement(CreateAnnouncementRequest request) {
-        return announcementRepository.save(request.toEntity());
+    public Announcement create(CreateAnnouncementRequest request) {
+        Admin admin = adminRepository.findById(request.getAdminId())
+                .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
+
+        return announcementRepository.save(request.toEntity(admin));
     }
 
     public Page<AnnouncementListViewResponse> getList(Pageable pageable) {

@@ -22,8 +22,8 @@ public class NotificationController {
 
     // 알림 생성
     @PostMapping
-    public ResponseEntity<ApiResponse<Notification>> createNotification(@RequestBody CreateNotificationRequest request) {
-        Notification savedNotification = notificationService.createNotification(request);
+    public ResponseEntity<ApiResponse<Notification>> create(@RequestBody CreateNotificationRequest request) {
+        Notification savedNotification = notificationService.create(request);
 
         return ResponseEntity.ok()
                 .body(ApiResponse.success(savedNotification));
@@ -31,11 +31,11 @@ public class NotificationController {
 
     // 알림 목록 조회
     @GetMapping
-    public ResponseEntity<ApiResponse<Page<NotificationResponse>>> getNotifications(
+    public ResponseEntity<ApiResponse<Page<NotificationResponse>>> getList(
             @RequestParam Long userId,
             @PageableDefault(sort = "userId", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        return ResponseEntity.ok(ApiResponse.success(notificationService.getNotifications(userId, pageable)));
+        return ResponseEntity.ok(ApiResponse.success(notificationService.getList(userId, pageable)));
     }
 
     // 읽음 처리
@@ -56,8 +56,8 @@ public class NotificationController {
 
     // 알림 삭제
     @DeleteMapping("/{notificationId}")
-    public ResponseEntity<ApiResponse<Void>> deleteNotification(@PathVariable Long notificationId) {
-        notificationService.deleteNotification(notificationId);
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long notificationId) {
+        notificationService.delete(notificationId);
 
         return ResponseEntity.ok(ApiResponse.success(null, "Notification successfully deleted"));
     }
