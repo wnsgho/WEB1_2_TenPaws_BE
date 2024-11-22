@@ -16,20 +16,16 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class UserJoinDTO {
 
-    @NotBlank(message = "사용자 아이디는 필수입니다")
-    @Size(min = 7, max = 20, message = "사용자 아이디는 7글자 이상, 20글자 이하로 제한됩니다")
-    private String username;
-
-    @NotBlank(message = "사용자 비밀번호는 필수입니다")
-    @Size(min = 7, max = 20, message = "사용자 아이디는 7글자 이상, 20글자 이하로 제한됩니다")
-    private String password;
-
     @NotBlank(message = "이메일 정보는 필수입니다")
     @Pattern(
             regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
             message = "유효하지 않은 이메일 형식입니다"
     )
     private String email;
+
+    @NotBlank(message = "사용자 비밀번호는 필수입니다")
+    @Size(min = 7, max = 20, message = "사용자 아이디는 7글자 이상, 20글자 이하로 제한됩니다")
+    private String password;
 
     @NotNull(message = "생년월일 정보는 필수입니다")
     @Past(message = "생년월일은 과거의 날짜여야 합니다")
@@ -50,9 +46,8 @@ public class UserJoinDTO {
     // DTO -> Entity 변환 메서드
     public User toEntity() {
         return User.builder()
-                .username(this.username)
-                .password(this.password)
                 .email(this.email)
+                .password(this.password)
                 .birthDate(this.birthDate)
                 .phoneNumber(this.phoneNumber)
                 .address(this.address)
