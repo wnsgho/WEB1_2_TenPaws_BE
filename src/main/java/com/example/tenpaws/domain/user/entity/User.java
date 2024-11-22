@@ -19,13 +19,10 @@ public class User {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String username;
+    private String email;
 
     @Column(nullable = false)
     private String password;
-
-    @Column(nullable = false, unique = true)
-    private String email;
 
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
@@ -49,6 +46,6 @@ public class User {
     public void changePassword(String password) {
         this.password = password;
     }
-    public void changeUsername(String username) { this.username = username; }
+    public void changeEmail(String email) { this.email = email; }
     public void changeUserRole(UserRole userRole) { this.userRole = userRole; }
 }

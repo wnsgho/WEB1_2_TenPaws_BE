@@ -24,16 +24,16 @@ public class AnnouncementController {
 
     // Create
     @PostMapping
-    public ResponseEntity<ApiResponse<Announcement>> createAnnouncement(@RequestBody CreateAnnouncementRequest request) {
-        Announcement savedAnnouncement = announcementService.createAnnouncement(request);
+    public ResponseEntity<ApiResponse<AnnouncementResponse>> create(@RequestBody CreateAnnouncementRequest request) {
+        Announcement savedAnnouncement = announcementService.create(request);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.success(savedAnnouncement));
+                .body(ApiResponse.success(new AnnouncementResponse(savedAnnouncement)));
     }
 
     // Read(Page)
     @GetMapping
-    public ResponseEntity<ApiResponse<Page<AnnouncementListViewResponse>>> getAnnouncementList(
+    public ResponseEntity<ApiResponse<Page<AnnouncementListViewResponse>>> getList(
             @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
         return ResponseEntity.ok(ApiResponse.success(announcementService.getList(pageable)));
@@ -41,7 +41,7 @@ public class AnnouncementController {
 
     // Read(By announcementId)
     @GetMapping("/{announcementId}")
-    public ResponseEntity<ApiResponse<AnnouncementResponse>> findAnnouncementById(@PathVariable Long announcementId) {
+    public ResponseEntity<ApiResponse<AnnouncementResponse>> findById(@PathVariable Long announcementId) {
         Announcement announcement = announcementService.findById(announcementId);
 
         return ResponseEntity.ok()
@@ -50,18 +50,18 @@ public class AnnouncementController {
 
     // Update
     @PutMapping("/{announcementId}")
-    public ResponseEntity<ApiResponse<Announcement>> updateAnnouncement(
+    public ResponseEntity<ApiResponse<AnnouncementResponse>> update(
             @PathVariable Long announcementId,
             @RequestBody UpdateAnnouncementRequest request) {
         Announcement updatedAnnouncement = announcementService.update(announcementId, request);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.success(updatedAnnouncement));
+                .body(ApiResponse.success(new AnnouncementResponse(updatedAnnouncement)));
     }
 
     // Delete
     @DeleteMapping("/{announcementId}")
-    public ResponseEntity<ApiResponse<Void>> deleteAnnouncement(@PathVariable Long announcementId) {
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long announcementId) {
         announcementService.delete(announcementId);
 
         return ResponseEntity.ok(ApiResponse.success(null, "Announcement successfully deleted"));
