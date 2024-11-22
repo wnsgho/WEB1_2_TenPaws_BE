@@ -3,6 +3,7 @@ package com.example.tenpaws.global.config;
 import com.example.tenpaws.global.security.jwt.JwtFilter;
 import com.example.tenpaws.global.security.jwt.JwtUtil;
 import com.example.tenpaws.global.security.jwt.LoginFilter;
+import com.example.tenpaws.global.security.jwt.CustomLogoutFilter;
 import com.example.tenpaws.global.security.repository.RefreshRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -87,6 +89,9 @@ public class SecurityConfig {
 
         httpSecurity
                 .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class);
+
+        httpSecurity
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
 
         return httpSecurity.build();
     }

@@ -7,9 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface NotificationService {
-    Notification createNotification(CreateNotificationRequest request);
-    Page<NotificationResponse> getNotifications(Long userId, Pageable pageable);
+    Notification create(CreateNotificationRequest request);
+    Page<NotificationResponse> getList(Long userId, Pageable pageable);
     void markAsRead(Long notificationId);
     Long getUnreadCount(Long userId);
-    void deleteNotification(Long notificationId);
+    void delete(Long notificationId);
 }
