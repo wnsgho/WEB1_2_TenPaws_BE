@@ -1,6 +1,6 @@
 package com.example.tenpaws.domain.board.entity;
 
-import com.example.tenpaws.domain.user.entity.User;
+import com.example.tenpaws.domain.admin.entity.Admin;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -23,9 +23,9 @@ public class Announcement {
     @Column(name = "id", updatable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "admin_id", nullable = false)
+    private Admin admin;
 
     @Column(name = "title", nullable = false)
     private String title;
@@ -37,8 +37,8 @@ public class Announcement {
     private LocalDate created_at;
 
     @Builder
-    public Announcement(User user, String title, String content) {
-        this.user = user;
+    public Announcement(Admin admin, String title, String content) {
+        this.admin = admin;
         this.title = title;
         this.content = content;
     }
