@@ -4,6 +4,8 @@ import com.example.tenpaws.domain.shelter.service.ShelterService;
 import com.example.tenpaws.domain.shelter.dto.ShelterRequestDTO;
 import com.example.tenpaws.domain.shelter.dto.ShelterResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,20 +35,23 @@ public class ShelterController {
 
     // 쉘터 등록
     @PostMapping
-    public ShelterResponseDTO createShelter(@RequestBody ShelterRequestDTO shelterRequestDTO) {
-        return shelterService.createShelter(shelterRequestDTO);
+    public ResponseEntity<Object> createShelter(@RequestBody ShelterRequestDTO shelterRequestDTO) {
+        ShelterResponseDTO createdShelter = shelterService.createShelter(shelterRequestDTO);
+        return new ResponseEntity<>(createdShelter, HttpStatus.CREATED);
     }
 
     // 쉘터 정보 수정
     @PutMapping("/{id}")
-    public ShelterResponseDTO updateShelter(@PathVariable Long id, @RequestBody ShelterRequestDTO shelterRequestDTO) {
-        return shelterService.updateShelter(id, shelterRequestDTO);
+    public ResponseEntity<Object> updateShelter(@PathVariable Long id, @RequestBody ShelterRequestDTO shelterRequestDTO) {
+        ShelterResponseDTO updatedShelter = shelterService.updateShelter(id, shelterRequestDTO);
+        return new ResponseEntity<>(updatedShelter, HttpStatus.OK);
     }
 
     // 쉘터 삭제
     @DeleteMapping("/{id}")
-    public void deleteShelter(@PathVariable Long id) {
+    public ResponseEntity<Object> deleteShelter(@PathVariable Long id) {
         shelterService.deleteShelter(id);
+        return new ResponseEntity<>("삭제 완료", HttpStatus.NO_CONTENT);
     }
 }
 

@@ -2,7 +2,6 @@ package com.example.tenpaws.domain.pet.entity;
 
 import com.example.tenpaws.domain.shelter.entity.Shelter;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,7 +32,7 @@ public class Pet {
     @Column(name = "exercise_level", nullable = false)
     private int exerciseLevel;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shelter_id")
     private Shelter shelter;
 
