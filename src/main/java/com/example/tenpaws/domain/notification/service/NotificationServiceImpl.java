@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
-
     private final NotificationRepository notificationRepository;
 
     @Transactional
