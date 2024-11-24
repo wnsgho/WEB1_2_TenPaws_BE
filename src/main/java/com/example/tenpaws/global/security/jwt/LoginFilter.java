@@ -31,29 +31,33 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        String username = obtainUsername(request);
-        String password = obtainPassword(request);
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
 
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, null);
+        if (email == null || password == null) {
+            throw new AuthenticationException("이메일과 비밀번호는 필수입니다") {};
+        }
+
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, password, null);
         return authenticationManager.authenticate(authToken);
     }
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
-        String username = authentication.getName();
+        String email = authentication.getName();
 
         UserRole userRole = UserRole.valueOf(authentication.getAuthorities().iterator().next().getAuthority());
 
-        RefreshEntity existingRefreshEntity = refreshRepository.findByUsername(username);
+        RefreshEntity existingRefreshEntity = refreshRepository.findByEmail(email);
         String refresh;
         if (existingRefreshEntity != null) {
             refresh = existingRefreshEntity.getRefresh();
         } else {
-            refresh = jwtUtil.createJwt("refresh", username, userRole, REFRESH_TOKEN_EXPIRATION);
-            addRefreshEntity(username, refresh, REFRESH_TOKEN_EXPIRATION);
+            refresh = jwtUtil.createJwt("refresh", email, userRole, REFRESH_TOKEN_EXPIRATION);
+            addRefreshEntity(email, refresh, REFRESH_TOKEN_EXPIRATION);
         }
 
-        String access = jwtUtil.createJwt("access", username, userRole, ACCESS_TOKEN_EXPIRATION);
+        String access = jwtUtil.createJwt("access", email, userRole, ACCESS_TOKEN_EXPIRATION);
 
         response.setHeader("Authorization", "Bearer " + access);
         response.addCookie(createCookie("refresh", refresh));
@@ -79,12 +83,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         return cookie;
     }
 
-    private void addRefreshEntity(String username, String refresh, Long expiredMs) {
+    private void addRefreshEntity(String email, String refresh, Long expiredMs) {
 
         Date date = new Date(System.currentTimeMillis() + expiredMs);
 
         RefreshEntity refreshEntity = new RefreshEntity();
-        refreshEntity.setUsername(username);
+        refreshEntity.setEmail(email);
         refreshEntity.setRefresh(refresh);
         refreshEntity.setExpiration(date.toString());
 

@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void registerUser(UserJoinDTO userJoinDTO) {
 
-        if (userRepository.existsByUsername(userJoinDTO.getUsername())) {
+        if (userRepository.existsByEmail(userJoinDTO.getEmail())) {
             throw new IllegalArgumentException("이미 존재하는 사용자 입니다");
         }
 

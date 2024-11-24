@@ -20,11 +20,11 @@ public class NotificationServiceImpl implements NotificationService {
     private final NotificationRepository notificationRepository;
 
     @Transactional
-    public Notification createNotification(CreateNotificationRequest request) {
+    public Notification create(CreateNotificationRequest request) {
         return notificationRepository.save(request.toEntity());
     }
 
-    public Page<NotificationResponse> getNotifications(Long userId, Pageable pageable) {
+    public Page<NotificationResponse> getList(Long userId, Pageable pageable) {
         return notificationRepository.findByUserIdOrderByCreatedAtDesc(userId, pageable)
                 .map(NotificationResponse::new);
     }
@@ -42,7 +42,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Transactional
-    public void deleteNotification(Long notificationId) {
+    public void delete(Long notificationId) {
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTIFICATION_NOT_FOUND));
         notificationRepository.delete(notification);
