@@ -1,7 +1,9 @@
 package com.example.tenpaws.domain.chat.chatroom.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "chatrooms")

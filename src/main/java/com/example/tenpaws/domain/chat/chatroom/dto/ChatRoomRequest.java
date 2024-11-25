@@ -2,11 +2,12 @@ package com.example.tenpaws.domain.chat.chatroom.dto;
 
 import com.example.tenpaws.domain.chat.chatroom.entity.ChatRoom;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@ToString
 public class ChatRoomRequest {
     @NotBlank
     private String user1;
