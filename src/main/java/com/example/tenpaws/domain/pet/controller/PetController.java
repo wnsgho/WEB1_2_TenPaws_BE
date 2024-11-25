@@ -23,12 +23,12 @@ public class PetController {
         return petService.getPetList();
     }
 
-    @GetMapping("/{shelterId}")
+    @GetMapping("/{shelterId}/list")
     public List<PetResponseDTO> getAllPets(@PathVariable Long shelterId) {
         return petService.getAllPets(shelterId);
     }
 
-    @GetMapping("/{shelterId}/list/{petId}")
+    @GetMapping("/{shelterId}/{petId}")
     public PetResponseDTO getPetById(@PathVariable Long shelterId, @PathVariable Long petId) {
         return petService.getPetById(shelterId, petId);
     }
