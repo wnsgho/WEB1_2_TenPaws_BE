@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AnnouncementServiceImpl implements AnnouncementService {
-
     private final AdminRepository adminRepository;
     private final AnnouncementRepository announcementRepository;
 
@@ -27,7 +26,6 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     public Announcement create(CreateAnnouncementRequest request) {
         Admin admin = adminRepository.findById(request.getAdminId())
                 .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
-
         return announcementRepository.save(request.toEntity(admin));
     }
 
@@ -52,6 +50,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
     @Transactional
     public void delete(Long announcementId) {
+        announcementRepository.findById(announcementId)
+                .orElseThrow(() -> new BaseException(ErrorCode.ANNOUNCEMENT_NOT_FOUND));
         announcementRepository.deleteById(announcementId);
     }
 }
