@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface ChatMessageService {
     ChatMessageResponse createChatMessage(ChatMessageRequest chatMessageRequest);
+
     List<ChatMessageResponse> getChatMessagesByChatRoomId(Long chatRoomId);
 }

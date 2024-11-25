@@ -4,7 +4,6 @@ import com.example.tenpaws.domain.chat.chatroom.dto.ChatRoomRequest;
 import com.example.tenpaws.domain.chat.chatroom.dto.ChatRoomResponse;
 import com.example.tenpaws.domain.chat.chatroom.entity.ChatRoom;
 import com.example.tenpaws.domain.chat.chatroom.repository.ChatRoomRepository;
-import com.example.tenpaws.domain.chat.chatroom.service.ChatRoomService;
 import com.example.tenpaws.global.exception.BaseException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -14,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,15 +24,13 @@ public class ChatRoomServiceTests {
 
     @BeforeAll
     public static void setUp(@Autowired ChatRoomRepository chatRoomRepository) {
-        for (long i = 1L; i <= 2L; i++) {
-            for (long j = 1L; j <= 2L; j++) {
-                ChatRoom chatRoom = ChatRoom.builder()
-                        .userId(i)
-                        .shelterId(j)
-                        .build();
-                chatRoomRepository.save(chatRoom);
-            }
-        }
+        IntStream.rangeClosed(1, 3).forEach(i -> {
+            ChatRoom chatRoom = ChatRoom.builder()
+                    .user1("user1")
+                    .user2("shelter" + i)
+                    .build();
+            chatRoomRepository.save(chatRoom);
+        });
     }
 
     @AfterAll
@@ -44,8 +42,8 @@ public class ChatRoomServiceTests {
     @Transactional
     void create() {
         ChatRoomRequest chatRoomRequest = ChatRoomRequest.builder()
-                .userId(1L)
-                .shelterId(3L)
+                .user1("user")
+                .user2("shelter")
                 .build();
 
         ChatRoomResponse chatRoomResponse = chatRoomService.create(chatRoomRequest);
@@ -73,30 +71,21 @@ public class ChatRoomServiceTests {
     }
 
     @Test
-    void getChatRoomByUserIdAndShelterId() {
-        Long userId = 1L;
-        Long shelterId = 1L;
+    void getChatRoomByUsers() {
+        String user1 = "user1";
+        String user2 = "shelter1";
 
-        ChatRoomResponse chatRoomResponse = chatRoomService.getChatRoomByUserIdAndShelterId(userId, shelterId);
+        ChatRoomResponse chatRoomResponse = chatRoomService.getChatRoomByUsers(user1, user2);
 
         assertNotNull(chatRoomResponse);
     }
 
     @Test
-    void getChatRoomsByUserId() {
-        Long userId = 1L;
+    void getChatRoomsByUser() {
+        String user = "user1";
 
-        List<ChatRoomResponse> chatRoomResponseList = chatRoomService.getChatRoomsByUserId(userId);
+        List<ChatRoomResponse> chatRoomResponseList = chatRoomService.getChatRoomsByUser(user);
 
-        assertEquals(2, chatRoomResponseList.size());
-    }
-
-    @Test
-    void getChatRoomsByShelterId() {
-        Long shelterId = 1L;
-
-        List<ChatRoomResponse> chatRoomResponseList = chatRoomService.getChatRoomsByShelterId(shelterId);
-
-        assertEquals(2, chatRoomResponseList.size());
+        assertEquals(3, chatRoomResponseList.size());
     }
 }

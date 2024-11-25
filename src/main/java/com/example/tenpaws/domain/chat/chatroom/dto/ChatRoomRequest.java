@@ -1,33 +1,35 @@
 package com.example.tenpaws.domain.chat.chatroom.dto;
 
 import com.example.tenpaws.domain.chat.chatroom.entity.ChatRoom;
-import lombok.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@ToString
 public class ChatRoomRequest {
-    @NonNull
-    private Long userId;
+    @NotBlank
+    private String user1;
 
-    @NonNull
-    private Long shelterId;
+    @NotBlank
+    private String user2;
 
     @Builder
-    public ChatRoomRequest(@NonNull Long userId, @NonNull Long shelterId) {
-        this.userId = userId;
-        this.shelterId = shelterId;
+    public ChatRoomRequest(String user1, String user2) {
+        this.user1 = user1;
+        this.user2 = user2;
     }
 
     public ChatRoomRequest(ChatRoom chatRoom) {
-        this.userId = chatRoom.getUserId();
-        this.shelterId = chatRoom.getShelterId();
+        this.user1 = chatRoom.getUser1();
+        this.user2 = chatRoom.getUser2();
     }
 
     public ChatRoom toEntity() {
         return ChatRoom.builder()
-                .userId(userId)
-                .shelterId(shelterId)
+                .user1(user1)
+                .user2(user2)
                 .build();
     }
 }

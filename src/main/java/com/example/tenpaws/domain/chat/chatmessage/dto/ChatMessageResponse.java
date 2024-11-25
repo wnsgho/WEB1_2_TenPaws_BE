@@ -19,18 +19,18 @@ public class ChatMessageResponse {
     private LocalDateTime chatDate;
 
     @NotBlank
-    private String senderType;
+    private String sender;
 
     @Builder
-    public ChatMessageResponse(String message, @NonNull LocalDateTime chatDate, String senderType) {
+    public ChatMessageResponse(String message, @NonNull LocalDateTime chatDate, String sender) {
         this.message = message;
         this.chatDate = chatDate;
-        this.senderType = senderType;
+        this.sender = sender;
     }
 
     public ChatMessageResponse(ChatMessage chatMessage) {
         this.message = chatMessage.getMessage();
         this.chatDate = chatMessage.getChatDate();
-        this.senderType = chatMessage.getSenderType().name();
+        this.sender = chatMessage.getSender();
     }
 }

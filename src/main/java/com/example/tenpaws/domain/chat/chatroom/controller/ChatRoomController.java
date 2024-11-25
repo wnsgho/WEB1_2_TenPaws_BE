@@ -22,19 +22,14 @@ public class ChatRoomController {
         return ResponseEntity.ok(chatRoomService.getChatRoom(chatRoomId));
     }
 
-    @GetMapping("/{userId}/{shelterId}")
-    public ResponseEntity<ChatRoomResponse> findChatRoomByUserIdAndShelterId(@PathVariable("userId") Long userId, @PathVariable("shelterId") Long shelterId) {
-        return ResponseEntity.ok(chatRoomService.getChatRoomByUserIdAndShelterId(userId, shelterId));
+    @GetMapping("/{user1}/{user2}")
+    public ResponseEntity<ChatRoomResponse> findChatRoomByUsers(@PathVariable("user1") String user1, @PathVariable("user2") String user2) {
+        return ResponseEntity.ok(chatRoomService.getChatRoomByUsers(user1, user2));
     }
 
-    @GetMapping("/user-{userId}")
-    public ResponseEntity<List<ChatRoomResponse>> findChatRoomsByUserId(@PathVariable("userId") Long userId) {
-        return ResponseEntity.ok(chatRoomService.getChatRoomsByUserId(userId));
-    }
-
-    @GetMapping("/shelter-{shelterId}")
-    public ResponseEntity<List<ChatRoomResponse>> findChatRoomsByShelterId(@PathVariable("shelterId") Long shelterId) {
-        return ResponseEntity.ok(chatRoomService.getChatRoomsByShelterId(shelterId));
+    @GetMapping("/user/{user}")
+    public ResponseEntity<List<ChatRoomResponse>> findChatRoomsByUser(@PathVariable("user") String user) {
+        return ResponseEntity.ok(chatRoomService.getChatRoomsByUser(user));
     }
 
     @PostMapping

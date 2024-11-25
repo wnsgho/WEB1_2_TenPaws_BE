@@ -12,9 +12,7 @@ public interface ChatRoomService {
 
     void delete(Long chatRoomId);
 
-    ChatRoomResponse getChatRoomByUserIdAndShelterId(Long userId, Long shelterId);
+    ChatRoomResponse getChatRoomByUsers(String user1, String user2);
 
-    List<ChatRoomResponse> getChatRoomsByUserId(Long userId);
-
-    List<ChatRoomResponse> getChatRoomsByShelterId(Long shelterId);
+    List<ChatRoomResponse> getChatRoomsByUser(String user);
 }

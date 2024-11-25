@@ -1,12 +1,10 @@
 package com.example.tenpaws.domain.chat.chatmessage.entity;
 
 import com.example.tenpaws.domain.chat.chatroom.entity.ChatRoom;
-import com.example.tenpaws.global.entity.UserRole;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -14,7 +12,6 @@ import java.time.LocalDateTime;
 @Table(name = "chatmessages")
 @NoArgsConstructor
 @Getter
-@ToString
 public class ChatMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,22 +24,18 @@ public class ChatMessage {
     private final LocalDateTime chatDate = LocalDateTime.now();
 
     @Column(nullable = false)
-    private Long senderId;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private UserRole senderType;
+    private String sender;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chatroom_id")
     private ChatRoom chatRoom;
 
     @Builder
-    public ChatMessage(Long id, String message, Long senderId, UserRole senderType, Long chatRoomId) {
+    public ChatMessage(Long id, String message, String sender, ChatRoom chatRoom) {
         this.id = id;
         this.message = message;
-        this.senderId = senderId;
-        this.senderType = senderType;
-        this.chatRoom = ChatRoom.builder().id(chatRoomId).build();
+        this.sender = sender;
+//        this.receiver = receiver;
+        this.chatRoom = chatRoom;
     }
 }
