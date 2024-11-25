@@ -6,7 +6,6 @@ import com.example.tenpaws.domain.board.dto.response.AnnouncementListViewRespons
 import com.example.tenpaws.domain.board.dto.response.AnnouncementResponse;
 import com.example.tenpaws.domain.board.entity.Announcement;
 import com.example.tenpaws.domain.board.service.AnnouncementService;
-import com.example.tenpaws.global.api.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,46 +23,46 @@ public class AnnouncementController {
 
     // Create
     @PostMapping
-    public ResponseEntity<ApiResponse<AnnouncementResponse>> create(@RequestBody CreateAnnouncementRequest request) {
+    public ResponseEntity<AnnouncementResponse> create(@RequestBody CreateAnnouncementRequest request) {
         Announcement savedAnnouncement = announcementService.create(request);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.success(new AnnouncementResponse(savedAnnouncement)));
+                .body(new AnnouncementResponse(savedAnnouncement));
     }
 
     // Read(Page)
     @GetMapping
-    public ResponseEntity<ApiResponse<Page<AnnouncementListViewResponse>>> getList(
+    public ResponseEntity<Page<AnnouncementListViewResponse>> getList(
             @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        return ResponseEntity.ok(ApiResponse.success(announcementService.getList(pageable)));
+        return ResponseEntity.ok(announcementService.getList(pageable));
     }
 
     // Read(By announcementId)
     @GetMapping("/{announcementId}")
-    public ResponseEntity<ApiResponse<AnnouncementResponse>> findById(@PathVariable Long announcementId) {
+    public ResponseEntity<AnnouncementResponse> findById(@PathVariable Long announcementId) {
         Announcement announcement = announcementService.findById(announcementId);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.success(new AnnouncementResponse(announcement)));
+                .body(new AnnouncementResponse(announcement));
     }
 
     // Update
     @PutMapping("/{announcementId}")
-    public ResponseEntity<ApiResponse<AnnouncementResponse>> update(
+    public ResponseEntity<AnnouncementResponse> update(
             @PathVariable Long announcementId,
             @RequestBody UpdateAnnouncementRequest request) {
         Announcement updatedAnnouncement = announcementService.update(announcementId, request);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.success(new AnnouncementResponse(updatedAnnouncement)));
+                .body(new AnnouncementResponse(updatedAnnouncement));
     }
 
     // Delete
     @DeleteMapping("/{announcementId}")
-    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long announcementId) {
+    public ResponseEntity<String> delete(@PathVariable Long announcementId) {
         announcementService.delete(announcementId);
 
-        return ResponseEntity.ok(ApiResponse.success(null, "Announcement successfully deleted"));
+        return ResponseEntity.ok("Announcement successfully deleted");
     }
 }
