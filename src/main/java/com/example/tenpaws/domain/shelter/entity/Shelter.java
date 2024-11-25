@@ -21,9 +21,6 @@ public class Shelter {
     @Column(name = "shelter_id")
     private Long id;
 
-    @Column(name = "username", nullable = false, length = 255)
-    private String username;
-
     @Column(name = "password", nullable = false, length = 255)
     private String pw;
 
@@ -36,15 +33,15 @@ public class Shelter {
     @Column(name = "phone_number", nullable = false, length = 15)
     private String phoneNumber;
 
-    @Column(name = "email", nullable = false, length = 255)
+    @Column(name = "email", unique = true, nullable = false, length = 255)
     private String email;
 
     @OneToMany(mappedBy = "shelter", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pet> pets = new ArrayList<>();
 
-//    @Enumerated(EnumType.STRING)
-//    @Column(name = "user_role", nullable = false)
-//    private UserRole userRole;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "user_role", nullable = false)
+    private UserRole userRole;
 
     public void addPet(Pet pet) {
         if (!pets.contains(pet)) {
@@ -55,7 +52,6 @@ public class Shelter {
 
     // Update method
     public void updateFields(ShelterRequestDTO requestDTO) {
-        if (requestDTO.getUsername() != null) this.username = requestDTO.getUsername();
         if (requestDTO.getPw() != null) this.pw = requestDTO.getPw();
         if (requestDTO.getShelterName() != null) this.shelterName = requestDTO.getShelterName();
         if (requestDTO.getAddress() != null) this.address = requestDTO.getAddress();
@@ -73,7 +69,6 @@ public class Shelter {
     @Builder
     public Shelter(Long id, String username, String pw, String shelterName, String address, String phoneNumber, String email) {
         this.id = id;
-        this.username = username;
         this.pw = pw;
         this.shelterName = shelterName;
         this.address = address;

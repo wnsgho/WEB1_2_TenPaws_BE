@@ -10,8 +10,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ShelterRequestDTO {
-    @NotBlank(message = "이름은 필수 항목입니다.")
-    private String username;
 
     @NotBlank(message = "비밀번호는 필수 항목입니다.")
     private String pw;
@@ -29,7 +27,6 @@ public class ShelterRequestDTO {
 
     public Shelter toEntity() {
         return Shelter.builder()
-                .username(this.username)
                 .pw(this.pw)
                 .shelterName(this.shelterName)
                 .address(this.address)

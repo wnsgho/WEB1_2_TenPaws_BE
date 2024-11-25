@@ -9,7 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 public class ShelterResponseDTO {
     private Long id;
-    private String username;
     private String shelterName;
     private String address;
     private String phoneNumber;
@@ -18,7 +17,6 @@ public class ShelterResponseDTO {
     public static ShelterResponseDTO fromEntity(Shelter shelter) {
         return new ShelterResponseDTO(
                 shelter.getId(),
-                shelter.getUsername(),
                 shelter.getShelterName(),
                 shelter.getAddress(),
                 shelter.getPhoneNumber(),
