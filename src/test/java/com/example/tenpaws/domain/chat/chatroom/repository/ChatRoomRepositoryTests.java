@@ -1,7 +1,6 @@
 package com.example.tenpaws.domain.chat.chatroom.repository;
 
 import com.example.tenpaws.domain.chat.chatroom.entity.ChatRoom;
-import com.example.tenpaws.domain.chat.chatroom.repository.ChatRoomRepository;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -9,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -19,15 +19,13 @@ public class ChatRoomRepositoryTests {
 
     @BeforeAll
     public static void setUp(@Autowired ChatRoomRepository chatRoomRepository) {
-        for (long i = 1L; i <= 2L; i++) {
-            for (long j = 1L; j <= 2L; j++) {
-                ChatRoom chatRoom = ChatRoom.builder()
-                        .userId(i)
-                        .shelterId(j)
-                        .build();
-                chatRoomRepository.save(chatRoom);
-            }
-        }
+        IntStream.rangeClosed(1, 3).forEach(i -> {
+            ChatRoom chatRoom = ChatRoom.builder()
+                    .user1("user1")
+                    .user2("shelter" + i)
+                    .build();
+            chatRoomRepository.save(chatRoom);
+        });
     }
 
     @AfterAll
@@ -36,30 +34,21 @@ public class ChatRoomRepositoryTests {
     }
 
     @Test
-    void findByUserIdAndShelterId() {
-        Long userId = 1L;
-        Long shelterId = 1L;
+    void findByUsers() {
+        String user1 = "user1";
+        String user2 = "shelter1";
 
-        ChatRoom chatRoom = chatRoomRepository.findByUserIdAndShelterId(userId, shelterId);
+        ChatRoom chatRoom = chatRoomRepository.findByUsers(user1, user2).get();
 
-        assertEquals(1L, chatRoom.getUserId());
+        assertEquals(1L, chatRoom.getId());
     }
 
     @Test
-    void findByUserId() {
-        Long userId = 1L;
+    void findByUser() {
+        String user = "user1";
 
-        List<ChatRoom> chatRoomList = chatRoomRepository.findByUserId(userId);
+        List<ChatRoom> chatRoomList = chatRoomRepository.findByUser(user);
 
-        assertEquals(2, chatRoomList.size());
-    }
-
-    @Test
-    void findByShelterID() {
-        Long shelterId = 1L;
-
-        List<ChatRoom> chatRoomList = chatRoomRepository.findByShelterId(shelterId);
-
-        assertEquals(2, chatRoomList.size());
+        assertEquals(3, chatRoomList.size());
     }
 }

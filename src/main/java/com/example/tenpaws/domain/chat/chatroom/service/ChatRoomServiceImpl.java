@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +22,9 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Transactional
     public ChatRoomResponse create(ChatRoomRequest chatRoomRequest) {
         try {
-            return new ChatRoomResponse(chatRoomRepository.save(chatRoomRequest.toEntity()));
+            Optional<ChatRoom> optionalChatRoom = chatRoomRepository.findByUsers(chatRoomRequest.getUser1(), chatRoomRequest.getUser2());
+            return optionalChatRoom.map(ChatRoomResponse::new)
+                    .orElseGet(() -> new ChatRoomResponse(chatRoomRepository.save(chatRoomRequest.toEntity())));
         } catch (Exception e) {
             throw new BaseException(ErrorCode.CHATROOM_NOT_REGISTERED);
         }
@@ -36,7 +39,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     @Override
     public void delete(Long chatRoomId) {
-        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(() -> new BaseException(ErrorCode.CHATROOM_NOT_FOUND));
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
+                .orElseThrow(() -> new BaseException(ErrorCode.CHATROOM_NOT_FOUND));
         try {
             chatRoomRepository.delete(chatRoom);
         } catch (Exception e) {
@@ -45,21 +49,14 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     @Override
-    public ChatRoomResponse getChatRoomByUserIdAndShelterId(Long userId, Long shelterId) {
-        try {
-            return new ChatRoomResponse(chatRoomRepository.findByUserIdAndShelterId(userId, shelterId));
-        } catch (Exception e) {
-            throw new BaseException(ErrorCode.CHATROOM_NOT_FOUND);
-        }
+    public ChatRoomResponse getChatRoomByUsers(String user1, String user2) {
+        return new ChatRoomResponse(
+                chatRoomRepository.findByUsers(user1, user2)
+                        .orElseThrow(() -> new BaseException(ErrorCode.CHATROOM_NOT_FOUND)));
     }
 
     @Override
-    public List<ChatRoomResponse> getChatRoomsByUserId(Long userId) {
-        return chatRoomRepository.findByUserId(userId).stream().map(ChatRoomResponse::new).toList();
-    }
-
-    @Override
-    public List<ChatRoomResponse> getChatRoomsByShelterId(Long shelterId) {
-        return chatRoomRepository.findByShelterId(shelterId).stream().map(ChatRoomResponse::new).toList();
+    public List<ChatRoomResponse> getChatRoomsByUser(String user) {
+        return chatRoomRepository.findByUser(user).stream().map(ChatRoomResponse::new).toList();
     }
 }
