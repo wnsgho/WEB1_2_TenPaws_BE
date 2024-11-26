@@ -39,9 +39,9 @@ public class Shelter {
     @OneToMany(mappedBy = "shelter", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pet> pets = new ArrayList<>();
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "user_role", nullable = false)
-    private UserRole userRole;
+//    @Enumerated(EnumType.STRING)
+//    @Column(name = "user_role", nullable = false)
+//    private UserRole userRole;
 
     public void addPet(Pet pet) {
         if (!pets.contains(pet)) {
