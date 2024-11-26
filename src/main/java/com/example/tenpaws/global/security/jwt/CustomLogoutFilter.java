@@ -41,45 +41,58 @@ public class CustomLogoutFilter extends GenericFilterBean {
             return;
         }
 
+        // Authorization 헤더에서 Access Token 추출
+        String accessToken = getAccessTokenFromHeader(request);
+        if (accessToken != null) {
+            try {
+                jwtUtil.isExpired(accessToken);
+                String category = jwtUtil.getCategory(accessToken);
+                if (!category.equals("access")) {
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    return;
+                }
+            } catch (ExpiredJwtException e) {
+                // 토큰이 만료된 상태라면 처리하지 않고 진행
+            }
+        }
+
         // Refresh 토큰 쿠키 추출
         String refreshToken = getRefreshTokenFromCookies(request);
-        if (refreshToken == null) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
+        if (refreshToken != null) {
+            try {
+                jwtUtil.isExpired(refreshToken);
+                String category = jwtUtil.getCategory(refreshToken);
+                if (!category.equals("refresh")) {
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    return;
+                }
+
+                // Refresh 토큰 DB 존재 여부 확인
+                boolean isExist = refreshRepository.existsByRefresh(refreshToken);
+                if (isExist) {
+                    refreshRepository.deleteByRefresh(refreshToken);
+                }
+            } catch (ExpiredJwtException e) {
+                // Refresh 토큰이 만료된 경우 무시
+            }
+
+            // Refresh 토큰 쿠키 삭제
+            Cookie cookie = new Cookie("refresh", null);
+            cookie.setMaxAge(0);
+            cookie.setPath("/");
+            response.addCookie(cookie);
         }
-
-        // Refresh 토큰 만료 여부 확인
-        try {
-            jwtUtil.isExpired(refreshToken);
-        } catch (ExpiredJwtException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
-
-        // Refresh 토큰인지 확인
-        String category = jwtUtil.getCategory(refreshToken);
-        if (!category.equals("refresh")) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
-
-        // DB에서 Refresh 토큰 존재 여부 확인
-        boolean isExist = refreshRepository.existsByRefresh(refreshToken);
-        if (!isExist) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
-
-        // 로그아웃 진행: Refresh 토큰 DB에서 삭제
-        refreshRepository.deleteByRefresh(refreshToken);
-
-        // Refresh 토큰 쿠키 값 삭제
-        Cookie cookie = new Cookie("refresh", null);
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
-        response.addCookie(cookie);
 
         response.setStatus(HttpServletResponse.SC_OK);
+    }
+
+    // 헤더에서 Access Token 추출
+    private String getAccessTokenFromHeader(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            return authorizationHeader.substring(7); // "Bearer " 이후의 토큰 부분 추출
+        }
+        return null;
     }
 
     // 쿠키에서 Refresh 토큰 추출
