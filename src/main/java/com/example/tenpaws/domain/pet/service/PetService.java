@@ -48,8 +48,7 @@ public class PetService {
 
     public PetResponseDTO createPet(Long shelterId, PetRequestDTO requestDTO) {
         Shelter shelter = getShelter(shelterId);
-        Pet pet = requestDTO.toEntity();
-        pet.setShelter(shelter);
+        Pet pet = requestDTO.toEntity(shelter);
         shelter.addPet(pet);
         Pet savedPet = petRepository.save(pet);
         return PetResponseDTO.fromEntity(savedPet);
