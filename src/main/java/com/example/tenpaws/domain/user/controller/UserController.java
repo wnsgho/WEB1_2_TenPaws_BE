@@ -1,6 +1,7 @@
 package com.example.tenpaws.domain.user.controller;
 
 import com.example.tenpaws.domain.recommendation.service.RecommendService;
+import com.example.tenpaws.domain.shelter.dto.ShelterRequestDTO;
 import com.example.tenpaws.domain.user.dto.UserJoinDTO;
 import com.example.tenpaws.domain.user.entity.User;
 import com.example.tenpaws.domain.user.repositoty.UserRepository;
@@ -26,7 +27,7 @@ public class UserController {
     private final UserRepository userRepository;
     private final RecommendService recommendService;
 
-    @PostMapping("/join")
+    @PostMapping("/regular/join")
     public ResponseEntity<?> usersJoin(
             @Valid @RequestBody UserJoinDTO userJoinDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -42,6 +43,28 @@ public class UserController {
 
         try {
             userService.registerUser(userJoinDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", "Successfully Created"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/shelter/join")
+    public ResponseEntity<?> sheltersJoin(
+            @Valid @RequestBody ShelterRequestDTO shelterRequestDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            // 에러 메시지를 중복 없이 처리
+            Map<String, String> errorMap = bindingResult.getFieldErrors().stream()
+                    .collect(Collectors.toMap(
+                            error -> error.getField(),
+                            error -> error.getDefaultMessage(),
+                            (existing, replacement) -> existing
+                    ));
+            return ResponseEntity.badRequest().body(errorMap);
+        }
+
+        try {
+            userService.registerShelter(shelterRequestDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", "Successfully Created"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
