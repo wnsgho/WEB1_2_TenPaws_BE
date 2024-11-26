@@ -35,7 +35,6 @@ public class ChatMessage {
         this.id = id;
         this.message = message;
         this.sender = sender;
-//        this.receiver = receiver;
         this.chatRoom = chatRoom;
     }
 }
