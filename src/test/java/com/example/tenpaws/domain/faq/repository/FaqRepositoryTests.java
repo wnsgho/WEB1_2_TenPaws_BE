@@ -1,37 +1,55 @@
 package com.example.tenpaws.domain.faq.repository;
 
 import com.example.tenpaws.domain.faq.entity.Faq;
-import com.example.tenpaws.domain.faq.repository.FaqRepository;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.IntStream;
 
 @SpringBootTest
 public class FaqRepositoryTests {
     @Autowired
     private FaqRepository faqRepository;
 
-    @Test
-    @Transactional
-    public void testFindByRefFaqId() {
-        IntStream.rangeClosed(1,2).forEach(i -> {
-            Faq faq = Faq.builder().content("parent" + i).build();
-            faqRepository.save(faq);
-        });
-        IntStream.rangeClosed(1,3).forEach(i -> {
-            Faq faq = Faq.builder().content("child" + i).parent(Faq.builder().id(1L).build()).build();
-            faqRepository.save(faq);
-        });
+    @BeforeAll
+    static void setUpBeforeClass(@Autowired FaqRepository faqRepository) throws Exception {
+        Faq faq = faqRepository.save(Faq.builder()
+                .content("parent")
+                .build());
+        faqRepository.save(Faq.builder()
+                .content("child1")
+                .parent(faq)
+                .build());
+        faqRepository.save(Faq.builder()
+                .content("child2")
+                .parent(faq)
+                .build());
+    }
 
+    @AfterAll
+    static void tearDownAfterClass(@Autowired FaqRepository faqRepository) throws Exception {
+        faqRepository.deleteAll();
+    }
+
+    @Test
+    void testFindByParentId() {
         Long parentId = 1L;
 
         List<Faq> byParentId = faqRepository.findByParentId(parentId);
 
-        Assertions.assertEquals(3, byParentId.size());
+        Assertions.assertEquals(2, byParentId.size());
+    }
+
+    @Test
+    @Transactional
+    void testFindTopLevel() {
+        List<Faq> topLevel = faqRepository.findTopLevel();
+
+        Assertions.assertEquals(1, topLevel.size());
     }
 }

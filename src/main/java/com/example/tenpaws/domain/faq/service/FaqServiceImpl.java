@@ -2,8 +2,8 @@ package com.example.tenpaws.domain.faq.service;
 
 import com.example.tenpaws.domain.faq.dto.FaqRequest;
 import com.example.tenpaws.domain.faq.dto.FaqResponse;
-import com.example.tenpaws.domain.faq.repository.FaqRepository;
 import com.example.tenpaws.domain.faq.entity.Faq;
+import com.example.tenpaws.domain.faq.repository.FaqRepository;
 import com.example.tenpaws.global.exception.BaseException;
 import com.example.tenpaws.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -17,22 +17,26 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 public class FaqServiceImpl implements FaqService {
+
+
     private final FaqRepository faqRepository;
 
     @Override
     public FaqResponse create(FaqRequest faqRequest) {
         try {
-            return new FaqResponse(faqRepository.save(faqRequest.toEntity()));
+            if (faqRequest.getParentId() != null) {
+                Faq faq = faqRepository.findById(faqRequest.getParentId()).orElseThrow(() -> new BaseException(ErrorCode.FAQ_NOT_FOUND));
+                return new FaqResponse(faqRepository.save(faqRequest.toEntity(faq)));
+            }
+            return new FaqResponse(faqRepository.save(faqRequest.toEntity(null)));
         } catch (Exception e) {
             throw new BaseException(ErrorCode.FAQ_NOT_REGISTERED);
         }
     }
 
     @Override
-    public FaqResponse read(Long faqId) {
-        return new FaqResponse(faqRepository.findById(faqId)
-                .orElseThrow(() -> new BaseException(ErrorCode.FAQ_NOT_FOUND))
-        );
+    public List<FaqResponse> read() {
+        return faqRepository.findTopLevel().stream().map(FaqResponse::new).toList();
     }
 
     @Override

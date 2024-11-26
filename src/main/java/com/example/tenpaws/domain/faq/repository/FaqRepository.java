@@ -9,4 +9,7 @@ import java.util.List;
 public interface FaqRepository extends JpaRepository<Faq, Long> {
     @Query("select f from Faq f where f.parent.id = :parentId")
     List<Faq> findByParentId(Long parentId);
+
+    @Query("select f from Faq f where f.parent.id is null")
+    List<Faq> findTopLevel();
 }
