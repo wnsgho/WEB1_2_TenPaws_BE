@@ -1,7 +1,7 @@
 package com.example.tenpaws.global.advice;
 
 import com.example.tenpaws.global.security.entity.CustomOAuth2User;
-import com.example.tenpaws.global.security.provider.JwtProvider;
+import com.example.tenpaws.global.security.jwt.JwtUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,7 +16,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final JwtProvider jwtProvider;
+    private final JwtUtil jwtUtil;
 
     @Override
     public void onAuthenticationSuccess(
@@ -26,7 +26,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     ) throws IOException, ServletException {
         CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
         String userId = oAuth2User.getName();
-        String token = jwtProvider.create(userId);
+        String token = jwtUtil.createSocialJwt(userId);
 
         // 로그인 성공 후, 발급된 토큰을 포함한 url 주소로 리다이렉팅
         // 프론트 팀에서는 적절하게 해당 토큰을 저장하고, 유저가 서비스를 사용 가능하게 페이지 구축 또는 다른 주소로 연결
