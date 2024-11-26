@@ -37,6 +37,7 @@ public class UserJoinDTO {
     @NotBlank(message = "전화번호는 필수 입력 항목입니다.")
     private String address;
 
+    private String preferredSize;
     private String preferredPersonality;
     private Integer preferredExerciseLevel;
 
@@ -51,6 +52,7 @@ public class UserJoinDTO {
                 .birthDate(this.birthDate)
                 .phoneNumber(this.phoneNumber)
                 .address(this.address)
+                .preferredSize(this.preferredSize)
                 .preferredPersonality(this.preferredPersonality)
                 .preferredExerciseLevel(this.preferredExerciseLevel)
                 .userRole(this.userRole)

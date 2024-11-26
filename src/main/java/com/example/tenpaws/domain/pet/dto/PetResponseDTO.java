@@ -1,7 +1,11 @@
 package com.example.tenpaws.domain.pet.dto;
 
+import com.example.tenpaws.domain.pet.entity.Image;
 import com.example.tenpaws.domain.pet.entity.Pet;
 import lombok.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -14,6 +18,8 @@ public class PetResponseDTO {
     private int age;
     private String personality;
     private int exerciseLevel;
+    private List<String> imageUrls;
+
 
     public static PetResponseDTO fromEntity(Pet pet) {
         PetResponseDTO dto = new PetResponseDTO();
@@ -23,6 +29,12 @@ public class PetResponseDTO {
         dto.setAge(pet.getAge());
         dto.setPersonality(pet.getPersonality());
         dto.setExerciseLevel(pet.getExerciseLevel());
+        if (pet.getImages() != null) {
+            dto.setImageUrls(pet.getImages()
+                    .stream()
+                    .map(Image::getImageUrl)
+                    .collect(Collectors.toList()));
+        }
         return dto;
     }
 }

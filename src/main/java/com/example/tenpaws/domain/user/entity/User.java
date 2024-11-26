@@ -33,6 +33,9 @@ public class User {
     @Column(nullable = false)
     private String address;
 
+    @Column(name = "preferred_size")
+    private String preferredSize;
+
     @Column(name = "preferred_personality")
     private String preferredPersonality;
 
