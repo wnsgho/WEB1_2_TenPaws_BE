@@ -23,6 +23,9 @@ public class UserJoinDTO {
     )
     private String email;
 
+    @NotBlank(message = "사용자 이름은 필수입니다")
+    private String username;
+
     @NotBlank(message = "사용자 비밀번호는 필수입니다")
     @Size(min = 7, max = 20, message = "사용자 비밀번호는 7글자 이상, 20글자 이하로 제한됩니다")
     private String password;
@@ -37,6 +40,7 @@ public class UserJoinDTO {
     @NotBlank(message = "전화번호는 필수 입력 항목입니다.")
     private String address;
 
+    private String preferredSize;
     private String preferredPersonality;
     private Integer preferredExerciseLevel;
 
@@ -47,10 +51,12 @@ public class UserJoinDTO {
     public User toEntity() {
         return User.builder()
                 .email(this.email)
+                .username(this.username)
                 .password(this.password)
                 .birthDate(this.birthDate)
                 .phoneNumber(this.phoneNumber)
                 .address(this.address)
+                .preferredSize(this.preferredSize)
                 .preferredPersonality(this.preferredPersonality)
                 .preferredExerciseLevel(this.preferredExerciseLevel)
                 .userRole(this.userRole)

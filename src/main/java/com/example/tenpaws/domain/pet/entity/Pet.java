@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -39,9 +41,11 @@ public class Pet {
     @JoinColumn(name = "shelter_id")
     private Shelter shelter;
 
+    @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<Image> images;
 
     @Builder
-    public Pet(Long id, String species, String size, int age, String personality, int exerciseLevel, Shelter shelter) {
+    public Pet(Long id, String species, String size, int age, String personality, int exerciseLevel, Shelter shelter, Set<Image> images) {
         this.id = id;
         this.species = species;
         this.size = size;
@@ -49,6 +53,7 @@ public class Pet {
         this.personality = personality;
         this.exerciseLevel = exerciseLevel;
         this.shelter = shelter;
+        this.images = images;
     }
 
     // 필드 업데이트 메서드
