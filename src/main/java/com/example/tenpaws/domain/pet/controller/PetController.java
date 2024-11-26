@@ -56,4 +56,10 @@ public class PetController {
                     .body(Map.of("result", "fail"));
         }
     }
+
+    @PostMapping("/applyPet")
+    public String applyForPet(@RequestParam Long petId, @RequestParam Long userId) {
+        petService.applyForPet(petId, userId);
+        return "success";
+    }
 }

@@ -1,11 +1,15 @@
 package com.example.tenpaws.domain.pet.service;
 
+import com.example.tenpaws.domain.apply.entity.Apply;
+import com.example.tenpaws.domain.apply.repository.ApplyRepository;
 import com.example.tenpaws.domain.pet.dto.PetRequestDTO;
 import com.example.tenpaws.domain.pet.dto.PetResponseDTO;
 import com.example.tenpaws.domain.pet.entity.Pet;
 import com.example.tenpaws.domain.pet.repository.PetRepository;
 import com.example.tenpaws.domain.shelter.entity.Shelter;
 import com.example.tenpaws.domain.shelter.repository.ShelterRepository;
+import com.example.tenpaws.domain.user.entity.User;
+import com.example.tenpaws.domain.user.repositoty.UserRepository;
 import com.example.tenpaws.global.exception.BaseException;
 import com.example.tenpaws.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +27,8 @@ public class PetService {
 
     private final ShelterRepository shelterRepository;
     private final PetRepository petRepository;
+    private final ApplyRepository applyRepository;
+    private final UserRepository userRepository;
 
     public List<PetResponseDTO> getPetList() {
         return petRepository.findAll().stream()
@@ -81,6 +87,21 @@ public class PetService {
         } else {
             throw new BaseException(ErrorCode.PET_NOT_FOUND);
         }
+    }
+
+    public void applyForPet(Long petId, Long userId) {
+        Pet pet = petRepository.findById(petId)
+                .orElseThrow(() -> new RuntimeException("Pet not found"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Apply apply = Apply.builder()
+                .pet(pet)
+                .user(user)
+                .applyDate(new java.util.Date())
+                .applyStatus(Apply.ApplyStatus.PENDING)
+                .build();
+
+        applyRepository.save(apply);
     }
 
     private Shelter getShelter(Long shelterId) {

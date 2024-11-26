@@ -37,7 +37,7 @@ public class RecommendService {
 
         String prompt = String.format(
                 "User prefers: Size: %s, Personality: %s, Exercise Level: %s." +
-                        "\nAvailable pets:\n%s\nPlease recommend only one pet that perfectly suits to the all of user's preferences. Size should be equal. id should be said. Answer in Korean.",
+                        "\nAvailable pets:\n%s\nPlease recommend only one pet that perfectly suits to the all of user's preferences. Id should be random. Size should be equal. id should be said. Answer in Korean.",
                 size, personality, exerciseLevel, petDescriptions);
 
         // Step 4: OpenAI 호출
