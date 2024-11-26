@@ -1,5 +1,6 @@
 package com.example.tenpaws.global.config;
 
+import com.example.tenpaws.global.advice.OAuth2SuccessHandler;
 import com.example.tenpaws.global.security.jwt.JwtFilter;
 import com.example.tenpaws.global.security.jwt.JwtUtil;
 import com.example.tenpaws.global.security.jwt.LoginFilter;
@@ -16,6 +17,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
@@ -32,6 +34,8 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
     private final RefreshRepository refreshRepository;
+    private final DefaultOAuth2UserService oAuth2UserService;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -81,7 +85,7 @@ public class SecurityConfig {
         // 모든 기능 완성되면 그 때 엔드포인트 보고 접근 권한 수정!
         httpSecurity
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/join").permitAll()
+                        .requestMatchers("/", "/join","/oauth2/**").permitAll()
                         .anyRequest().permitAll());
 
         httpSecurity
@@ -92,6 +96,16 @@ public class SecurityConfig {
 
         httpSecurity
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
+
+        // oauth2
+        httpSecurity
+                .oauth2Login((oauth2) -> oauth2
+                        .authorizationEndpoint((endpoint) -> endpoint.baseUri("/api/v1/auth/oauth2"))
+                        .redirectionEndpoint((endpoint) -> endpoint
+                                .baseUri("/oauth2/callback/*"))
+                        .userInfoEndpoint((endpoint) -> endpoint.userService(oAuth2UserService))
+                        .successHandler(oAuth2SuccessHandler)
+                );
 
         return httpSecurity.build();
     }
