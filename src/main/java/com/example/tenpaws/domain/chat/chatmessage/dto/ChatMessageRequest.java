@@ -17,6 +17,8 @@ public class ChatMessageRequest {
     @NotBlank
     private String sender;
 
+    private String receiver;
+
     @NonNull
     private Long chatRoomId;
 
