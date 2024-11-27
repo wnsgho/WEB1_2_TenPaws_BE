@@ -43,13 +43,6 @@ public class Shelter {
    @Column(name = "user_role", nullable = false)
    private UserRole userRole;
 
-    public void addPet(Pet pet) {
-        if (!pets.contains(pet)) {
-            pets.add(pet);
-            pet.setShelter(this);
-        }
-    }
-
     // Update method
     public void updateFields(ShelterRequestDTO requestDTO) {
         if (requestDTO.getPw() != null) this.pw = requestDTO.getPw();
@@ -59,6 +52,12 @@ public class Shelter {
         if (requestDTO.getEmail() != null) this.email = requestDTO.getEmail();
     }
 
+    public void addPet(Pet pet) {
+        if (!pets.contains(pet)) {
+            pets.add(pet);
+            pet.setShelter(this);
+        }
+    }
     public void removePet(Pet pet) {
         if (pets.contains(pet)) {
             pets.remove(pet);
