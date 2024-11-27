@@ -66,13 +66,18 @@ public class Shelter {
     }
 
     @Builder
-    public Shelter(Long id, String username, String pw, String shelterName, String address, String phoneNumber, String email) {
+    public Shelter(Long id, String username, String pw, String shelterName, String address, String phoneNumber, String email, UserRole userRole) {
         this.id = id;
         this.pw = pw;
         this.shelterName = shelterName;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.email = email;
+        this.userRole = userRole;
+    }
+
+    public void changePassword(String password) {
+        this.pw = password;
     }
 }
 
