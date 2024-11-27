@@ -64,6 +64,4 @@ public class Pet {
         if (requestDTO.getPersonality() != null) this.personality = requestDTO.getPersonality();
         if (requestDTO.getExerciseLevel() != 0) this.exerciseLevel = requestDTO.getExerciseLevel();
     }
-
-
 }
