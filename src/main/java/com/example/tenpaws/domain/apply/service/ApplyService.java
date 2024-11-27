@@ -1,5 +1,6 @@
 package com.example.tenpaws.domain.apply.service;
 
+import com.example.tenpaws.domain.apply.dto.ApplyDto;
 import com.example.tenpaws.domain.apply.entity.Apply;
 import com.example.tenpaws.domain.apply.repository.ApplyRepository;
 import com.example.tenpaws.domain.pet.entity.Pet;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -36,8 +38,11 @@ public class ApplyService {
     }
 
     // shelterId로 해당 보호소의 신청 목록 조회
-    public List<Apply> getAppliesForShelter(Long shelterId) {
-        return applyRepository.findAllByPetShelterId(shelterId);
+    public List<ApplyDto> getAppliesForShelter(Long shelterId) {
+        return applyRepository.findAllByPetShelterId(shelterId)
+                .stream()
+                .map(ApplyDto::fromEntity)
+                .collect(Collectors.toList());
     }
 
     // status 변경

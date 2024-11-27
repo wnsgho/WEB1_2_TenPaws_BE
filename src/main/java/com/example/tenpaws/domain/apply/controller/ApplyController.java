@@ -1,5 +1,6 @@
 package com.example.tenpaws.domain.apply.controller;
 
+import com.example.tenpaws.domain.apply.dto.ApplyDto;
 import com.example.tenpaws.domain.apply.entity.Apply;
 import com.example.tenpaws.domain.apply.service.ApplyService;
 import lombok.RequiredArgsConstructor;
@@ -24,13 +25,13 @@ public class ApplyController {
 
     // 보호소 신청 목록 조회
     @GetMapping("/{shelterId}/applies")
-    public List<Apply> getAppliesForUser(@RequestParam Long shelterId) {
+    public List<ApplyDto> getAppliesForUser(@PathVariable Long shelterId) {
         return applyService.getAppliesForShelter(shelterId);
     }
 
     // 신청 상태 변경
     @PutMapping("/{shelterId}/status")
-    public String updateApplyStatus(@RequestParam Long applyId, @RequestParam String status) {
+    public String updateApplyStatus(@RequestParam Long applyId, @RequestParam String status, @PathVariable Long shelterId) {
         applyService.updateApplyStatus(applyId, status);
         return "status updated";
     }
