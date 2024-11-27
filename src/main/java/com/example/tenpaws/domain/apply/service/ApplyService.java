@@ -22,7 +22,7 @@ public class ApplyService {
     private final PetRepository petRepository;
     private final UserRepository userRepository;
 
-    public void applyForPet(Long petId, Long userId) {
+    public ApplyDto applyForPet(Long petId, Long userId) {
         Pet pet = petRepository.findById(petId)
                 .orElseThrow(() -> new RuntimeException("Pet not found"));
         User user = userRepository.findById(userId)
@@ -42,6 +42,7 @@ public class ApplyService {
                 .build();
 
         applyRepository.save(apply);
+        return ApplyDto.fromEntity(apply);
     }
 
     // shelterId로 해당 보호소의 신청 목록 조회
@@ -53,13 +54,15 @@ public class ApplyService {
     }
 
     // status 변경
-    public void updateApplyStatus(Long applyId, String status) {
+    public ApplyDto updateApplyStatus(Long applyId, String status) {
         Apply apply = applyRepository.findById(applyId)
                 .orElseThrow(() -> new RuntimeException("Application not found"));
         try {
             Apply.ApplyStatus newStatus = Apply.ApplyStatus.valueOf(status.toUpperCase());
             apply.setApplyStatus(newStatus);
             applyRepository.save(apply);
+
+            return ApplyDto.fromEntity(apply);
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("Invalid status: " + status);
         }
