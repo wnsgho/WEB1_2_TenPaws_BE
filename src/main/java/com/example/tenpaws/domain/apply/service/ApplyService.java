@@ -27,6 +27,13 @@ public class ApplyService {
                 .orElseThrow(() -> new RuntimeException("Pet not found"));
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // 이미 신청했는지 확인
+        boolean isAlreadyApplied = applyRepository.existsByPetAndUser(pet, user);
+        if (isAlreadyApplied) {
+            throw new RuntimeException("이미 신청하셨습니다.");
+        }
+
         Apply apply = Apply.builder()
                 .pet(pet)
                 .user(user)
