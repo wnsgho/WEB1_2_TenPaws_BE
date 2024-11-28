@@ -1,0 +1,32 @@
+# AppSpec 파일 버전과 운영체제 설정
+version: 0.0
+os: linux
+
+
+# 파일 복사 설정
+files:
+  # S3 버킷에 업로드된 애플리케이션 파일들을 EC2 인스턴스로 복사
+  # appspec.yml: CodeDeploy가 배포를 어떻게 수행할지 정의하는 설정 파일
+  # scripts/: 배포 lifecycle에서 실행될 스크립트들이 있는 디렉토리 (예: start-server.sh)
+  # docker-compose.yml: Docker 컨테이너 실행을 위한 설정 파일
+  # source의 '/'는 S3에 업로드된 배포 패키지(ZIP)의 루트 디렉토리를 의미
+  # 예: s3://bucket-name/app.zip을 압축 해제했을 때의 최상위 디렉토리
+  # 지정된 EC2 인스턴스의 /home/ubuntu/instagram-server 디렉토리에
+  # ZIP 파일에 있는 모든 파일과 디렉토리가 동일한 구조로 복사됨(source: /)
+  - source: /
+    destination: /home/ubuntu/instagram-server
+
+# 파일 권한 설정
+permissions:
+  # 모든 파일의 소유자와 그룹을 ubuntu로 설정
+  - object: /
+    owner: ubuntu
+    group: ubuntu
+
+# 배포 수명 주기 이벤트 후크 설정
+hooks:
+  ApplicationStart:
+    # 애플리케이션 시작 스크립트 실행 설정
+    - location: scripts/start-server.sh
+      timeout: 60  # 60초 타임아웃
+      runas: ubuntu  # ubuntu 사용자로 실행
