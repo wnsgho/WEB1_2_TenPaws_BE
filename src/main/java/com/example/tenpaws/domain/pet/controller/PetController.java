@@ -36,13 +36,13 @@ public class PetController {
     @PostMapping("/{shelterId}")
     public ResponseEntity<PetResponseDTO> createPet(@PathVariable Long shelterId, @RequestBody PetRequestDTO petRequestDTO) {
         PetResponseDTO createdPet = petService.createPet(shelterId, petRequestDTO);
-        return new ResponseEntity<>(createdPet, HttpStatus.CREATED);
+        return ResponseEntity.ok(createdPet);
     }
 
     @PutMapping("/{shelterId}/{petId}")
     public ResponseEntity<PetResponseDTO> updatePet(@PathVariable Long shelterId, @PathVariable Long petId, @RequestBody PetRequestDTO petRequestDTO) {
         PetResponseDTO updatedPet = petService.updatePet(shelterId, petId, petRequestDTO);
-        return new ResponseEntity<>(updatedPet, HttpStatus.OK);
+        return ResponseEntity.ok(updatedPet);
     }
 
     @DeleteMapping("/{shelterId}/{petId}")
