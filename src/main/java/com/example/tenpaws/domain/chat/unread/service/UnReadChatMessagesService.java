@@ -10,5 +10,5 @@ public interface UnReadChatMessagesService {
 
     UnReadChatMessagesResponse update(UnReadChatMessagesRequest unReadChatMessagesRequest);
 
-    List<UnReadChatMessagesResponse> read(UnReadChatMessagesRequest unReadChatMessagesRequest);
+    List<UnReadChatMessagesResponse> read(String username);
 }
