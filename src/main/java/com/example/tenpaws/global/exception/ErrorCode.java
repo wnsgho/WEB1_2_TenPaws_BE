@@ -12,6 +12,7 @@ public enum ErrorCode {
 
     // User
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found"),
+    MEMBER_ALREADY_EXIST(HttpStatus.CONFLICT, "User already exists"),
     EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, "Email already exists"),
     PHONE_ALREADY_EXISTS(HttpStatus.CONFLICT, "Phone already exists"),
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "Access denied"),
@@ -44,6 +45,7 @@ public enum ErrorCode {
     // Pet
     PET_NOT_FOUND(HttpStatus.NOT_FOUND,"Pet not found with ID"),
     NOT_ASSIGNED(HttpStatus.BAD_REQUEST,"The pet is not assigned to this shelter." );
+
 
     private final HttpStatus httpStatus;
     private final String message;

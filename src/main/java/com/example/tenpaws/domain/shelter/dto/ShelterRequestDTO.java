@@ -1,8 +1,10 @@
 package com.example.tenpaws.domain.shelter.dto;
 
 import com.example.tenpaws.domain.shelter.entity.Shelter;
+import com.example.tenpaws.global.entity.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
@@ -25,6 +27,9 @@ public class ShelterRequestDTO {
     @Email(message = "유효한 이메일을 입력해주세요.")
     private String email;
 
+    @NotNull(message = "사용자 역할은 필수 항목입니다.")
+    private UserRole userRole;
+
     public Shelter toEntity() {
         return Shelter.builder()
                 .pw(this.pw)
@@ -32,6 +37,7 @@ public class ShelterRequestDTO {
                 .address(this.address)
                 .phoneNumber(this.phoneNumber)
                 .email(this.email)
+                .userRole(this.userRole)
                 .build();
     }
 }
