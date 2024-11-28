@@ -23,10 +23,12 @@ jobs:
           distribution: temurin  # Eclipse Temurin JDK 배포판 사용
           java-version: 17       # Java 17 버전 지정
 
-      # Step 3: 애플리케이션 설정 파일 생성
-      - name: application.properties 파일 만들기
-        # GitHub Secrets에 저장된 설정 값을 파일로 생성
-        run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./src/main/resources/application.properties
+  # Step 3: 애플리케이션 설정 파일들 생성
+  - name: application.properties 파일들 만들기
+    run: |
+      echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./src/main/resources/application.properties
+      mkdir -p ./src/test/resources
+      echo "${{ secrets.TEST_APPLICATION_PROPERTIES }}" > ./src/test/resources/application.properties
 
       # Step 4: Gradle 빌드 스크립트 실행 권한 설정
       - name: gradlew 실행 권한 부여
