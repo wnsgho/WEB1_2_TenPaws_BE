@@ -3,6 +3,8 @@ package com.example.tenpaws.domain.chat.chatroom.controller;
 import com.example.tenpaws.domain.chat.chatroom.dto.ChatRoomRequest;
 import com.example.tenpaws.domain.chat.chatroom.dto.ChatRoomResponse;
 import com.example.tenpaws.domain.chat.chatroom.service.ChatRoomService;
+import com.example.tenpaws.domain.chat.unread.dto.UnReadChatMessagesResponse;
+import com.example.tenpaws.domain.chat.unread.service.UnReadChatMessagesService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import java.util.Map;
 @RequestMapping("/api/v1/chatrooms")
 public class ChatRoomController {
     private final ChatRoomService chatRoomService;
+    private final UnReadChatMessagesService unReadChatMessagesService;
     private final SimpMessagingTemplate messagingTemplate;
     private final SimpUserRegistry userRegistry;
 
@@ -33,12 +36,18 @@ public class ChatRoomController {
 
     @GetMapping("/user/{user}")
     public ResponseEntity<List<ChatRoomResponse>> findChatRoomsByUser(@PathVariable("user") String user) {
-        return ResponseEntity.ok(chatRoomService.getChatRoomsByUser(user));
+        List<ChatRoomResponse> chatRoomResponseList = chatRoomService.getChatRoomsByUser(user);
+        List<UnReadChatMessagesResponse> unReadChatMessagesResponseList = unReadChatMessagesService.read(user);
+        for (int i = 0; i < chatRoomResponseList.size(); i++) {
+            chatRoomResponseList.get(i).setUnReadCount(unReadChatMessagesResponseList.get(i).getUnReadCount());
+        }
+        return ResponseEntity.ok(chatRoomResponseList);
     }
 
     @PostMapping
     public ResponseEntity<ChatRoomResponse> createChatRoom(@Valid @RequestBody ChatRoomRequest chatRoomRequest) {
         ChatRoomResponse chatRoomResponse = chatRoomService.create(chatRoomRequest);
+        unReadChatMessagesService.create(chatRoomResponse.getChatRoomId(), chatRoomResponse.getUser1(), chatRoomResponse.getUser2());
         notifyUserForSubscription(chatRoomResponse.getChatRoomId(), chatRoomResponse.getUser2());
         return ResponseEntity.ok(chatRoomResponse);
     }
