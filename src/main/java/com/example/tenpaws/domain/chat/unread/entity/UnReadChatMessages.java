@@ -31,4 +31,8 @@ public class UnReadChatMessages {
         this.unReadCount = unReadCount;
         this.chatroom = chatroom;
     }
+
+    public void changeUnReadCount() {
+        this.unReadCount++;
+    }
 }
