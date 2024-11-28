@@ -40,7 +40,6 @@ public class Apply {
         COMPLETED
     }
 
-    // Constructor for easy creation
     @Builder
     public Apply(Long id, Pet pet, User user, java.util.Date applyDate, ApplyStatus applyStatus) {
         this.id = id;

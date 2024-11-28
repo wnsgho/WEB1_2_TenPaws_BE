@@ -1,7 +1,10 @@
 package com.example.tenpaws.domain.faq.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -10,8 +13,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@ToString
 public class Faq {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +27,13 @@ public class Faq {
 
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Faq> children;
+
+    @Builder
+    public Faq(Long id, String content, Faq parent) {
+        this.id = id;
+        this.content = content;
+        this.parent = parent;
+    }
 
     public void changeContent(String content) {
         this.content = content;

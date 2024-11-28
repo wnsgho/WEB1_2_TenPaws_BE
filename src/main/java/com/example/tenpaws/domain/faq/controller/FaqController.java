@@ -17,12 +17,12 @@ import java.util.Map;
 public class FaqController {
     private final FaqService faqService;
 
-    @GetMapping("/{faqId}")
-    public ResponseEntity<FaqResponse> getFaq(@PathVariable("faqId") Long faqId) {
-        return ResponseEntity.ok(faqService.read(faqId));
+    @GetMapping
+    public ResponseEntity<List<FaqResponse>> getFaq() {
+        return ResponseEntity.ok(faqService.read());
     }
 
-    @GetMapping("/child/{parentId}")
+    @GetMapping("/{parentId}")
     public ResponseEntity<List<FaqResponse>> getChildFaq(@PathVariable("parentId") Long parentId) {
         return ResponseEntity.ok(faqService.findByParentId(parentId));
     }
