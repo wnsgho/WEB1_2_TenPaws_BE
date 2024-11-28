@@ -49,9 +49,16 @@ public class User {
     @Column(name = "user_role", nullable = false)
     private UserRole userRole;
 
+    public void changeUsername(String username) { this.username = username; }
     public void changePassword(String password) {
         this.password = password;
     }
     public void changeEmail(String email) { this.email = email; }
+    public void changePhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+    public void changeAddress(String address) { this.address = address; }
     public void changeUserRole(UserRole userRole) { this.userRole = userRole; }
+    public void changePreferredSize(String preferredSize) { this.preferredSize = preferredSize; }
+    public void changePreferredPersonality(String preferredPersonality) { this.preferredPersonality = preferredPersonality; }
+    public void changePreferredExerciseLevel(Integer preferredExerciseLevel) { this.preferredExerciseLevel = preferredExerciseLevel; }
+    public void changeBirthDate(LocalDate birthDate) { this.birthDate = birthDate; }
 }

@@ -3,6 +3,9 @@ package com.example.tenpaws.domain.user.controller;
 import com.example.tenpaws.domain.recommendation.service.RecommendService;
 import com.example.tenpaws.domain.shelter.dto.ShelterRequestDTO;
 import com.example.tenpaws.domain.user.dto.UserJoinDTO;
+import com.example.tenpaws.domain.user.dto.UserResponseDTO;
+import com.example.tenpaws.domain.user.dto.UserUpdateRequestDTO;
+import com.example.tenpaws.domain.user.dto.UserUpdateResponseDTO;
 import com.example.tenpaws.domain.user.entity.User;
 import com.example.tenpaws.domain.user.repositoty.UserRepository;
 import com.example.tenpaws.domain.user.service.UserService;
@@ -15,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -27,6 +31,7 @@ public class UserController {
     private final UserRepository userRepository;
     private final RecommendService recommendService;
 
+    // 일반 유저 가입
     @PostMapping("/regular/join")
     public ResponseEntity<?> usersJoin(
             @Valid @RequestBody UserJoinDTO userJoinDTO, BindingResult bindingResult) {
@@ -49,6 +54,7 @@ public class UserController {
         }
     }
 
+    // 보호소 유저 가입
     @PostMapping("/shelter/join")
     public ResponseEntity<?> sheltersJoin(
             @Valid @RequestBody ShelterRequestDTO shelterRequestDTO, BindingResult bindingResult) {
@@ -88,5 +94,32 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류: " + e.getMessage());
         }
+    }
+
+    // 단일 유저 조회
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserById(id));
+    }
+
+    // 유저 정보 수정
+    @PutMapping("/{id}")
+    public ResponseEntity<UserUpdateResponseDTO> updateUser(
+            @PathVariable Long id,
+            @RequestBody UserUpdateRequestDTO userUpdateRequestDTO) {
+        return ResponseEntity.ok(userService.updateUser(id, userUpdateRequestDTO));
+    }
+
+    // 유저 탈퇴
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // 모든 일반 유저 불러오기
+    @GetMapping
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 }

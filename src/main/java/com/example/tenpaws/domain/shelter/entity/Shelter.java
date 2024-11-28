@@ -22,7 +22,7 @@ public class Shelter {
     private Long id;
 
     @Column(name = "password", nullable = false, length = 255)
-    private String pw;
+    private String password;
 
     @Column(name = "shelter_name", nullable = false, length = 255)
     private String shelterName;
@@ -45,7 +45,7 @@ public class Shelter {
 
     // Update method
     public void updateFields(ShelterRequestDTO requestDTO) {
-        if (requestDTO.getPw() != null) this.pw = requestDTO.getPw();
+        if (requestDTO.getPassword() != null) this.password = requestDTO.getPassword();
         if (requestDTO.getShelterName() != null) this.shelterName = requestDTO.getShelterName();
         if (requestDTO.getAddress() != null) this.address = requestDTO.getAddress();
         if (requestDTO.getPhoneNumber() != null) this.phoneNumber = requestDTO.getPhoneNumber();
@@ -66,9 +66,9 @@ public class Shelter {
     }
 
     @Builder
-    public Shelter(Long id, String username, String pw, String shelterName, String address, String phoneNumber, String email, UserRole userRole) {
+    public Shelter(Long id, String password, String shelterName, String address, String phoneNumber, String email, UserRole userRole) {
         this.id = id;
-        this.pw = pw;
+        this.password = password;
         this.shelterName = shelterName;
         this.address = address;
         this.phoneNumber = phoneNumber;
@@ -77,7 +77,7 @@ public class Shelter {
     }
 
     public void changePassword(String password) {
-        this.pw = password;
+        this.password = password;
     }
 }
 

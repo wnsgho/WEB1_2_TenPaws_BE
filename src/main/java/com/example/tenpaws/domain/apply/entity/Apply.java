@@ -36,11 +36,12 @@ public class Apply {
 
     public enum ApplyStatus {
         PENDING,
+        CANCELED,
         UNDER_REVIEW,
+        REJECTED,
         COMPLETED
     }
 
-    // Constructor for easy creation
     @Builder
     public Apply(Long id, Pet pet, User user, java.util.Date applyDate, ApplyStatus applyStatus) {
         this.id = id;

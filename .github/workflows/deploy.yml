@@ -1,0 +1,107 @@
+# 워크플로우의 이름 설정
+name: CI/CD
+
+# 워크플로우가 실행될 조건 설정
+on:
+  push:
+    branches:
+      - staging  # staging 브랜치에 push가 발생할 때만 실행
+
+# 실행될 작업들을 정의
+jobs:
+  Deploy:
+    runs-on: ubuntu-latest  # GitHub에서 제공하는 최신 Ubuntu 환경에서 실행
+    steps:
+      # Step 1: 소스 코드 체크아웃
+      - name: Github Repository에 Push한 파일들을 불러오기
+        uses: actions/checkout@v4  # GitHub의 공식 체크아웃 액션 사용
+
+      # Step 2: Java 개발 환경 설정
+      - name: JDK 17버전 설치
+        uses: actions/setup-java@v4  # Java 설치를 위한 공식 액션
+        with:
+          distribution: temurin  # Eclipse Temurin JDK 배포판 사용
+          java-version: 17       # Java 17 버전 지정
+
+      # Step 3: 애플리케이션 설정 파일들 생성
+      - name: application.properties 파일들 만들기
+        run: |
+          echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./src/main/resources/application.properties
+          mkdir -p ./src/test/resources
+          echo "${{ secrets.TEST_APPLICATION_PROPERTIES }}" > ./src/test/resources/application.properties
+
+      # Step 4: Gradle 빌드 스크립트 실행 권한 설정
+      - name: gradlew 실행 권한 부여
+        run: chmod +x ./gradlew  # gradlew 파일에 실행 권한 추가
+
+      # Step 5: 프로젝트 테스트 및 빌드
+      - name: 테스트 및 빌드
+        run: ./gradlew clean build  # 기존 빌드 결과물 삭제 후 새로 빌드
+
+      # Step 6: AWS 접근 권한 설정
+      - name: AWS Resource에 접근할 수 있게 AWS credentials 설정
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ap-northeast-2  # AWS 서울 리전 지정
+          # GitHub Secrets에 저장된 AWS 접근 키 사용
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      # Step 7: ECR 로그인
+      - name: ECR에 로그인
+        id: login-ecr  # 다음 단계에서 참조할 수 있도록 ID 부여
+        uses: aws-actions/amazon-ecr-login@v2  # AWS ECR 로그인을 위한 공식 액션
+
+      # Step 8: Docker 이미지 빌드
+      - name: Docker 이미지 생성
+        run: docker build -t instagram-server .  # Dockerfile을 사용하여 이미지 생성
+
+      # Step 9: ECR 푸시를 위한 이미지 태깅
+      - name: Docker 이미지에 Tag 붙이기
+        # ECR 레지스트리 주소를 사용하여 이미지 태깅
+        run: docker tag instagram-server ${{ steps.login-ecr.outputs.registry }}/instagram-server:latest
+
+      # Step 10: ECR에 이미지 푸시
+      - name: ECR에 Docker 이미지 Push
+        # 태깅된 이미지를 ECR에 업로드
+        run: docker push ${{ steps.login-ecr.outputs.registry }}/instagram-server:latest
+
+      # Step 11: 배포 스크립트 실행 권한 설정
+      - name: start-server.sh 실행 권한 추가
+        run: chmod +x scripts/start-server.sh
+
+      # Step 12: docker-compose.yml 임시 생성
+      - name: Generate docker-compose.yml
+        run: |
+          cp docker-compose.template.yml docker-compose.yml  
+          sed -i "s/MYSQL_USERNAME_PLACEHOLDER/${{ secrets.MYSQL_USERNAME }}/g" docker-compose.yml  
+          sed -i "s/MYSQL_PASSWORD_PLACEHOLDER/${{ secrets.MYSQL_PASSWORD }}/g" docker-compose.yml  
+
+      # Step 13: 배포 파일 압축
+      - name: 압축하기
+        # 배포에 필요한 설정 파일들을 tar.gz 형식으로 압축
+        # - appspec.yml: CodeDeploy 설정 파일
+        # - scripts: 배포 스크립트들이 있는 디렉토리
+        # - docker-compose.yml: 컨테이너 구성 파일
+        run: tar -czvf $GITHUB_SHA.tar.gz appspec.yml scripts docker-compose.yml
+
+      # Step 14: S3에 배포 파일 업로드
+      - name: S3에 프로젝트 폴더 업로드
+        # 압축된 파일을 S3 버킷에 업로드
+        # $GITHUB_SHA: 현재 커밋의 해시값으로, 각 배포마다 고유한 파일명 생성
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.tar.gz s3://instagram-server-bucket/$GITHUB_SHA.tar.gz
+
+      # Step 15: CodeDeploy를 통한 배포 실행 (application-name : 애플리케이션 이름)
+      - name: CodeDeploy를 활용해 EC2에 프로젝트 코드 배포
+        run: aws deploy create-deployment
+          --application-name instagram-server
+          --deployment-group-name Production
+          --deployment-config-name CodeDeployDefault.AllAtOnce
+          --s3-location bucket=instagram-server-bucket,bundleType=tgz,key=$GITHUB_SHA.tar.gz
+
+# 전체 배포 프로세스:
+# 1. GitHub에서 코드를 가져옴
+# 2. Java 환경 설정 및 애플리케이션 빌드
+# 3. Docker 이미지 생성 및 ECR 업로드
+# 4. 배포 설정 파일들을 S3에 업로드
+# 5. CodeDeploy를 통해 EC2 인스턴스에 배포
