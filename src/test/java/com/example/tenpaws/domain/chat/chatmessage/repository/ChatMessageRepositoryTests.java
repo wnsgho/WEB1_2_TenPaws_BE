@@ -30,21 +30,18 @@ public class ChatMessageRepositoryTests {
                 ChatMessage.builder()
                         .message("user first chat")
                         .sender("user")
-//                        .receiver("shelter")
                         .chatRoom(chatRoom)
                         .build());
         chatMessageRepository.save(
                 ChatMessage.builder()
                         .message("shelter first chat")
                         .sender("shelter")
-//                        .receiver("user")
                         .chatRoom(chatRoom)
                         .build());
         chatMessageRepository.save(
                 ChatMessage.builder()
                         .message("user second chat")
                         .sender("user")
-//                        .receiver("shelter")
                         .chatRoom(chatRoom)
                         .build());
     }

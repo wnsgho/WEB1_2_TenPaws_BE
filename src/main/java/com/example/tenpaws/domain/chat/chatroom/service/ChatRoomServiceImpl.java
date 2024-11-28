@@ -39,10 +39,10 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     @Override
     public void delete(Long chatRoomId) {
-        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
+        chatRoomRepository.findById(chatRoomId)
                 .orElseThrow(() -> new BaseException(ErrorCode.CHATROOM_NOT_FOUND));
         try {
-            chatRoomRepository.delete(chatRoom);
+            chatRoomRepository.deleteById(chatRoomId);
         } catch (Exception e) {
             throw new BaseException(ErrorCode.CHATROOM_NOT_DELETED);
         }
