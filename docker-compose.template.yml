@@ -23,6 +23,7 @@ services:
         java -jar project.jar  
       "  
 
+
   tenpaws-db:
     image: mysql
     volumes:
