@@ -4,6 +4,7 @@
 LOG_FILE="/home/ubuntu/deploy.log"
 exec 1> >(tee -a "$LOG_FILE") 2>&1
 
+
 echo "-------------서버 시작 $(date)-------------"
 
 # MySQL 데이터 디렉토리 생성
