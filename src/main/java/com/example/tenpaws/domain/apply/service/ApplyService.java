@@ -122,19 +122,18 @@ public class ApplyService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         // 이미 다른 동물에 신청했는지 확인
-        boolean isAlreadyAppliedToOtherPets = applyRepository.existsByUserIdAndPetNot(userId, pet);
+        // 취소 상태, 거절 상태가 아닌 신청이 있는지 확인
+        boolean isAlreadyAppliedToOtherPets = applyRepository.existsByUserIdPetNotApplyStatusNotIn(userId, pet,
+                List.of(Apply.ApplyStatus.CANCELED, Apply.ApplyStatus.REJECTED));
         if (isAlreadyAppliedToOtherPets) {
             throw new RuntimeException("This user has already applied for another pet.");
         }
-        // 현재 동물에 신청했는지 확인
-        // 취소 상태가 아닌 신청이 있는지 확인
-        boolean isAlreadyAppliedToThisPet = applyRepository.existsByPetAndUserAndApplyStatusNot(pet, user, Apply.ApplyStatus.CANCELED);
+        // 접속한 유저가 현재 동물에 신청했는지 확인
+        // 취소 상태, 거절 상태가 아닌 신청이 있는지 확인
+        boolean isAlreadyAppliedToThisPet = applyRepository.existsByPetAndUserAndApplyStatusNotIn(pet, user,
+                List.of(Apply.ApplyStatus.CANCELED, Apply.ApplyStatus.REJECTED));
         if (isAlreadyAppliedToThisPet) {
             throw new RuntimeException("You have already applied for this pet.");
         }
-    }
-
-    public boolean existsByUserIdAndPetNot(Long userId, Pet pet) {
-        return applyRepository.existsByUserIdAndPetNot(userId, pet);
     }
 }
