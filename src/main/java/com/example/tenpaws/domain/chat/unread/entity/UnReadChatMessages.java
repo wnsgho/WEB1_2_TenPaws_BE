@@ -32,7 +32,7 @@ public class UnReadChatMessages {
         this.chatroom = chatroom;
     }
 
-    public void changeUnReadCount() {
-        this.unReadCount++;
+    public void changeUnReadCount(int count) {
+        this.unReadCount = count > 0 ? this.unReadCount + 1 : 0;
     }
 }

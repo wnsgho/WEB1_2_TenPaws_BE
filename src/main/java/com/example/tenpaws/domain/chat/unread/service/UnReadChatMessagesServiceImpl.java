@@ -42,7 +42,7 @@ public class UnReadChatMessagesServiceImpl implements UnReadChatMessagesService 
                         unReadChatMessagesRequest.getChatRoomId(), unReadChatMessagesRequest.getUsername())
                 .orElseThrow(() -> new BaseException(ErrorCode.UNREAD_CHAT_MESSAGES_NOT_FOUND));
         try {
-            unReadChatMessages.changeUnReadCount();
+            unReadChatMessages.changeUnReadCount(unReadChatMessagesRequest.getUnReadCount());
         } catch (Exception e) {
             throw new BaseException(ErrorCode.UNREAD_CHAT_MESSAGES_NOT_MODIFIED);
         }
