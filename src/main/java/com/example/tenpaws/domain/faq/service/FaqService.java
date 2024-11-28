@@ -7,8 +7,12 @@ import java.util.List;
 
 public interface FaqService {
     FaqResponse create(FaqRequest faqRequest);
-    FaqResponse read(Long faqId);
+
+    List<FaqResponse> read();
+
     FaqResponse update(FaqRequest faqRequest);
+
     void delete(Long faqId);
+
     List<FaqResponse> findByParentId(Long parentId);
 }
