@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,11 +23,13 @@ public class UnReadChatMessagesServiceImpl implements UnReadChatMessagesService 
 
     @Override
     @Transactional
-    public UnReadChatMessagesResponse create(UnReadChatMessagesRequest unReadChatMessagesRequest) {
-        ChatRoom chatRoom = chatRoomRepository.findById(unReadChatMessagesRequest.getChatRoomId())
+    public UnReadChatMessagesResponse create(Long chatRoomId, String user1, String user2) {
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
                 .orElseThrow(() -> new BaseException(ErrorCode.CHATROOM_NOT_FOUND));
         try {
-            return new UnReadChatMessagesResponse(unReadChatMessagesRepository.save(unReadChatMessagesRequest.toEntity(chatRoom)));
+            createTemplate(chatRoom, chatRoomId, user1);
+            createTemplate(chatRoom, chatRoomId, user2);
+            return new UnReadChatMessagesResponse();
         } catch (Exception e) {
             throw new BaseException(ErrorCode.UNREAD_CHAT_MESSAGES_NOT_REGISTERED);
         }
@@ -36,7 +39,7 @@ public class UnReadChatMessagesServiceImpl implements UnReadChatMessagesService 
     @Transactional
     public UnReadChatMessagesResponse update(UnReadChatMessagesRequest unReadChatMessagesRequest) {
         UnReadChatMessages unReadChatMessages = unReadChatMessagesRepository.findByChatRoomIdAndUsername(
-                unReadChatMessagesRequest.getChatRoomId(), unReadChatMessagesRequest.getUsername())
+                        unReadChatMessagesRequest.getChatRoomId(), unReadChatMessagesRequest.getUsername())
                 .orElseThrow(() -> new BaseException(ErrorCode.UNREAD_CHAT_MESSAGES_NOT_FOUND));
         try {
             unReadChatMessages.changeUnReadCount();
@@ -50,5 +53,14 @@ public class UnReadChatMessagesServiceImpl implements UnReadChatMessagesService 
     public List<UnReadChatMessagesResponse> read(String username) {
         return unReadChatMessagesRepository.findBydUsername(username)
                 .stream().map(UnReadChatMessagesResponse::new).toList();
+    }
+
+    private void createTemplate(ChatRoom chatRoom, Long chatRoomId, String user1) {
+        Optional<UnReadChatMessages> optionalUnReadChatMessages = unReadChatMessagesRepository.findByChatRoomIdAndUsername(chatRoomId, user1);
+        optionalUnReadChatMessages.map(UnReadChatMessagesResponse::new)
+                .orElseGet(() -> new UnReadChatMessagesResponse(
+                        unReadChatMessagesRepository.save(
+                                UnReadChatMessagesRequest.builder().chatRoomId(chatRoomId).username(user1).build()
+                                        .toEntity(chatRoom))));
     }
 }

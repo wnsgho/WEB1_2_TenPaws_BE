@@ -6,7 +6,7 @@ import com.example.tenpaws.domain.chat.unread.dto.UnReadChatMessagesResponse;
 import java.util.List;
 
 public interface UnReadChatMessagesService {
-    UnReadChatMessagesResponse create(UnReadChatMessagesRequest unReadChatMessagesRequest);
+    UnReadChatMessagesResponse create(Long chatRoomId, String user1, String user2);
 
     UnReadChatMessagesResponse update(UnReadChatMessagesRequest unReadChatMessagesRequest);
 
