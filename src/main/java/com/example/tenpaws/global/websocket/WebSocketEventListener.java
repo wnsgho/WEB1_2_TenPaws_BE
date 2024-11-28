@@ -1,7 +1,10 @@
 package com.example.tenpaws.global.websocket;
 
-import lombok.extern.log4j.Log4j2;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
@@ -9,26 +12,32 @@ import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import org.springframework.web.socket.messaging.SessionUnsubscribeEvent;
 
 @Component
-@Log4j2
+@RequiredArgsConstructor
 public class WebSocketEventListener {
+    private final SimpUserRegistry userRegistry;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @EventListener
     public void handleSessionConnectEvent(SessionConnectEvent event) {
-        log.info("New WebSocket connection established: {}", event.getMessage());
+        StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
+        String username = accessor.getUser().getName();
+        if (userRegistry.getUser(username) != null) {
+            messagingTemplate.convertAndSendToUser(
+                    username,
+                    "/queue/close",
+                    "중복 연결 감지");
+        }
     }
 
     @EventListener
     public void handleSessionDisconnectEvent(SessionDisconnectEvent event) {
-        log.info("WebSocket connection closed: {}", event.getSessionId());
     }
 
     @EventListener
     public void handleSessionSubscribeEvent(SessionSubscribeEvent event) {
-        log.info("New subscription: {}", event.getMessage());
     }
 
     @EventListener
     public void handleSessionUnsubscribeEvent(SessionUnsubscribeEvent event) {
-        log.info("Unsubscribed: {}", event.getMessage());
     }
 }
