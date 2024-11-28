@@ -44,6 +44,14 @@ public class Pet {
     @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Image> images;
 
+    // pet 신청 상태
+    @Enumerated(EnumType.STRING)
+    private PetStatus status = PetStatus.AVAILABLE; // 기본값: 신청 가능
+    public enum PetStatus {
+        AVAILABLE, // 신청 가능
+        APPLIED    // 신청 완료
+    }
+
     @Builder
     public Pet(Long id, String species, String size, int age, String personality, int exerciseLevel, Shelter shelter, Set<Image> images) {
         this.id = id;

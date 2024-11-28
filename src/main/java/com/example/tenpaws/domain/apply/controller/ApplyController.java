@@ -27,6 +27,14 @@ public class ApplyController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+    // 입양 신청 취소
+    @PostMapping("/{applyId}/cancel")
+    public ResponseEntity<String> cancelApply(
+            @PathVariable Long applyId,
+            @RequestParam Long userId) {
+        applyService.cancelApply(applyId, userId);
+        return ResponseEntity.ok("Application has been canceled successfully.");
+    }
 
     // 보호소 신청 목록 조회
     @GetMapping("/shelter/{shelterId}")
