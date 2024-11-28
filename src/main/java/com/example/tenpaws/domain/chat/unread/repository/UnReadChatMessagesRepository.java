@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UnReadChatMessagesRepository extends JpaRepository<UnReadChatMessages, Long> {
-    @Query("select uc from UnReadChatMessages uc where uc.username = :username")
+    @Query("select uc from UnReadChatMessages uc where uc.username = :username order by uc.chatroom.id asc ")
     List<UnReadChatMessages> findBydUsername(String username);
 
     @Query("select uc from UnReadChatMessages uc where uc.chatroom.id = :chatRoomId and uc.username = :username")
