@@ -14,7 +14,7 @@ import lombok.*;
 public class ShelterRequestDTO {
 
     @NotBlank(message = "비밀번호는 필수 항목입니다.")
-    private String pw;
+    private String password;
 
     @NotBlank(message = "보호소 이름은 필수 항목입니다.")
     private String shelterName;
@@ -32,7 +32,7 @@ public class ShelterRequestDTO {
 
     public Shelter toEntity() {
         return Shelter.builder()
-                .pw(this.pw)
+                .password(this.password)
                 .shelterName(this.shelterName)
                 .address(this.address)
                 .phoneNumber(this.phoneNumber)

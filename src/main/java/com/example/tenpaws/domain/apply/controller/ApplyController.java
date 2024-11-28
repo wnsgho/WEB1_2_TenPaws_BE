@@ -18,9 +18,22 @@ public class ApplyController {
 
     // 회원의 입양 신청
     @PostMapping
-    public ResponseEntity<ApplyDto> applyForPet(@RequestParam Long petId, @RequestParam Long userId) {
-        ApplyDto apply = applyService.applyForPet(petId, userId);
-        return ResponseEntity.ok(apply);
+    public ResponseEntity<String> applyForPet(@RequestParam Long petId, @RequestParam Long userId) {
+        try {
+            applyService.ensureUserCanApply(userId, petId);
+            applyService.applyForPet(petId, userId);
+            return ResponseEntity.ok("Application submitted successfully.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    // 입양 신청 취소
+    @PostMapping("/{applyId}/cancel")
+    public ResponseEntity<String> cancelApply(
+            @PathVariable Long applyId,
+            @RequestParam Long userId) {
+        applyService.cancelApply(applyId, userId);
+        return ResponseEntity.ok("Application has been canceled successfully.");
     }
 
     // 보호소 신청 목록 조회

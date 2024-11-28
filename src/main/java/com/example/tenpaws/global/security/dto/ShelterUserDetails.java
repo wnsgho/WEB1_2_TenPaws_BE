@@ -31,7 +31,7 @@ public class ShelterUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return shelter.getPw();
+        return shelter.getPassword();
     }
 
     @Override
