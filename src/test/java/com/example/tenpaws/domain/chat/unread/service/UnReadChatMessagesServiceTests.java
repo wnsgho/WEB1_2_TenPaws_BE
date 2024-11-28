@@ -51,7 +51,7 @@ public class UnReadChatMessagesServiceTests {
                 .username("user1")
                 .build();
 
-        assertNotNull(unReadChatMessagesService.create(unReadChatMessagesRequest));
+        assertNotNull(unReadChatMessagesService.create(savedId, "user1", "user2"));
     }
 
     @Test
@@ -60,6 +60,7 @@ public class UnReadChatMessagesServiceTests {
         UnReadChatMessagesRequest unReadChatMessagesRequest = UnReadChatMessagesRequest.builder()
                 .chatRoomId(savedId)
                 .username("user1")
+                .unReadCount(1)
                 .build();
 
         UnReadChatMessagesResponse unReadChatMessagesResponse = unReadChatMessagesService.update(unReadChatMessagesRequest);
