@@ -58,7 +58,7 @@ public class ChatRoomController {
         return ResponseEntity.ok(Map.of("message", "ChatRoom deleted"));
     }
 
-    public void notifyUserForSubscription(Long chatRoomId, String targetUsername) {
+    private void notifyUserForSubscription(Long chatRoomId, String targetUsername) {
         boolean isConnected = userRegistry.getUsers().stream()
                 .anyMatch(user -> user.getName().equals(targetUsername));
 
