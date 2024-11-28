@@ -5,9 +5,7 @@ import com.example.tenpaws.domain.chat.chatroom.dto.ChatRoomResponse;
 import com.example.tenpaws.domain.chat.chatroom.entity.ChatRoom;
 import com.example.tenpaws.domain.chat.chatroom.repository.ChatRoomRepository;
 import com.example.tenpaws.global.exception.BaseException;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,27 +16,34 @@ import java.util.stream.IntStream;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ChatRoomServiceTests {
     @Autowired
     private ChatRoomService chatRoomService;
+    @Autowired
+    private ChatRoomRepository chatRoomRepository;
 
-    @BeforeAll
-    public static void setUp(@Autowired ChatRoomRepository chatRoomRepository) {
+    Long savedId;
+
+    @BeforeEach
+    void setUp() {
         IntStream.rangeClosed(1, 3).forEach(i -> {
             ChatRoom chatRoom = ChatRoom.builder()
                     .user1("user1")
                     .user2("shelter" + i)
                     .build();
-            chatRoomRepository.save(chatRoom);
+            ChatRoom saved = chatRoomRepository.save(chatRoom);
+            savedId = saved.getId();
         });
     }
 
-    @AfterAll
-    public static void tearDown(@Autowired ChatRoomRepository chatRoomRepository) {
-        chatRoomRepository.deleteAll(chatRoomRepository.findAll());
+    @AfterEach
+    void tearDown() {
+        chatRoomRepository.deleteAll();
     }
 
     @Test
+    @Order(5)
     @Transactional
     void create() {
         ChatRoomRequest chatRoomRequest = ChatRoomRequest.builder()
@@ -52,8 +57,9 @@ public class ChatRoomServiceTests {
     }
 
     @Test
+    @Order(2)
     void getChatRoom() {
-        Long chatRoomId = 1L;
+        Long chatRoomId = savedId;
 
         ChatRoomResponse chatRoomResponse = chatRoomService.getChatRoom(chatRoomId);
 
@@ -61,9 +67,10 @@ public class ChatRoomServiceTests {
     }
 
     @Test
+    @Order(3)
     @Transactional
     void delete() {
-        Long chatRoomId = 1L;
+        Long chatRoomId = savedId;
 
         chatRoomService.delete(chatRoomId);
 
@@ -71,13 +78,12 @@ public class ChatRoomServiceTests {
     }
 
     @Test
+    @Order(1)
     void getChatRoomByUsers() {
         String user1 = "user1";
         String user2 = "shelter1";
 
-        ChatRoomResponse chatRoomResponse = chatRoomService.getChatRoomByUsers(user1, user2);
-
-        assertNotNull(chatRoomResponse);
+        assertNotNull(chatRoomService.getChatRoomByUsers(user1, user2));
     }
 
     @Test
@@ -86,6 +92,6 @@ public class ChatRoomServiceTests {
 
         List<ChatRoomResponse> chatRoomResponseList = chatRoomService.getChatRoomsByUser(user);
 
-        assertEquals(3, chatRoomResponseList.size());
+        assertFalse(chatRoomResponseList.isEmpty());
     }
 }

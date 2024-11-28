@@ -1,9 +1,9 @@
 package com.example.tenpaws.domain.faq.repository;
 
 import com.example.tenpaws.domain.faq.entity.Faq;
-import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,11 +16,14 @@ public class FaqRepositoryTests {
     @Autowired
     private FaqRepository faqRepository;
 
-    @BeforeAll
-    static void setUpBeforeClass(@Autowired FaqRepository faqRepository) throws Exception {
+    Long savedId;
+
+    @BeforeEach
+    void setUp() {
         Faq faq = faqRepository.save(Faq.builder()
                 .content("parent")
                 .build());
+        savedId = faq.getId();
         faqRepository.save(Faq.builder()
                 .content("child1")
                 .parent(faq)
@@ -31,14 +34,14 @@ public class FaqRepositoryTests {
                 .build());
     }
 
-    @AfterAll
-    static void tearDownAfterClass(@Autowired FaqRepository faqRepository) throws Exception {
+    @AfterEach
+    void tearDown() {
         faqRepository.deleteAll();
     }
 
     @Test
     void testFindByParentId() {
-        Long parentId = 1L;
+        Long parentId = savedId;
 
         List<Faq> byParentId = faqRepository.findByParentId(parentId);
 

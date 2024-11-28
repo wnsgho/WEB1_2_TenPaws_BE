@@ -6,8 +6,8 @@ import com.example.tenpaws.domain.chat.chatmessage.entity.ChatMessage;
 import com.example.tenpaws.domain.chat.chatmessage.repository.ChatMessageRepository;
 import com.example.tenpaws.domain.chat.chatroom.entity.ChatRoom;
 import com.example.tenpaws.domain.chat.chatroom.repository.ChatRoomRepository;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,39 +22,38 @@ public class ChatMessageServiceTests {
     @Autowired
     private ChatMessageService chatMessageService;
 
-    @BeforeAll
-    static void setUpBeforeClass(@Autowired ChatMessageRepository chatMessageRepository, @Autowired ChatRoomRepository chatRoomRepository) throws Exception {
+    Long savedId;
+
+    @BeforeEach
+    void setUp(@Autowired ChatMessageRepository chatMessageRepository, @Autowired ChatRoomRepository chatRoomRepository) {
         ChatRoom chatRoom = chatRoomRepository.save(
                 ChatRoom.builder()
                         .user1("user1")
                         .user2("user2")
                         .build());
+        savedId = chatRoom.getId();
         chatMessageRepository.save(
                 ChatMessage.builder()
                         .message("user first chat")
                         .sender("user")
-//                        .receiver("shelter")
                         .chatRoom(chatRoom)
                         .build());
         chatMessageRepository.save(
                 ChatMessage.builder()
                         .message("shelter first chat")
                         .sender("shelter")
-//                        .receiver("user")
                         .chatRoom(chatRoom)
                         .build());
         chatMessageRepository.save(
                 ChatMessage.builder()
                         .message("user second chat")
                         .sender("user")
-//                        .receiver("shelter")
                         .chatRoom(chatRoom)
                         .build());
     }
 
-    @AfterAll
-    static void tearDownAfterClass(@Autowired ChatMessageRepository chatMessageRepository, @Autowired ChatRoomRepository chatRoomRepository) throws Exception {
-        chatMessageRepository.deleteAll();
+    @AfterEach
+    void tearDown(@Autowired ChatRoomRepository chatRoomRepository) throws Exception {
         chatRoomRepository.deleteAll();
     }
 
@@ -64,8 +63,7 @@ public class ChatMessageServiceTests {
         ChatMessageRequest chatMessageRequest = ChatMessageRequest.builder()
                 .message("test message")
                 .sender("user")
-//                .receiver("shelter")
-                .chatRoomId(1L)
+                .chatRoomId(savedId)
                 .build();
 
         ChatMessageResponse chatMessageResponse = chatMessageService.createChatMessage(chatMessageRequest);
@@ -74,8 +72,9 @@ public class ChatMessageServiceTests {
     }
 
     @Test
+    @Transactional
     void getChatMessagesByChatRoomId() {
-        Long chatRoomId = 1L;
+        Long chatRoomId = savedId;
 
         List<ChatMessageResponse> chatMessageResponseList = chatMessageService.getChatMessagesByChatRoomId(chatRoomId);
 

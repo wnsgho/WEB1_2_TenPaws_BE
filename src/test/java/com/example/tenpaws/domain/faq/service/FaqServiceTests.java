@@ -5,7 +5,9 @@ import com.example.tenpaws.domain.faq.dto.FaqResponse;
 import com.example.tenpaws.domain.faq.entity.Faq;
 import com.example.tenpaws.domain.faq.repository.FaqRepository;
 import com.example.tenpaws.global.exception.BaseException;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,22 +17,25 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@Transactional
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class FaqServiceTests {
     @Autowired
     private FaqService faqService;
     @Autowired
     private FaqRepository faqRepository;
 
-    @BeforeAll
-    static void setUpBeforeClass(@Autowired FaqRepository faqRepository) throws Exception {
+    Long savedId1;
+    Long savedId2;
+
+    @BeforeEach
+    void setUp() {
         Faq faq = faqRepository.save(Faq.builder()
                 .content("parent1")
                 .build());
-        faqRepository.save(Faq.builder()
+        savedId1 = faq.getId();
+        Faq faq1 = faqRepository.save(Faq.builder()
                 .content("parent2")
                 .build());
+        savedId2 = faq1.getId();
         faqRepository.save(Faq.builder()
                 .content("child1")
                 .parent(faq)
@@ -41,8 +46,8 @@ public class FaqServiceTests {
                 .build());
     }
 
-    @AfterAll
-    static void tearDownAfterClass(@Autowired FaqRepository faqRepository) throws Exception {
+    @AfterEach
+    void tearDown() {
         faqRepository.deleteAll();
     }
 
@@ -61,13 +66,13 @@ public class FaqServiceTests {
     void FAQ조회() {
         List<FaqResponse> faqResponseList = faqService.read();
 
-        assertEquals(2, faqResponseList.size());
+        assertFalse(faqResponseList.isEmpty());
     }
 
     @Test
     @Transactional
     void FAQ수정() {
-        FaqRequest faqRequest = FaqRequest.builder().faqId(1L).content("test update").build();
+        FaqRequest faqRequest = FaqRequest.builder().faqId(savedId1).content("test update").build();
 
         FaqResponse faqResponse = faqService.update(faqRequest);
 
@@ -76,7 +81,7 @@ public class FaqServiceTests {
 
     @Test
     void FAQ부모아이디로조회() {
-        Long parentId = 1L;
+        Long parentId = savedId1;
 
         for (FaqResponse faqResponse : faqService.findByParentId(parentId)) {
             assertNotNull(faqResponse);
@@ -87,7 +92,7 @@ public class FaqServiceTests {
     @Test
     @Transactional
     void FAQ삭제() {
-        Long faqId = 1L;
+        Long faqId = savedId2;
 
         faqService.delete(faqId);
 

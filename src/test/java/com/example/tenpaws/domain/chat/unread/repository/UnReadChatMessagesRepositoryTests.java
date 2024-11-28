@@ -3,9 +3,9 @@ package com.example.tenpaws.domain.chat.unread.repository;
 import com.example.tenpaws.domain.chat.chatroom.entity.ChatRoom;
 import com.example.tenpaws.domain.chat.chatroom.repository.ChatRoomRepository;
 import com.example.tenpaws.domain.chat.unread.entity.UnReadChatMessages;
-import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,12 +19,15 @@ public class UnReadChatMessagesRepositoryTests {
     @Autowired
     private UnReadChatMessagesRepository unReadChatMessagesRepository;
 
-    @BeforeAll
-    static void setUpBeforeClass(@Autowired ChatRoomRepository chatRoomRepository, @Autowired UnReadChatMessagesRepository unReadChatMessagesRepository) throws Exception {
+    Long savedId;
+
+    @BeforeEach
+    void setUp(@Autowired ChatRoomRepository chatRoomRepository) {
         ChatRoom chatRoom = chatRoomRepository.save(ChatRoom.builder()
                 .user1("user1")
                 .user2("user2")
                 .build());
+        savedId = chatRoom.getId();
         unReadChatMessagesRepository.save(UnReadChatMessages.builder()
                 .chatroom(chatRoom)
                 .username("user1")
@@ -32,8 +35,8 @@ public class UnReadChatMessagesRepositoryTests {
                 .build());
     }
 
-    @AfterAll
-    static void tearDownAfterClass(@Autowired ChatRoomRepository chatRoomRepository, @Autowired UnReadChatMessagesRepository unReadChatMessagesRepository) throws Exception {
+    @AfterEach
+    void tearDown(@Autowired ChatRoomRepository chatRoomRepository) {
         chatRoomRepository.deleteAll();
     }
 
@@ -47,7 +50,7 @@ public class UnReadChatMessagesRepositoryTests {
 
     @Test
     void testFindByChatRoomIdAndUsername() {
-        Long chatRoomId = 1L;
+        Long chatRoomId = savedId;
         String username1 = "user1";
 
         UnReadChatMessages unReadChatMessages = unReadChatMessagesRepository.findByChatRoomIdAndUsername(chatRoomId, username1);
