@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.user.SimpUser;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.stereotype.Controller;
 
@@ -20,7 +19,6 @@ public class ChatController {
 
     @MessageMapping("/chat/send/{chatRoomId}")
     public void sendMessage(@DestinationVariable String chatRoomId, ChatMessageRequest chatMessageRequest) {
-        printUserSubscriptions(userRegistry);
         String receiver = chatMessageRequest.getReceiver();
         boolean isReceiverConnected = userRegistry.getUsers().stream()
                 .anyMatch(user -> user.getName().equals(receiver));
@@ -31,23 +29,12 @@ public class ChatController {
                 "/topic/chatroom/" + chatRoomId,
                 chatMessageResponse
         );
-        if (!isReceiverConnected) {
-            System.out.println("상대방 접속 X");
+        if (isReceiverConnected) {
             messagingTemplate.convertAndSendToUser(
                     receiver,
                     "/queue/notifications",
                     "새 채팅 메시지가 도착했습니다!"
             );
-        }
-    }
-
-    public void printUserSubscriptions(SimpUserRegistry userRegistry) {
-        System.out.println("userRegistry: " + userRegistry);
-        for (SimpUser user : userRegistry.getUsers()) {
-            System.out.println("User: " + user.getName());
-            user.getSessions().forEach(session -> {
-                System.out.println("Subscribed to: " + session.getSubscriptions());
-            });
         }
     }
 }
