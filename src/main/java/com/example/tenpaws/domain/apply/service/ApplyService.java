@@ -67,4 +67,21 @@ public class ApplyService {
             throw new RuntimeException("Invalid status: " + status);
         }
     }
+
+    public void ensureUserCanApply(Long userId, Long petId) {
+        Pet pet = petRepository.findById(petId)
+                .orElseThrow(() -> new RuntimeException("Pet not found"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // 이미 다른 동물에 신청했는지 확인
+        boolean isAlreadyAppliedToOtherPets = applyRepository.existsByUserIdAndPetNot(userId, pet);
+        if (isAlreadyAppliedToOtherPets) {
+            throw new RuntimeException("This user has already applied for another pet.");
+        }
+    }
+
+    public boolean existsByUserIdAndPetNot(Long userId, Pet pet) {
+        return applyRepository.existsByUserIdAndPetNot(userId, pet);
+    }
 }

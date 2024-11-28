@@ -107,7 +107,7 @@ class UserServiceImplTest {
         when(shelterRepository.existsByEmail(shelterRequestDTO.getEmail())).thenReturn(false);
 
         // Given: BCryptPasswordEncoder가 비밀번호를 암호화하도록 설정
-        when(bCryptPasswordEncoder.encode(shelterRequestDTO.getPw())).thenReturn("encodedPassword");
+        when(bCryptPasswordEncoder.encode(shelterRequestDTO.getPassword())).thenReturn("encodedPassword");
 
         Shelter shelter = shelterRequestDTO.toEntity();
         shelter.changePassword("encodedPassword");
@@ -118,7 +118,7 @@ class UserServiceImplTest {
         // Then: UserRepository의 save 메소드가 한 번 호출되어야 한다.
         verify(shelterRepository, times(1)).save(argThat(savedUser ->
                 savedUser.getEmail().equals(shelter.getEmail()) &&
-                        savedUser.getPw().equals("encodedPassword") &&
+                        savedUser.getPassword().equals("encodedPassword") &&
                         savedUser.getPhoneNumber().equals(shelter.getPhoneNumber()) &&
                         savedUser.getAddress().equals(shelter.getAddress()) &&
                         savedUser.getUserRole().equals(shelter.getUserRole())

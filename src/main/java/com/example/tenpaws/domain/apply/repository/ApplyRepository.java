@@ -10,4 +10,5 @@ import java.util.List;
 public interface ApplyRepository extends JpaRepository<Apply, Long> {
     List<Apply> findAllByPetShelterId(Long shelterId);
     boolean existsByPetAndUser(Pet pet, User user);
+    boolean existsByUserIdAndPetNot(Long userId, Pet pet);
 }

@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
         }
 
         Shelter shelter = shelterRequestDTO.toEntity();
-        shelter.changePassword(bCryptPasswordEncoder.encode(shelterRequestDTO.getPw()));
+        shelter.changePassword(bCryptPasswordEncoder.encode(shelterRequestDTO.getPassword()));
 
         shelterRepository.save(shelter);
     }
