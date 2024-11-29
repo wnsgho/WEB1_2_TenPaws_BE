@@ -23,13 +23,12 @@ public class UnReadChatMessagesServiceImpl implements UnReadChatMessagesService 
 
     @Override
     @Transactional
-    public UnReadChatMessagesResponse create(Long chatRoomId, String user1, String user2) {
+    public void create(Long chatRoomId, String user1, String user2) {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
                 .orElseThrow(() -> new BaseException(ErrorCode.CHATROOM_NOT_FOUND));
         try {
             createTemplate(chatRoom, chatRoomId, user1);
             createTemplate(chatRoom, chatRoomId, user2);
-            return new UnReadChatMessagesResponse();
         } catch (Exception e) {
             throw new BaseException(ErrorCode.UNREAD_CHAT_MESSAGES_NOT_REGISTERED);
         }
@@ -37,7 +36,7 @@ public class UnReadChatMessagesServiceImpl implements UnReadChatMessagesService 
 
     @Override
     @Transactional
-    public UnReadChatMessagesResponse update(UnReadChatMessagesRequest unReadChatMessagesRequest) {
+    public void update(UnReadChatMessagesRequest unReadChatMessagesRequest) {
         UnReadChatMessages unReadChatMessages = unReadChatMessagesRepository.findByChatRoomIdAndUsername(
                         unReadChatMessagesRequest.getChatRoomId(), unReadChatMessagesRequest.getUsername())
                 .orElseThrow(() -> new BaseException(ErrorCode.UNREAD_CHAT_MESSAGES_NOT_FOUND));
@@ -46,7 +45,6 @@ public class UnReadChatMessagesServiceImpl implements UnReadChatMessagesService 
         } catch (Exception e) {
             throw new BaseException(ErrorCode.UNREAD_CHAT_MESSAGES_NOT_MODIFIED);
         }
-        return new UnReadChatMessagesResponse(unReadChatMessages);
     }
 
     @Override
