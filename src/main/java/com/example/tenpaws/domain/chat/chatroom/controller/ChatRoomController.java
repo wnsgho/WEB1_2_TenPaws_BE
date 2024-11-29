@@ -43,7 +43,6 @@ public class ChatRoomController {
     public ResponseEntity<ChatRoomResponse> createChatRoom(@Valid @RequestBody ChatRoomRequest chatRoomRequest) {
         ChatRoomResponse chatRoomResponse = chatRoomService.create(chatRoomRequest);
         unReadChatMessagesService.create(chatRoomResponse.getChatRoomId(), chatRoomResponse.getUser1(), chatRoomResponse.getUser2());
-        notifyUserForSubscription(chatRoomResponse.getChatRoomId(), chatRoomResponse.getUser2());
         return ResponseEntity.ok(chatRoomResponse);
     }
 
@@ -51,19 +50,5 @@ public class ChatRoomController {
     public ResponseEntity<Map<String, String>> deleteChatRoom(@PathVariable("chatRoomId") Long chatRoomId) {
         chatRoomService.delete(chatRoomId);
         return ResponseEntity.ok(Map.of("message", "ChatRoom deleted"));
-    }
-
-    // 알림 완성되면 삭제
-    private void notifyUserForSubscription(Long chatRoomId, String targetUsername) {
-        boolean isConnected = userRegistry.getUsers().stream()
-                .anyMatch(user -> user.getName().equals(targetUsername));
-
-        if (isConnected) {
-            messagingTemplate.convertAndSendToUser(
-                    targetUsername,
-                    "/queue/subscribe",
-                    chatRoomId
-            );
-        }
     }
 }
