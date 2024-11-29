@@ -8,8 +8,6 @@ import com.example.tenpaws.domain.chat.unread.service.UnReadChatMessagesService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,8 +19,6 @@ import java.util.Map;
 public class ChatRoomController {
     private final ChatRoomService chatRoomService;
     private final UnReadChatMessagesService unReadChatMessagesService;
-    private final SimpMessagingTemplate messagingTemplate;
-    private final SimpUserRegistry userRegistry;
 
     @GetMapping("/{user1}/{user2}")
     public ResponseEntity<ChatRoomResponse> findChatRoomByUsers(@PathVariable("user1") String user1, @PathVariable("user2") String user2) {
