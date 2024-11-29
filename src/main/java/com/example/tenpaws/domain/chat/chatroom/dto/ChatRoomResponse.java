@@ -17,6 +17,8 @@ public class ChatRoomResponse {
     @NotBlank
     private String user2;
 
+    private int unReadCount;
+
     public ChatRoomResponse(ChatRoom chatRoom) {
         this.chatRoomId = chatRoom.getId();
         this.user1 = chatRoom.getUser1();

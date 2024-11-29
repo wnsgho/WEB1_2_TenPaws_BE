@@ -34,6 +34,11 @@ public enum ErrorCode {
     // ChatMessage
     CHAT_MESSAGE_NOT_REGISTERED(HttpStatus.BAD_REQUEST, "ChatMessage not registered"),
 
+    // UnReadChatMessages
+    UNREAD_CHAT_MESSAGES_NOT_FOUND(HttpStatus.NOT_FOUND, "Unread ChatMessages not found"),
+    UNREAD_CHAT_MESSAGES_NOT_REGISTERED(HttpStatus.BAD_REQUEST, "Unread ChatMessages not registered"),
+    UNREAD_CHAT_MESSAGES_NOT_MODIFIED(HttpStatus.BAD_REQUEST, "Unread ChatMessages not modified"),
+
     // Announcement
     ANNOUNCEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Announcement not found"),
 
