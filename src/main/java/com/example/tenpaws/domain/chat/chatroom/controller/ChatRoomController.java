@@ -24,11 +24,6 @@ public class ChatRoomController {
     private final SimpMessagingTemplate messagingTemplate;
     private final SimpUserRegistry userRegistry;
 
-    @GetMapping("/{chatRoomId}")
-    public ResponseEntity<ChatRoomResponse> findChatRoomById(@PathVariable("chatRoomId") Long chatRoomId) {
-        return ResponseEntity.ok(chatRoomService.getChatRoom(chatRoomId));
-    }
-
     @GetMapping("/{user1}/{user2}")
     public ResponseEntity<ChatRoomResponse> findChatRoomByUsers(@PathVariable("user1") String user1, @PathVariable("user2") String user2) {
         return ResponseEntity.ok(chatRoomService.getChatRoomByUsers(user1, user2));
