@@ -36,6 +36,7 @@ public class ChatController {
                 chatMessageResponse
         );
 
+        // 알림 완성되면 삭제
         if (!isUserSubscribed(receiver, destination)) {
             messagingTemplate.convertAndSendToUser(
                     receiver,
