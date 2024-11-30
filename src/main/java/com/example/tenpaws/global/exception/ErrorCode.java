@@ -4,8 +4,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
-
 @Getter
 @RequiredArgsConstructor
 public enum ErrorCode {
@@ -55,6 +53,8 @@ public enum ErrorCode {
 
     // Notification
     NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "Notification not found"),
+    NOTIFICATION_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "Unsupported notification type"),
+    WRITER_NOT_FOUND(HttpStatus.NOT_FOUND, "Writer not found"),
 
     // Shelter
     SHELTER_NOT_FOUND(HttpStatus.NOT_FOUND, "Shelter not found with ID"),
