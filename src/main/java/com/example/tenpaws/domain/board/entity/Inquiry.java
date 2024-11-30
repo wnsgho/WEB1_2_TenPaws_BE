@@ -2,6 +2,9 @@ package com.example.tenpaws.domain.board.entity;
 
 import com.example.tenpaws.domain.shelter.entity.Shelter;
 import com.example.tenpaws.domain.user.entity.User;
+import com.example.tenpaws.global.entity.UserRole;
+import com.example.tenpaws.global.exception.BaseException;
+import com.example.tenpaws.global.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -34,9 +37,6 @@ public class Inquiry {
     @JoinColumn(name = "shelter_id")
     private Shelter shelter;
 
-    @OneToMany(mappedBy = "inquiry", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
-
     @Column(name = "title", nullable = false)
     private String title;
 
@@ -45,6 +45,9 @@ public class Inquiry {
 
     @Column(name = "view_count", nullable = false)
     private Long viewCount;
+
+    @OneToMany(mappedBy = "inquiry", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     @CreatedDate
     private LocalDate created_at;
@@ -65,5 +68,25 @@ public class Inquiry {
 
     public void incrementViewCount() {
         this.viewCount++;
+    }
+
+    public Long getWriterId() {
+        if (user != null) {
+            return user.getId();
+        }
+        if (shelter != null) {
+            return shelter.getId();
+        }
+        throw new BaseException(ErrorCode.WRITER_NOT_FOUND);
+    }
+
+    public UserRole getWriterRole() {
+        if (user != null) {
+            return user.getUserRole();
+        }
+        if (shelter != null) {
+            return shelter.getUserRole();
+        }
+        throw new BaseException(ErrorCode.WRITER_NOT_FOUND);
     }
 }
