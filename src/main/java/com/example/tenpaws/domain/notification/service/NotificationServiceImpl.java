@@ -5,6 +5,8 @@ import com.example.tenpaws.domain.notification.dto.request.CreateNotificationReq
 import com.example.tenpaws.domain.notification.dto.response.NotificationResponse;
 import com.example.tenpaws.domain.notification.entity.Notification;
 import com.example.tenpaws.domain.notification.sse.SseEmitters;
+import com.example.tenpaws.domain.notification.sse.UserIdentifier;
+import com.example.tenpaws.global.entity.UserRole;
 import com.example.tenpaws.global.exception.BaseException;
 import com.example.tenpaws.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +31,8 @@ public class NotificationServiceImpl implements NotificationService {
     private final SseEmitters sseEmitters;
     private static final Long DEFAULT_TIMEOUT = 60L * 1000 * 60;
 
-    public SseEmitter subscribe(Long userId) {
+    public SseEmitter subscribe(UserRole userRole, Long userId) {
+        UserIdentifier identifier = new UserIdentifier(userRole, userId);
         SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
 
         try {
@@ -37,7 +40,7 @@ public class NotificationServiceImpl implements NotificationService {
                     .name("SSE")
                     .data("연결되었습니다.", MediaType.APPLICATION_JSON));
 
-            sseEmitters.add(userId, emitter);
+            sseEmitters.add(identifier, emitter);
         } catch (IOException e) {
             log.error("SSE 연결 중 오류 발생", e);
             emitter.completeWithError(e);
@@ -52,7 +55,7 @@ public class NotificationServiceImpl implements NotificationService {
         Notification savedNotification = notificationRepository.save(request.toEntity());
 
         try {
-            notify(request.getUserId(), new NotificationResponse(savedNotification));
+            notify(request.getUserRole(), request.getUserId(), new NotificationResponse(savedNotification));
         } catch (Exception e) {
             log.error("실시간 알림 전송 실패", e);
         }
@@ -61,10 +64,11 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void notify(Long userId, NotificationResponse notification) {
-        SseEmitter emitter = sseEmitters.get(userId);
+    public void notify(UserRole userRole, Long userId, NotificationResponse notification) {
+        UserIdentifier identifier = new UserIdentifier(userRole, userId);
+        SseEmitter emitter = sseEmitters.get(identifier);
         if (emitter != null) {
-            sendToClient(emitter, "notification", notification);
+            sendToClient(emitter, "알림", notification);
         }
     }
 
@@ -77,9 +81,9 @@ public class NotificationServiceImpl implements NotificationService {
         } catch (IOException e) {
             log.error("SSE 이벤트 전송 실패", e);
             emitter.complete();
-            Long userId = getCurrentSubscriberId(emitter);
-            if (userId != null) {
-                sseEmitters.remove(userId);
+            UserIdentifier identifier = getCurrentSubscriberId(emitter);
+            if (identifier != null) {
+                sseEmitters.remove(identifier);
             }
         } catch (Exception e) {
             log.error("SSE 이벤트 전송 중 예상치 못한 오류 발생", e);
@@ -87,11 +91,12 @@ public class NotificationServiceImpl implements NotificationService {
         }
     }
 
-    private Long getCurrentSubscriberId(SseEmitter emitter) {
+    private UserIdentifier getCurrentSubscriberId(SseEmitter emitter) {
         return sseEmitters.getAll().entrySet().stream()
                 .filter(entry -> entry.getValue().equals(emitter))
                 .map(Map.Entry::getKey)
                 .findFirst()
+                .map(UserIdentifier::fromKey)
                 .orElse(null);
     }
 
