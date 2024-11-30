@@ -4,6 +4,7 @@ import com.example.tenpaws.domain.notification.dto.request.CreateNotificationReq
 import com.example.tenpaws.domain.notification.dto.response.NotificationResponse;
 import com.example.tenpaws.domain.notification.entity.Notification;
 import com.example.tenpaws.domain.notification.service.NotificationService;
+import com.example.tenpaws.global.entity.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,9 +21,12 @@ public class NotificationController {
 
     private final NotificationService notificationService;
 
-    @GetMapping("/subscribe")
-    public SseEmitter subscribe(@RequestParam Long userId) {
-        return notificationService.subscribe(userId);
+    @GetMapping("/subscribe/{userRole}/{userId}")
+    public SseEmitter subscribe(
+            @PathVariable(name = "userRole") String userRoleStr,
+            @PathVariable Long userId) {
+        UserRole userRole = UserRole.valueOf("ROLE_" + userRoleStr.toUpperCase());
+        return notificationService.subscribe(userRole, userId);
     }
 
     // 알림 생성
