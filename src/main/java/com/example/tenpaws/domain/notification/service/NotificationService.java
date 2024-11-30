@@ -5,8 +5,12 @@ import com.example.tenpaws.domain.notification.dto.response.NotificationResponse
 import com.example.tenpaws.domain.notification.entity.Notification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 public interface NotificationService {
+    SseEmitter subscribe(Long userId);
+    void notify(Long userId, NotificationResponse notification);
+
     Notification create(CreateNotificationRequest request);
     Page<NotificationResponse> getList(Long userId, Pageable pageable);
     void markAsRead(Long notificationId);
