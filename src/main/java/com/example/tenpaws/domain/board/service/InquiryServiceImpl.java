@@ -1,5 +1,7 @@
 package com.example.tenpaws.domain.board.service;
 
+import com.example.tenpaws.domain.notification.factory.NotificationFactory;
+import com.example.tenpaws.domain.notification.service.NotificationService;
 import com.example.tenpaws.domain.shelter.entity.Shelter;
 import com.example.tenpaws.domain.shelter.repository.ShelterRepository;
 import com.example.tenpaws.domain.user.entity.User;
@@ -10,7 +12,6 @@ import com.example.tenpaws.domain.board.dto.response.InquiryListViewResponse;
 import com.example.tenpaws.domain.board.dto.response.CommentResponse;
 import com.example.tenpaws.domain.board.entity.Inquiry;
 import com.example.tenpaws.domain.board.repository.InquiryRepository;
-import com.example.tenpaws.domain.board.repository.CommentRepository;
 import com.example.tenpaws.domain.user.repositoty.UserRepository;
 import com.example.tenpaws.global.exception.BaseException;
 import com.example.tenpaws.global.exception.ErrorCode;
@@ -31,21 +32,40 @@ public class InquiryServiceImpl implements InquiryService {
     private final UserRepository userRepository;
     private final ShelterRepository shelterRepository;
     private final InquiryRepository inquiryRepository;
-    private final CommentRepository commentRepository;
+    private final NotificationService notificationService;
+    private final NotificationFactory notificationFactory;
 
     @Transactional
     public Inquiry create(CreateInquiryRequest request) {
+        Inquiry inquiry;
+
         if (request.getUserId() != null) {
+            // 사용자 정보 조회 및 문의 생성
             User user = userRepository.findById(request.getUserId())
                     .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
-            return inquiryRepository.save(request.toEntity(user));
+            inquiry = inquiryRepository.save(request.toEntity(user));
+
+            // 관리자에게 문의 등록 알림 전송
+            notificationService.create(
+                    notificationFactory.createInquirySubmittedNotification(user.getEmail())
+            );
         } else if (request.getShelterId() != null) {
+            // 보호소 정보 조회 및 문의 생성
             Shelter shelter = shelterRepository.findById(request.getShelterId())
                     .orElseThrow(() -> new BaseException(ErrorCode.SHELTER_NOT_FOUND));
-            return inquiryRepository.save(request.toEntity(shelter));
+            inquiry = inquiryRepository.save(request.toEntity(shelter));
+
+            // 관리자에게 문의 등록 알림 전송
+            notificationService.create(
+                    notificationFactory.createInquirySubmittedNotification(
+                            shelter.getEmail()
+                    )
+            );
         } else {
             throw new BaseException(ErrorCode.MEMBER_OR_SHELTER_NOT_FOUND);
         }
+
+        return inquiry;
     }
 
     public Page<InquiryListViewResponse> getList(Pageable pageable) {
@@ -58,17 +78,20 @@ public class InquiryServiceImpl implements InquiryService {
         Inquiry inquiry = inquiryRepository.findById(inquiryId)
                 .orElseThrow(() -> new BaseException(ErrorCode.INQUIRY_NOT_FOUND));
 
-        List<CommentResponse> comments = commentRepository.findByInquiryId(inquiryId)
-                .stream()
+        // 조회수 증가 로직 유지
+        inquiry.incrementViewCount();
+
+        // 댓글 목록 조회
+        List<CommentResponse> comments = inquiry.getComments().stream()
                 .map(CommentResponse::new)
                 .collect(Collectors.toList());
 
-        inquiry.incrementViewCount();
         return new InquiryDetailResponse(inquiry, comments);
     }
 
     @Transactional
     public Inquiry update(Long inquiryId, UpdateInquiryRequest request) {
+        // 문의 업데이트 로직
         Inquiry inquiry = inquiryRepository.findById(inquiryId)
                 .orElseThrow(() -> new BaseException(ErrorCode.INQUIRY_NOT_FOUND));
         AuthenticationUtils.validateInquiryWriter(inquiry, request.getUserId(), request.getShelterId());
