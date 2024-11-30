@@ -8,6 +8,8 @@ import com.example.tenpaws.domain.board.entity.Comment;
 import com.example.tenpaws.domain.board.entity.Inquiry;
 import com.example.tenpaws.domain.board.repository.CommentRepository;
 import com.example.tenpaws.domain.board.repository.InquiryRepository;
+import com.example.tenpaws.domain.notification.factory.NotificationFactory;
+import com.example.tenpaws.domain.notification.service.NotificationService;
 import com.example.tenpaws.global.exception.BaseException;
 import com.example.tenpaws.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,8 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final InquiryRepository inquiryRepository;
     private final AdminRepository adminRepository;
+    private final NotificationService notificationService;
+    private final NotificationFactory notificationFactory;
 
     @Transactional
     public Comment create(Long inquiryId, CreateCommentRequest request) {
@@ -29,11 +33,20 @@ public class CommentServiceImpl implements CommentService {
         Admin admin = adminRepository.findById(request.getAdminId())
                 .orElseThrow(() -> new BaseException(ErrorCode.ADMIN_NOT_FOUND));
 
-        return commentRepository.save(Comment.builder()
+        Comment comment = commentRepository.save(Comment.builder()
                 .inquiry(inquiry)
                 .admin(admin)
                 .content(request.getContent())
                 .build());
+
+        // 문의 답변 알림 생성 및 저장
+        notificationService.create(
+                notificationFactory.createInquiryAnsweredNotification(
+                        inquiry.getWriterId(),
+                        inquiry.getWriterRole()
+                )
+        );
+        return comment;
     }
 
     @Transactional
