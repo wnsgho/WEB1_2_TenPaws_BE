@@ -4,7 +4,7 @@ import com.example.tenpaws.domain.board.dto.request.CreateCommentRequest;
 import com.example.tenpaws.domain.board.dto.request.UpdateCommentRequest;
 import com.example.tenpaws.domain.board.dto.response.CommentResponse;
 import com.example.tenpaws.domain.board.entity.Comment;
-import com.example.tenpaws.domain.board.service.CommentServiceImpl;
+import com.example.tenpaws.domain.board.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CommentController {
 
-    private final CommentServiceImpl commentService;
+    private final CommentService commentService;
 
     @PostMapping
     public ResponseEntity<CommentResponse> create(
