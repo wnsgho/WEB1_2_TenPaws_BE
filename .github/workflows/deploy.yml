@@ -52,7 +52,7 @@ jobs:
         id: login-ecr  # 다음 단계에서 참조할 수 있도록 ID 부여
         uses: aws-actions/amazon-ecr-login@v2  # AWS ECR 로그인을 위한 공식 액션
 
-      # Step 8: Docker 이미지 빌드
+      # Step 8: Docker 컨테이너(이미지) 빌드
       - name: Docker 이미지 생성
         run: docker build -t instagram-server .  # Dockerfile을 사용하여 이미지 생성
 
