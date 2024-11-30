@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RestController
 @RequestMapping("/api/v1/notifications")
@@ -18,6 +19,11 @@ import org.springframework.web.bind.annotation.*;
 public class NotificationController {
 
     private final NotificationService notificationService;
+
+    @GetMapping("/subscribe")
+    public SseEmitter subscribe(@RequestParam Long userId) {
+        return notificationService.subscribe(userId);
+    }
 
     // 알림 생성
     @PostMapping
