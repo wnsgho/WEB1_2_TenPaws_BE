@@ -50,7 +50,7 @@ public class InquiryController {
 
     /**
      * userId와 shelterId가 선택적인 값이므로 @RequestParam 적용.
-     * @PathVariable을 사용하면 URL이 복잡해짐
+     * PathVariable을 사용하면 URL이 복잡해짐
      * ex. @DeleteMapping("/{inquiryId}/users/{userId}/shelters/{shelterId}")
      */
     @DeleteMapping("/{inquiryId}")
