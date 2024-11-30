@@ -18,23 +18,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/announcements")
 @RequiredArgsConstructor
 public class AnnouncementController {
-
     private final AnnouncementService announcementService;
 
     // Create
     @PostMapping
     public ResponseEntity<AnnouncementResponse> create(@RequestBody CreateAnnouncementRequest request) {
         Announcement savedAnnouncement = announcementService.create(request);
-
-        return ResponseEntity.ok()
-                .body(new AnnouncementResponse(savedAnnouncement));
+        return ResponseEntity.ok().body(new AnnouncementResponse(savedAnnouncement));
     }
 
     // Read(Page)
     @GetMapping
     public ResponseEntity<Page<AnnouncementListViewResponse>> getList(
             @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-
         return ResponseEntity.ok(announcementService.getList(pageable));
     }
 
@@ -42,9 +38,7 @@ public class AnnouncementController {
     @GetMapping("/{announcementId}")
     public ResponseEntity<AnnouncementResponse> findById(@PathVariable Long announcementId) {
         Announcement announcement = announcementService.findById(announcementId);
-
-        return ResponseEntity.ok()
-                .body(new AnnouncementResponse(announcement));
+        return ResponseEntity.ok().body(new AnnouncementResponse(announcement));
     }
 
     // Update
@@ -53,16 +47,13 @@ public class AnnouncementController {
             @PathVariable Long announcementId,
             @RequestBody UpdateAnnouncementRequest request) {
         Announcement updatedAnnouncement = announcementService.update(announcementId, request);
-
-        return ResponseEntity.ok()
-                .body(new AnnouncementResponse(updatedAnnouncement));
+        return ResponseEntity.ok().body(new AnnouncementResponse(updatedAnnouncement));
     }
 
     // Delete
     @DeleteMapping("/{announcementId}")
     public ResponseEntity<String> delete(@PathVariable Long announcementId) {
         announcementService.delete(announcementId);
-
         return ResponseEntity.ok("Announcement successfully deleted");
     }
 }
