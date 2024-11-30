@@ -8,37 +8,37 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class SseEmitters {
-    private final Map<Long, SseEmitter> emitters = new ConcurrentHashMap<>();
+    private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
 
-    public SseEmitter add(Long userId, SseEmitter emitter) {
-        this.emitters.put(userId, emitter);
+    public SseEmitter add(UserIdentifier userIdentifier, SseEmitter emitter) {
+        String key = userIdentifier.toKey();
+        this.emitters.put(key, emitter);
 
         // 타임아웃 및 완료 시 자동 제거
         emitter.onTimeout(() -> {
             emitter.complete();
-            this.emitters.remove(userId);
+            this.emitters.remove(key);
         });
 
-        emitter.onCompletion(() -> this.emitters.remove(userId));
+        emitter.onCompletion(() -> this.emitters.remove(key));
 
-        // 에러 발생 시 자동 제거
         emitter.onError(e -> {
             emitter.completeWithError(e);
-            this.emitters.remove(userId);
+            this.emitters.remove(key);
         });
 
         return emitter;
     }
 
-    public void remove(Long userId) {
-        this.emitters.remove(userId);
+    public SseEmitter get(UserIdentifier userIdentifier) {
+        return this.emitters.get(userIdentifier.toKey());
     }
 
-    public SseEmitter get(Long userId) {
-        return this.emitters.get(userId);
+    public void remove(UserIdentifier userIdentifier) {
+        this.emitters.remove(userIdentifier.toKey());
     }
 
-    public Map<Long, SseEmitter> getAll() {
+    public Map<String, SseEmitter> getAll() {
         return this.emitters;
     }
 }
