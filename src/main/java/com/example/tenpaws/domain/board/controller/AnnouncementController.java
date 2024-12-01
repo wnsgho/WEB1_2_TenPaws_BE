@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,6 +22,7 @@ public class AnnouncementController {
     private final AnnouncementService announcementService;
 
     // Create
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<AnnouncementResponse> create(@RequestBody CreateAnnouncementRequest request) {
         Announcement savedAnnouncement = announcementService.create(request);
@@ -42,6 +44,7 @@ public class AnnouncementController {
     }
 
     // Update
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{announcementId}")
     public ResponseEntity<AnnouncementResponse> update(
             @PathVariable Long announcementId,
@@ -51,6 +54,7 @@ public class AnnouncementController {
     }
 
     // Delete
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{announcementId}")
     public ResponseEntity<String> delete(@PathVariable Long announcementId) {
         announcementService.delete(announcementId);
