@@ -13,15 +13,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/inquiries")
 @RequiredArgsConstructor
 public class InquiryController {
-
     private final InquiryService inquiryService;
 
+    @PreAuthorize("hasRole('USER') or hasRole('SHELTER')")
     @PostMapping
     public ResponseEntity<InquiryResponse> create(@RequestBody CreateInquiryRequest request) {
         Inquiry savedInquiry = inquiryService.create(request);
@@ -40,6 +41,7 @@ public class InquiryController {
         return ResponseEntity.ok().body(response);
     }
 
+    @PreAuthorize("hasRole('USER') or hasRole('SHELTER')")
     @PutMapping("/{inquiryId}")
     public ResponseEntity<InquiryResponse> update(
             @PathVariable Long inquiryId,
