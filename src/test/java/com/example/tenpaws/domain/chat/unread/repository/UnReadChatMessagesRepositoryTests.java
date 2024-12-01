@@ -53,7 +53,7 @@ public class UnReadChatMessagesRepositoryTests {
         Long chatRoomId = savedId;
         String username1 = "user1";
 
-        UnReadChatMessages unReadChatMessages = unReadChatMessagesRepository.findByChatRoomIdAndUsername(chatRoomId, username1);
+        UnReadChatMessages unReadChatMessages = unReadChatMessagesRepository.findByChatRoomIdAndUsername(chatRoomId, username1).get();
         Assertions.assertEquals(2, unReadChatMessages.getUnReadCount());
     }
 }
