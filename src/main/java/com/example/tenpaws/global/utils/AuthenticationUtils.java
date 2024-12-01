@@ -1,4 +1,4 @@
-package com.example.tenpaws.global.util;
+package com.example.tenpaws.global.utils;
 
 import com.example.tenpaws.domain.admin.entity.Admin;
 import com.example.tenpaws.domain.board.entity.Comment;
