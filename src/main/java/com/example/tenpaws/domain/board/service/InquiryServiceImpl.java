@@ -15,10 +15,11 @@ import com.example.tenpaws.domain.board.repository.InquiryRepository;
 import com.example.tenpaws.domain.user.repositoty.UserRepository;
 import com.example.tenpaws.global.exception.BaseException;
 import com.example.tenpaws.global.exception.ErrorCode;
-import com.example.tenpaws.global.util.AuthenticationUtils;
+import com.example.tenpaws.global.utils.AuthenticationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -78,10 +79,8 @@ public class InquiryServiceImpl implements InquiryService {
         Inquiry inquiry = inquiryRepository.findById(inquiryId)
                 .orElseThrow(() -> new BaseException(ErrorCode.INQUIRY_NOT_FOUND));
 
-        // 조회수 증가 로직 유지
         inquiry.incrementViewCount();
 
-        // 댓글 목록 조회
         List<CommentResponse> comments = inquiry.getComments().stream()
                 .map(CommentResponse::new)
                 .collect(Collectors.toList());
@@ -91,7 +90,6 @@ public class InquiryServiceImpl implements InquiryService {
 
     @Transactional
     public Inquiry update(Long inquiryId, UpdateInquiryRequest request) {
-        // 문의 업데이트 로직
         Inquiry inquiry = inquiryRepository.findById(inquiryId)
                 .orElseThrow(() -> new BaseException(ErrorCode.INQUIRY_NOT_FOUND));
         AuthenticationUtils.validateInquiryWriter(inquiry, request.getUserId(), request.getShelterId());
