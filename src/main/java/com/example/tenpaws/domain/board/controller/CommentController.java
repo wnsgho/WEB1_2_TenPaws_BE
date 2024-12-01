@@ -7,15 +7,16 @@ import com.example.tenpaws.domain.board.entity.Comment;
 import com.example.tenpaws.domain.board.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/inquiries/{inquiryId}/comments")
 @RequiredArgsConstructor
 public class CommentController {
-
     private final CommentService commentService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<CommentResponse> create(
             @PathVariable Long inquiryId,
@@ -24,6 +25,7 @@ public class CommentController {
         return ResponseEntity.ok(new CommentResponse(comment));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{commentId}")
     public ResponseEntity<CommentResponse> update(
             @PathVariable Long commentId,
@@ -32,6 +34,7 @@ public class CommentController {
         return ResponseEntity.ok(new CommentResponse(comment));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{commentId}")
     public ResponseEntity<String> delete(
             @PathVariable Long commentId) {
