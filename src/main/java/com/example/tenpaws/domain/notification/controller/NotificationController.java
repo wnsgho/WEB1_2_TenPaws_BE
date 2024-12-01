@@ -21,6 +21,7 @@ public class NotificationController {
 
     private final NotificationService notificationService;
 
+    // 본인 검증 추가 필요
     @GetMapping("/subscribe/{userRole}/{userId}")
     public SseEmitter subscribe(
             @PathVariable(name = "userRole") String userRoleStr,
