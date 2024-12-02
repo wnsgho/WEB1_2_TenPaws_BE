@@ -39,8 +39,8 @@ public class AnnouncementController {
     // Read(By announcementId)
     @GetMapping("/{announcementId}")
     public ResponseEntity<AnnouncementResponse> findById(@PathVariable Long announcementId) {
-        Announcement announcement = announcementService.findById(announcementId);
-        return ResponseEntity.ok().body(new AnnouncementResponse(announcement));
+        AnnouncementResponse response = announcementService.findById(announcementId);
+        return ResponseEntity.ok().body(response);
     }
 
     // Update
