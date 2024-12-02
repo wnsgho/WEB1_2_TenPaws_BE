@@ -35,4 +35,16 @@ public class Admin {
         this.email = email;
         this.userRole = userRole;
     }
+
+    public void changeUsername(String username) {
+        this.username = username;
+    }
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
+    public void changeEmail(String email) {
+        this.email = email;
+    }
 }
