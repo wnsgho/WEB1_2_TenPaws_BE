@@ -12,6 +12,8 @@ import com.example.tenpaws.domain.user.repositoty.UserRepository;
 import com.example.tenpaws.global.exception.BaseException;
 import com.example.tenpaws.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -123,5 +125,19 @@ public class UserServiceImpl implements UserService {
         return users.stream()
                 .map(UserResponseDTO::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    public boolean isUserOwn(Long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentEmail = authentication.getName();
+
+        User user = userRepository.findByEmail(currentEmail)
+                .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
+
+        if (!user.getId().equals(id)) {
+            throw new BaseException(ErrorCode.MEMBER_NOT_AUTHORIZED);
+        }
+
+        return true;
     }
 }
