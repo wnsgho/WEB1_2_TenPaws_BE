@@ -22,7 +22,7 @@ public class AnnouncementController {
     private final AnnouncementService announcementService;
 
     // Create
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<AnnouncementResponse> create(@RequestBody CreateAnnouncementRequest request) {
         Announcement savedAnnouncement = announcementService.create(request);
@@ -39,12 +39,12 @@ public class AnnouncementController {
     // Read(By announcementId)
     @GetMapping("/{announcementId}")
     public ResponseEntity<AnnouncementResponse> findById(@PathVariable Long announcementId) {
-        Announcement announcement = announcementService.findById(announcementId);
-        return ResponseEntity.ok().body(new AnnouncementResponse(announcement));
+        AnnouncementResponse response = announcementService.findById(announcementId);
+        return ResponseEntity.ok().body(response);
     }
 
     // Update
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
     @PutMapping("/{announcementId}")
     public ResponseEntity<AnnouncementResponse> update(
             @PathVariable Long announcementId,
@@ -54,7 +54,7 @@ public class AnnouncementController {
     }
 
     // Delete
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
     @DeleteMapping("/{announcementId}")
     public ResponseEntity<String> delete(@PathVariable Long announcementId) {
         announcementService.delete(announcementId);

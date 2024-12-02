@@ -30,15 +30,6 @@ public class NotificationController {
         return notificationService.subscribe(userRole, userId);
     }
 
-    // 알림 생성
-    @PostMapping
-    public ResponseEntity<Notification> create(@RequestBody CreateNotificationRequest request) {
-        Notification savedNotification = notificationService.create(request);
-
-        return ResponseEntity.ok()
-                .body(savedNotification);
-    }
-
     // 알림 목록 조회
     @GetMapping
     public ResponseEntity<Page<NotificationResponse>> getList(
