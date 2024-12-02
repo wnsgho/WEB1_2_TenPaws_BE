@@ -62,7 +62,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
-    public Notification create(CreateNotificationRequest request) {
+    public NotificationResponse create(CreateNotificationRequest request) {
         Notification savedNotification = notificationRepository.save(request.toEntity());
 
         // 비동기로 알림 전송 처리
@@ -73,7 +73,7 @@ public class NotificationServiceImpl implements NotificationService {
             // 알림 전송 실패는 notification 생성 자체의 실패로 이어지지 않도록 함
         }
 
-        return savedNotification;
+        return new NotificationResponse(savedNotification);
     }
 
     @Override
