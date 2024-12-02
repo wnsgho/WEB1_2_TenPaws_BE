@@ -16,11 +16,14 @@ public class ChatMessageResponse {
     private LocalDateTime chatDate;
 
     @NotBlank
-    private String sender;
+    private String senderEmail;
+
+    @Setter
+    private String senderName;
 
     public ChatMessageResponse(ChatMessage chatMessage) {
         this.message = chatMessage.getMessage();
         this.chatDate = chatMessage.getChatDate();
-        this.sender = chatMessage.getSender();
+        this.senderEmail = chatMessage.getSender();
     }
 }
