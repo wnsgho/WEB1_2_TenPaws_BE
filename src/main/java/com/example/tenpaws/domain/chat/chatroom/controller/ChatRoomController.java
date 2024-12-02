@@ -8,6 +8,7 @@ import com.example.tenpaws.domain.chat.unread.service.UnReadChatMessagesService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,11 +21,7 @@ public class ChatRoomController {
     private final ChatRoomService chatRoomService;
     private final UnReadChatMessagesService unReadChatMessagesService;
 
-    @GetMapping("/{user1}/{user2}")
-    public ResponseEntity<ChatRoomResponse> findChatRoomByUsers(@PathVariable("user1") String user1, @PathVariable("user2") String user2) {
-        return ResponseEntity.ok(chatRoomService.getChatRoomByUsers(user1, user2));
-    }
-
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_SHELTER', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN') and #user == authentication.name")
     @GetMapping("/user/{user}")
     public ResponseEntity<List<ChatRoomResponse>> findChatRoomsByUser(@PathVariable("user") String user) {
         List<ChatRoomResponse> chatRoomResponseList = chatRoomService.getChatRoomsByUser(user);
@@ -35,6 +32,7 @@ public class ChatRoomController {
         return ResponseEntity.ok(chatRoomResponseList);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_SHELTER', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN') and #chatRoomRequest.user1 == authentication.name")
     @PostMapping
     public ResponseEntity<ChatRoomResponse> createChatRoom(@Valid @RequestBody ChatRoomRequest chatRoomRequest) {
         ChatRoomResponse chatRoomResponse = chatRoomService.create(chatRoomRequest);
@@ -42,6 +40,7 @@ public class ChatRoomController {
         return ResponseEntity.ok(chatRoomResponse);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_SHELTER', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN') and @chatRoomServiceImpl.isUserParticipated(#chatRoomId)")
     @DeleteMapping("/{chatRoomId}")
     public ResponseEntity<Map<String, String>> deleteChatRoom(@PathVariable("chatRoomId") Long chatRoomId) {
         chatRoomService.delete(chatRoomId);
