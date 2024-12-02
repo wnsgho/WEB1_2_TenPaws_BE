@@ -18,6 +18,7 @@ public enum ErrorCode {
 
     // Admin
     ADMIN_NOT_FOUND(HttpStatus.NOT_FOUND, "Admin not found"),
+    ADMIN_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "Only authorized admin can view/update own information"),
 
     // Faq
     FAQ_NOT_FOUND(HttpStatus.NOT_FOUND, "Faq not found"),
@@ -61,7 +62,8 @@ public enum ErrorCode {
 
     // Pet
     PET_NOT_FOUND(HttpStatus.NOT_FOUND,"Pet not found with ID"),
-    NOT_ASSIGNED(HttpStatus.BAD_REQUEST,"The pet is not assigned to this shelter." );
+    NOT_ASSIGNED(HttpStatus.BAD_REQUEST,"The pet is not assigned to this shelter." ),
+    RECOMMENDATION_FAILED(HttpStatus.NO_CONTENT, "Recommendation failed");
 
 
     private final HttpStatus httpStatus;

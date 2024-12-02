@@ -19,14 +19,14 @@ public class AdminInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (adminRepository.countByUserRole(UserRole.ROLE_ADMIN) > 0) {
+        if (adminRepository.countByUserRole(UserRole.ROLE_SUPER_ADMIN) > 0) {
             return;
         }
 
         List<Admin> admins = List.of(
-                new Admin("TENPAWS_ADMIN_1", bCryptPasswordEncoder.encode("tenpaws1"), "tenpaws1@tenpaws.com", UserRole.ROLE_ADMIN),
-                new Admin("TENPAWS_ADMIN_2", bCryptPasswordEncoder.encode("tenpaws2"), "tenpaws2@tenpaws.com", UserRole.ROLE_ADMIN),
-                new Admin("TENPAWS_ADMIN_3", bCryptPasswordEncoder.encode("tenpaws3"), "tenpaws3@tenpaws.com", UserRole.ROLE_ADMIN)
+                new Admin("superadmin", bCryptPasswordEncoder.encode("superadmin123"), "superadmin@tenpaws.com", UserRole.ROLE_SUPER_ADMIN),
+                new Admin("admin1", bCryptPasswordEncoder.encode("admin123"), "admin1@tenpaws.com", UserRole.ROLE_ADMIN),
+                new Admin("admin2", bCryptPasswordEncoder.encode("admin123"), "admin2@tenpaws.com", UserRole.ROLE_ADMIN)
         );
 
         adminRepository.saveAll(admins);
