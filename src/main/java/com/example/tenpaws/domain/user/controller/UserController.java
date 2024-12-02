@@ -19,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -81,18 +82,26 @@ public class UserController {
      * 사용자의 선호 기준에 맞는 반려동물 추천
      */
     @PostMapping("/{id}/recommend-pet")
-    public ResponseEntity<String> recommendPet(@PathVariable Long id) {
+    public ResponseEntity<Map<String, Object>> recommendPet(@PathVariable Long id) {
         try {
             User user = userRepository.findById(id)
                     .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
 
             // 추천 서비스 호출
-            String recommendation = recommendService.recommendPet(user);
-            return ResponseEntity.ok(recommendation);
+            Map<String, Object> recommendationResult = recommendService.recommendPet(user);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("recommendation", recommendationResult.get("content")); // AI의 추천 메시지
+            response.put("petId", recommendationResult.get("petId")); // 추천된 반려동물 ID
+            response.put("pet", recommendationResult.get("pet")); // Pet 정보
+
+            return ResponseEntity.ok(response);
         } catch (BaseException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("추천 실패: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "추천 실패: " + e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "서버 오류: " + e.getMessage()));
         }
     }
 

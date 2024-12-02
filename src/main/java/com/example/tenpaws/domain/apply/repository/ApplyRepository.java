@@ -12,6 +12,9 @@ import java.util.Optional;
 
 public interface ApplyRepository extends JpaRepository<Apply, Long> {
 
+    // 유저 ID로 모든 신청 조회
+    List<Apply> findAllByUserId(Long userId);
+
     // 보호소 ID로 모든 신청 조회
     List<Apply> findAllByPetShelterId(Long shelterId);
 

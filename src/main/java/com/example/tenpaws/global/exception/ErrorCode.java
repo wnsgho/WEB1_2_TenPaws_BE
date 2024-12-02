@@ -62,7 +62,8 @@ public enum ErrorCode {
 
     // Pet
     PET_NOT_FOUND(HttpStatus.NOT_FOUND,"Pet not found with ID"),
-    NOT_ASSIGNED(HttpStatus.BAD_REQUEST,"The pet is not assigned to this shelter." );
+    NOT_ASSIGNED(HttpStatus.BAD_REQUEST,"The pet is not assigned to this shelter." ),
+    RECOMMENDATION_FAILED(HttpStatus.NO_CONTENT, "Recommendation failed");
 
 
     private final HttpStatus httpStatus;

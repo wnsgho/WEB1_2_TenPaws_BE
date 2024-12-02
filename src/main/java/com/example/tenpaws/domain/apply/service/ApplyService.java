@@ -86,6 +86,13 @@ public class ApplyService {
         petRepository.save(pet);
     }
 
+    // userId로 신청 목록 조회
+    public List<ApplyDto> getApplies(Long userId) {
+        return applyRepository.findAllByUserId(userId)
+                .stream()
+                .map(ApplyDto::fromEntity)
+                .collect(Collectors.toList());
+    }
 
     // shelterId로 해당 보호소의 신청 목록 조회
     public List<ApplyDto> getAppliesForShelter(Long shelterId) {
