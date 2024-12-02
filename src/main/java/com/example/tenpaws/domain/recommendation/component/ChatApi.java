@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ChatApi {
 
-    private ApiService apiService;
+    private final ApiService apiService;
 
     public String getRecommendation(String prompt) {
         try {
