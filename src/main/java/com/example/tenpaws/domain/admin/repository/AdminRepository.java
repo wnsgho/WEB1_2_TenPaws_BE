@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface AdminRepository extends JpaRepository<Admin, Long> {
     int countByUserRole(UserRole userRole);
     Optional<Admin> findByEmail(String email);
+    boolean existsByEmail(String email);
 }
