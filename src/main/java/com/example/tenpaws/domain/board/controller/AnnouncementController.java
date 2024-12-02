@@ -22,7 +22,7 @@ public class AnnouncementController {
     private final AnnouncementService announcementService;
 
     // Create
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<AnnouncementResponse> create(@RequestBody CreateAnnouncementRequest request) {
         Announcement savedAnnouncement = announcementService.create(request);
@@ -44,7 +44,7 @@ public class AnnouncementController {
     }
 
     // Update
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
     @PutMapping("/{announcementId}")
     public ResponseEntity<AnnouncementResponse> update(
             @PathVariable Long announcementId,
@@ -54,7 +54,7 @@ public class AnnouncementController {
     }
 
     // Delete
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
     @DeleteMapping("/{announcementId}")
     public ResponseEntity<String> delete(@PathVariable Long announcementId) {
         announcementService.delete(announcementId);
