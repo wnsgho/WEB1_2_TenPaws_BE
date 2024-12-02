@@ -22,7 +22,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
-    private static final long ACCESS_TOKEN_EXPIRATION = 3_600_000L; // 1시간
+    private static final long ACCESS_TOKEN_EXPIRATION = 86_400_000L; // 24시간, 최종 배포 전 시간 변경해주기
     private static final long REFRESH_TOKEN_EXPIRATION = 86_400_000L; // 24시간
 
     private final AuthenticationManager authenticationManager;

@@ -1,5 +1,6 @@
 package com.example.tenpaws.domain.user.dto;
 
+import com.example.tenpaws.domain.pet.species.Species;
 import com.example.tenpaws.domain.user.entity.User;
 import com.example.tenpaws.global.entity.UserRole;
 import jakarta.validation.constraints.*;
@@ -37,7 +38,7 @@ public class UserJoinDTO {
     @NotBlank(message = "전화번호는 필수 입력 항목입니다.")
     private String phoneNumber;
 
-    @NotBlank(message = "전화번호는 필수 입력 항목입니다.")
+    @NotBlank(message = "주소는 필수 입력 항목입니다.")
     private String address;
 
     private String preferredSize;
