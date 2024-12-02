@@ -5,6 +5,7 @@ import com.example.tenpaws.domain.admin.repository.AdminRepository;
 import com.example.tenpaws.domain.board.dto.request.CreateAnnouncementRequest;
 import com.example.tenpaws.domain.board.dto.request.UpdateAnnouncementRequest;
 import com.example.tenpaws.domain.board.dto.response.AnnouncementListViewResponse;
+import com.example.tenpaws.domain.board.dto.response.AnnouncementResponse;
 import com.example.tenpaws.domain.board.entity.Announcement;
 import com.example.tenpaws.domain.board.repository.AnnouncementRepository;
 import com.example.tenpaws.global.exception.BaseException;
@@ -34,9 +35,13 @@ public class AnnouncementServiceImpl implements AnnouncementService {
                 .map(AnnouncementListViewResponse::new);
     }
 
-    public Announcement findById(Long announcementId) {
-        return announcementRepository.findById(announcementId)
+    @Transactional
+    public AnnouncementResponse findById(Long announcementId) {
+        Announcement announcement = announcementRepository.findById(announcementId)
                 .orElseThrow(() -> new BaseException(ErrorCode.ANNOUNCEMENT_NOT_FOUND));
+
+        announcement.incrementViewCount();
+        return new AnnouncementResponse(announcement);
     }
 
     @Transactional
@@ -44,7 +49,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         Announcement announcement = announcementRepository.findById(announcementId)
                 .orElseThrow(() -> new BaseException(ErrorCode.ANNOUNCEMENT_NOT_FOUND));
 
-        announcement.update(request.getTitle(), request.getContent());
+        announcement.update(request.getCategory(), request.getTitle(), request.getContent());
         return announcement;
     }
 
