@@ -37,7 +37,7 @@ public class Pet {
     private int age;
 
     @Column(name = "gender", nullable = false)
-    private Boolean gender;
+    private String gender;
 
     @Column(name = "neutering", nullable = false)
     private Boolean neutering; // 중성화
@@ -76,7 +76,7 @@ public class Pet {
     }
 
     @Builder
-    public Pet(Long id, String petName, Species species,  String size, int age, Boolean gender, Boolean neutering, String reason, String preAdoption, Boolean vaccinated, String extra, String personality, int exerciseLevel, Shelter shelter, Set<Image> images) {
+    public Pet(Long id, String petName, Species species,  String size, int age, String gender, Boolean neutering, String reason, String preAdoption, Boolean vaccinated, String extra, String personality, int exerciseLevel, Shelter shelter, Set<Image> images) {
         this.id = id;
         this.petName = petName;
         this.species = species;

@@ -21,7 +21,7 @@ public class PetResponseDTO {
     private Species species;
     private String size;
     private int age;
-    private Boolean gender;
+    private String gender;
     private Boolean neutering;
     private String reason;
     private String preAdoption;
