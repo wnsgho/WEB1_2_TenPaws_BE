@@ -6,6 +6,7 @@ import com.example.tenpaws.domain.chat.chatmessage.service.ChatMessageService;
 import com.example.tenpaws.domain.chat.unread.dto.UnReadChatMessagesRequest;
 import com.example.tenpaws.domain.chat.unread.service.UnReadChatMessagesService;
 import com.example.tenpaws.domain.notification.dto.request.CreateNotificationRequest;
+import com.example.tenpaws.domain.notification.dto.response.NotificationResponse;
 import com.example.tenpaws.domain.notification.entity.Notification;
 import com.example.tenpaws.domain.notification.entity.NotificationType;
 import com.example.tenpaws.domain.notification.service.NotificationService;
@@ -35,14 +36,16 @@ public class ChatController {
 
     @MessageMapping("/chat/send/{chatRoomId}")
     public void sendMessage(@DestinationVariable Long chatRoomId, ChatMessageRequest chatMessageRequest) {
+        String sender = chatMessageRequest.getSender();
         String receiver = chatMessageRequest.getReceiver();
         String destination = "/topic/chatroom/" + chatRoomId;
+        Map<String, Object> senderData = customUserDetailsService.getInfosByEmail(sender);
         Map<String, Object> receiverData = customUserDetailsService.getInfosByEmail(receiver);
 
         chatMessageRequest.setChatRoomId(chatRoomId);
         ChatMessageResponse chatMessageResponse = chatMessageService.createChatMessage(chatMessageRequest);
 
-        chatMessageResponse.setSenderName(receiverData.get("username").toString());
+        chatMessageResponse.setSenderName(senderData.get("username").toString());
         messagingTemplate.convertAndSend(
                 destination,
                 chatMessageResponse
@@ -53,7 +56,7 @@ public class ChatController {
                     UnReadChatMessagesRequest.builder().chatRoomId(chatRoomId).username(receiver).unReadCount(1).build());
 
             Notification notification = notificationService.create(CreateNotificationRequest.builder()
-                    .content(chatMessageRequest.getSender() + "님이 채팅을 보내셨습니다.")
+                    .content(chatMessageResponse.getSenderName() + "님이 채팅을 보내셨습니다.")
                     .type(NotificationType.NEW_CHAT_MESSAGE)
                     .userId((Long) receiverData.get("id"))
                     .userRole((UserRole) receiverData.get("role"))
@@ -62,7 +65,7 @@ public class ChatController {
             messagingTemplate.convertAndSendToUser(
                     receiver,
                     "/queue/notifications",
-                    notification.getContent()
+                    new NotificationResponse(notification)
             );
 
         }
