@@ -18,6 +18,7 @@ public enum ErrorCode {
 
     // Admin
     ADMIN_NOT_FOUND(HttpStatus.NOT_FOUND, "Admin not found"),
+    ADMIN_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "Only authorized admin can view/update own information"),
 
     // Faq
     FAQ_NOT_FOUND(HttpStatus.NOT_FOUND, "Faq not found"),
