@@ -1,8 +1,6 @@
 package com.example.tenpaws.domain.notification.controller;
 
-import com.example.tenpaws.domain.notification.dto.request.CreateNotificationRequest;
 import com.example.tenpaws.domain.notification.dto.response.NotificationResponse;
-import com.example.tenpaws.domain.notification.entity.Notification;
 import com.example.tenpaws.domain.notification.service.NotificationService;
 import com.example.tenpaws.global.entity.UserRole;
 import lombok.RequiredArgsConstructor;
