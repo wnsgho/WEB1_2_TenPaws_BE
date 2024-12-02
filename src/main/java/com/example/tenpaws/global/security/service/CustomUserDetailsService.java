@@ -62,6 +62,13 @@ public class CustomUserDetailsService implements UserDetailsService {
             map.put("username", shelter.getShelterName());
             return map;
         }
+        Admin admin = adminRepository.findByEmail(email).orElse(null);
+        if (admin != null) {
+            map.put("id", admin.getId());
+            map.put("role", admin.getUserRole());
+            map.put("username", admin.getUsername());
+            return map;
+        }
         throw new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + email);
     }
 }
