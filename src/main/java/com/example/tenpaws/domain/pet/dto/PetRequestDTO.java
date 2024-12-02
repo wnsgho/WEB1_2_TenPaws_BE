@@ -17,6 +17,12 @@ public class PetRequestDTO {
     private String species;
     private String size;
     private int age;
+    private Boolean gender;
+    private Boolean neutering;
+    private String reason;
+    private String preAdoption;
+    private Boolean vaccinated;
+    private String extra;
     private String personality;
     private int exerciseLevel;
     private List<String> imageUrls;
@@ -35,6 +41,12 @@ public class PetRequestDTO {
                 .species(this.species)
                 .size(this.size)
                 .age(this.age)
+                .gender(this.gender)
+                .neutering(this.neutering)
+                .reason(this.reason)
+                .preAdoption(this.preAdoption)
+                .vaccinated(this.vaccinated)
+                .extra(this.extra)
                 .personality(this.personality)
                 .exerciseLevel(this.exerciseLevel)
                 .shelter(shelter)
