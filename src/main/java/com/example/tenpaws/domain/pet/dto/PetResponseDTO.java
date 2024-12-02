@@ -2,8 +2,11 @@ package com.example.tenpaws.domain.pet.dto;
 
 import com.example.tenpaws.domain.pet.entity.Image;
 import com.example.tenpaws.domain.pet.entity.Pet;
-import com.example.tenpaws.domain.shelter.entity.Shelter;
-import lombok.*;
+import com.example.tenpaws.domain.pet.species.Species;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,7 +17,8 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class PetResponseDTO {
     private Long petId;
-    private String species;
+    private String petName;
+    private Species species;
     private String size;
     private int age;
     private Boolean gender;
@@ -31,6 +35,7 @@ public class PetResponseDTO {
     public static PetResponseDTO fromEntity(Pet pet) {
         PetResponseDTO dto = new PetResponseDTO();
         dto.setPetId(pet.getId());
+        dto.setPetName(pet.getPetName());
         dto.setSpecies(pet.getSpecies());
         dto.setSize(pet.getSize());
         dto.setAge(pet.getAge());

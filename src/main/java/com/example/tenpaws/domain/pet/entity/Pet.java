@@ -1,6 +1,7 @@
 package com.example.tenpaws.domain.pet.entity;
 
 import com.example.tenpaws.domain.pet.dto.PetRequestDTO;
+import com.example.tenpaws.domain.pet.species.Species;
 import com.example.tenpaws.domain.shelter.entity.Shelter;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -22,9 +23,12 @@ public class Pet {
     @Column(name = "pet_id", unique = true, nullable = false)
     private Long id;
 
+    @Column(name = "pet_name")
+    private String petName;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "species", nullable = false, length = 50)
-    private String species;
+    private Species species;
 
     @Column(name = "size", nullable = false, length = 50)
     private String size;
@@ -41,7 +45,7 @@ public class Pet {
     @Column(name = "reason", nullable = false)
     private String reason; // 보호소 입소 이유
 
-    @Column(name = "pre-adoption", nullable = false)
+    @Column(name = "pre_adoption", nullable = false)
     private String preAdoption; // 이전 가정환경
 
     @Column(name = "vaccinated")
@@ -50,7 +54,7 @@ public class Pet {
     @Column(name = "extra")
     private String extra;
 
-    @Column(name = "personality", nullable = false, length = 255)
+    @Column(name = "personality", nullable = false)
     private String personality;
 
     @Column(name = "exercise_level", nullable = false)
@@ -72,8 +76,9 @@ public class Pet {
     }
 
     @Builder
-    public Pet(Long id, String species, String size, int age, Boolean gender, Boolean neutering, String reason, String preAdoption, Boolean vaccinated, String extra, String personality, int exerciseLevel, Shelter shelter, Set<Image> images) {
+    public Pet(Long id, String petName, Species species,  String size, int age, Boolean gender, Boolean neutering, String reason, String preAdoption, Boolean vaccinated, String extra, String personality, int exerciseLevel, Shelter shelter, Set<Image> images) {
         this.id = id;
+        this.petName = petName;
         this.species = species;
         this.size = size;
         this.age = age;
@@ -92,6 +97,7 @@ public class Pet {
     // 필드 업데이트 메서드
     public void updateFields(PetRequestDTO requestDTO) {
         if (requestDTO.getSpecies() != null) this.species = requestDTO.getSpecies();
+
         if (requestDTO.getSize() != null) this.size = requestDTO.getSize();
         if (requestDTO.getAge() != 0) this.age = requestDTO.getAge();
         if (requestDTO.getGender() != null) this.gender = requestDTO.getGender();

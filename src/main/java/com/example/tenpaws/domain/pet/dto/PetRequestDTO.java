@@ -2,6 +2,7 @@ package com.example.tenpaws.domain.pet.dto;
 
 import com.example.tenpaws.domain.pet.entity.Image;
 import com.example.tenpaws.domain.pet.entity.Pet;
+import com.example.tenpaws.domain.pet.species.Species;
 import com.example.tenpaws.domain.shelter.entity.Shelter;
 import lombok.*;
 
@@ -14,7 +15,8 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PetRequestDTO {
-    private String species;
+    private String petName;
+    private Species species;
     private String size;
     private int age;
     private Boolean gender;
@@ -38,7 +40,9 @@ public class PetRequestDTO {
         }
 
         return Pet.builder()
+                .petName(petName)
                 .species(this.species)
+                .petName(this.petName)
                 .size(this.size)
                 .age(this.age)
                 .gender(this.gender)
