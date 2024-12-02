@@ -1,5 +1,6 @@
 package com.example.tenpaws.domain.notification.entity;
 
+import com.example.tenpaws.global.entity.UserRole;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -28,18 +29,22 @@ public class Notification {
     @Enumerated(EnumType.STRING)
     private NotificationType type;
 
-    private Boolean isRead;
-
     private Long userId;
+
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole;
+
+    private Boolean isRead;
 
     @CreatedDate
     private LocalDateTime createdAt;
 
     @Builder
-    public Notification(String content, NotificationType type, Long userId) {
+    public Notification(String content, NotificationType type, Long userId, Long adminId, UserRole userRole) {
         this.content = content;
         this.type = type;
         this.userId = userId;
+        this.userRole = userRole;
         this.isRead = false;
     }
 
