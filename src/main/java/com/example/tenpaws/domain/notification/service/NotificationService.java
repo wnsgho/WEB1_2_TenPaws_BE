@@ -12,7 +12,7 @@ public interface NotificationService {
     SseEmitter subscribe(UserRole userRole, Long userId);
     void notify(UserRole userRole, Long userId, NotificationResponse notification);
 
-    Notification create(CreateNotificationRequest request);
+    NotificationResponse create(CreateNotificationRequest request);
     Page<NotificationResponse> getList(Long userId, Pageable pageable);
     void markAsRead(Long notificationId);
     Long getUnreadCount(Long userId);
