@@ -67,7 +67,7 @@ public class NotificationServiceImpl implements NotificationService {
         Notification savedNotification = notificationRepository.save(request.toEntity());
 
         if (savedNotification.getType().name().equals(NotificationType.NEW_CHAT_MESSAGE.name())) {
-            return savedNotification;
+            return new NotificationResponse(savedNotification);
         }
 
         // 비동기로 알림 전송 처리

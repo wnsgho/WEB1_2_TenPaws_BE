@@ -55,7 +55,7 @@ public class ChatController {
             unReadChatMessagesService.update(
                     UnReadChatMessagesRequest.builder().chatRoomId(chatRoomId).username(receiver).unReadCount(1).build());
 
-            Notification notification = notificationService.create(CreateNotificationRequest.builder()
+            NotificationResponse notificationResponse = notificationService.create(CreateNotificationRequest.builder()
                     .content(chatMessageResponse.getSenderName() + "님이 채팅을 보내셨습니다.")
                     .type(NotificationType.NEW_CHAT_MESSAGE)
                     .userId((Long) receiverData.get("id"))
@@ -65,7 +65,7 @@ public class ChatController {
             messagingTemplate.convertAndSendToUser(
                     receiver,
                     "/queue/notifications",
-                    new NotificationResponse(notification)
+                    notificationResponse
             );
 
         }
