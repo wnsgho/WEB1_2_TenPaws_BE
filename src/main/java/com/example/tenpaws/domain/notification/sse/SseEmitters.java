@@ -17,14 +17,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SseEmitters {
     private static final Logger log = LoggerFactory.getLogger(SseEmitters.class);
 
-    // ConcurrentHashMap으로 thread-safe 보장
     private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
 
-    // 재시도 관련 상수 추가
     private static final int MAX_RETRY_COUNT = 3;
     private static final long RETRY_DELAY_MS = 1000;
 
-    // 기존 add 메서드 개선: 로깅 추가 및 기존 연결 정리
     public SseEmitter add(UserIdentifier userIdentifier, SseEmitter emitter) {
         String key = userIdentifier.toKey();
 
@@ -60,7 +57,6 @@ public class SseEmitters {
         return emitter;
     }
 
-    // 기존 메서드들 유지
     public SseEmitter get(UserIdentifier userIdentifier) {
         return this.emitters.get(userIdentifier.toKey());
     }
@@ -74,12 +70,12 @@ public class SseEmitters {
         }
     }
 
-    // 수정된 getAll 메서드: 불변 맵 반환
+    // 불변 맵 반환
     public Map<String, SseEmitter> getAll() {
         return Collections.unmodifiableMap(this.emitters);
     }
 
-    // 새로 추가: 하트비트 전송
+    // 하트비트 전송
     @Scheduled(fixedRate = 45000) // 45초마다 실행
     public void sendHeartbeat() {
         emitters.forEach((key, emitter) -> {
@@ -96,7 +92,7 @@ public class SseEmitters {
         });
     }
 
-    // 새로 추가: 알림 전송 with 재시도 로직
+    // 알림 전송 with 재시도 로직
     public boolean sendNotification(UserIdentifier userIdentifier, Object data) {
         String key = userIdentifier.toKey();
         SseEmitter emitter = this.emitters.get(key);
@@ -131,7 +127,7 @@ public class SseEmitters {
         return false;
     }
 
-    // 새로 추가: 서버 종료 시 정리
+    // 서버 종료 시 정리
     @PreDestroy
     public void destroy() {
         emitters.forEach((key, emitter) -> {
