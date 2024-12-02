@@ -27,24 +27,37 @@ public class Announcement {
     @JoinColumn(name = "admin_id", nullable = false)
     private Admin admin;
 
+    @Column(name = "category", nullable = false)
+    private AnnouncementCategory category;
+
     @Column(name = "title", nullable = false)
     private String title;
 
     @Column(name = "content", nullable = false)
     private String content;
 
+    @Column(name = "view_count", nullable = false)
+    private Long viewCount;
+
     @CreatedDate
     private LocalDate created_at;
 
     @Builder
-    public Announcement(Admin admin, String title, String content) {
+    public Announcement(Admin admin, AnnouncementCategory category, String title, String content, Long viewCount) {
         this.admin = admin;
+        this.category = category;
+        this.title = title;
+        this.content = content;
+        this.viewCount = viewCount;
+    }
+
+    public void update(AnnouncementCategory category, String title, String content) {
+        this.category = category;
         this.title = title;
         this.content = content;
     }
 
-    public void update(String title, String content) {
-        this.title = title;
-        this.content = content;
+    public void incrementViewCount() {
+        this.viewCount++;
     }
 }
