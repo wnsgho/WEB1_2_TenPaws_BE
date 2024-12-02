@@ -4,6 +4,7 @@ import com.example.tenpaws.domain.notification.dto.request.CreateNotificationReq
 import com.example.tenpaws.domain.notification.dto.response.NotificationResponse;
 import com.example.tenpaws.domain.notification.entity.Notification;
 import com.example.tenpaws.domain.notification.service.NotificationService;
+import com.example.tenpaws.global.entity.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RestController
 @RequestMapping("/api/v1/notifications")
@@ -18,6 +20,15 @@ import org.springframework.web.bind.annotation.*;
 public class NotificationController {
 
     private final NotificationService notificationService;
+
+    // 본인 검증 추가 필요
+    @GetMapping("/subscribe/{userRole}/{userId}")
+    public SseEmitter subscribe(
+            @PathVariable(name = "userRole") String userRoleStr,
+            @PathVariable Long userId) {
+        UserRole userRole = UserRole.valueOf("ROLE_" + userRoleStr.toUpperCase());
+        return notificationService.subscribe(userRole, userId);
+    }
 
     // 알림 생성
     @PostMapping

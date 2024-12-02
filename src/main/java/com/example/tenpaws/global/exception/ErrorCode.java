@@ -4,8 +4,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
-
 @Getter
 @RequiredArgsConstructor
 public enum ErrorCode {
@@ -17,6 +15,10 @@ public enum ErrorCode {
     PHONE_ALREADY_EXISTS(HttpStatus.CONFLICT, "Phone already exists"),
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "Access denied"),
     INVALID_INPUT(HttpStatus.BAD_REQUEST, "Invalid input"),
+
+    // Admin
+    ADMIN_NOT_FOUND(HttpStatus.NOT_FOUND, "Admin not found"),
+    ADMIN_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "Only authorized admin can view/update own information"),
 
     // Faq
     FAQ_NOT_FOUND(HttpStatus.NOT_FOUND, "Faq not found"),
@@ -42,8 +44,18 @@ public enum ErrorCode {
     // Announcement
     ANNOUNCEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Announcement not found"),
 
+    // Inquiry
+    INQUIRY_NOT_FOUND(HttpStatus.NOT_FOUND, "Inquiry not found"),
+    MEMBER_OR_SHELTER_NOT_FOUND(HttpStatus.NOT_FOUND, "Member or Shelter Not found"),
+    UNAUTHORIZED_ACCESS(HttpStatus.FORBIDDEN, "Unauthorized."),
+
+    // Comment
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Comment not found"),
+
     // Notification
     NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "Notification not found"),
+    NOTIFICATION_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "Unsupported notification type"),
+    WRITER_NOT_FOUND(HttpStatus.NOT_FOUND, "Writer not found"),
 
     // Shelter
     SHELTER_NOT_FOUND(HttpStatus.NOT_FOUND, "Shelter not found with ID"),
