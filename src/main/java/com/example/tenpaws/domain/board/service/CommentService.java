@@ -2,10 +2,10 @@ package com.example.tenpaws.domain.board.service;
 
 import com.example.tenpaws.domain.board.dto.request.CreateCommentRequest;
 import com.example.tenpaws.domain.board.dto.request.UpdateCommentRequest;
-import com.example.tenpaws.domain.board.entity.Comment;
+import com.example.tenpaws.domain.board.dto.response.CommentResponse;
 
 public interface CommentService {
-    Comment create(Long inquiryId, CreateCommentRequest request);
-    Comment update(Long commentId, UpdateCommentRequest request);
+    CommentResponse create(Long inquiryId, CreateCommentRequest request);
+    CommentResponse update(Long commentId, UpdateCommentRequest request);
     void delete(Long commentId);
 }
