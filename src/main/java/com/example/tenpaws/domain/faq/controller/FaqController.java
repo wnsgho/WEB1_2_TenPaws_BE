@@ -19,7 +19,12 @@ public class FaqController {
     private final FaqService faqService;
 
     @GetMapping
-    public ResponseEntity<List<FaqResponse>> getFaq() {
+    public ResponseEntity<List<FaqResponse>> getAll() {
+        return ResponseEntity.ok(faqService.findAll());
+    }
+
+    @GetMapping("/top-level")
+    public ResponseEntity<List<FaqResponse>> getTopLevelFaq() {
         return ResponseEntity.ok(faqService.read());
     }
 
