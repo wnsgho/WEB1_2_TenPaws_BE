@@ -4,7 +4,6 @@ import com.example.tenpaws.domain.board.dto.request.CreateAnnouncementRequest;
 import com.example.tenpaws.domain.board.dto.request.UpdateAnnouncementRequest;
 import com.example.tenpaws.domain.board.dto.response.AnnouncementListViewResponse;
 import com.example.tenpaws.domain.board.dto.response.AnnouncementResponse;
-import com.example.tenpaws.domain.board.entity.Announcement;
 import com.example.tenpaws.domain.board.service.AnnouncementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,40 +20,34 @@ import org.springframework.web.bind.annotation.*;
 public class AnnouncementController {
     private final AnnouncementService announcementService;
 
-    // Create
-    @PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @PostMapping
     public ResponseEntity<AnnouncementResponse> create(@RequestBody CreateAnnouncementRequest request) {
-        Announcement savedAnnouncement = announcementService.create(request);
-        return ResponseEntity.ok().body(new AnnouncementResponse(savedAnnouncement));
+        return ResponseEntity.ok(announcementService.create(request));
     }
 
-    // Read(Page)
+    @PreAuthorize("permitAll()")
     @GetMapping
     public ResponseEntity<Page<AnnouncementListViewResponse>> getList(
             @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok(announcementService.getList(pageable));
     }
 
-    // Read(By announcementId)
+    @PreAuthorize("permitAll()")
     @GetMapping("/{announcementId}")
     public ResponseEntity<AnnouncementResponse> findById(@PathVariable Long announcementId) {
-        AnnouncementResponse response = announcementService.findById(announcementId);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok(announcementService.findById(announcementId));
     }
 
-    // Update
-    @PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN') and @ownershipVerifier.isAnnouncementOwner(#announcementId, authentication.name)")
     @PutMapping("/{announcementId}")
     public ResponseEntity<AnnouncementResponse> update(
             @PathVariable Long announcementId,
             @RequestBody UpdateAnnouncementRequest request) {
-        Announcement updatedAnnouncement = announcementService.update(announcementId, request);
-        return ResponseEntity.ok().body(new AnnouncementResponse(updatedAnnouncement));
+        return ResponseEntity.ok(announcementService.update(announcementId, request));
     }
 
-    // Delete
-    @PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN') and @ownershipVerifier.isAnnouncementOwner(#announcementId, authentication.name)")
     @DeleteMapping("/{announcementId}")
     public ResponseEntity<String> delete(@PathVariable Long announcementId) {
         announcementService.delete(announcementId);
