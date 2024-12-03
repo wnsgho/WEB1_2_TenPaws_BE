@@ -13,24 +13,25 @@ public class ChatMessageRequest {
     private String message;
 
     @NotBlank
-    private String sender;
+    private String senderEmail;
 
-    private String receiver;
+    @NotBlank
+    private String receiverEmail;
 
     @NonNull
     private Long chatRoomId;
 
     @Builder
-    public ChatMessageRequest(String message, String sender, @NonNull Long chatRoomId) {
+    public ChatMessageRequest(String message, String senderEmail, @NonNull Long chatRoomId) {
         this.message = message;
-        this.sender = sender;
+        this.senderEmail = senderEmail;
         this.chatRoomId = chatRoomId;
     }
 
     public ChatMessage toEntity(ChatRoom chatRoom) {
         return ChatMessage.builder()
                 .message(message)
-                .sender(sender)
+                .sender(senderEmail)
                 .chatRoom(chatRoom)
                 .build();
     }
