@@ -2,7 +2,6 @@ package com.example.tenpaws.domain.notification.dto.request;
 
 import com.example.tenpaws.domain.notification.entity.Notification;
 import com.example.tenpaws.domain.notification.entity.NotificationType;
-import com.example.tenpaws.global.entity.UserRole;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;

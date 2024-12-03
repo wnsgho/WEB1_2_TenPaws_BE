@@ -1,6 +1,5 @@
 package com.example.tenpaws.domain.notification.entity;
 
-import com.example.tenpaws.global.entity.UserRole;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

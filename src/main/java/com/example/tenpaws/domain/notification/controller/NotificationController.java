@@ -2,7 +2,6 @@ package com.example.tenpaws.domain.notification.controller;
 
 import com.example.tenpaws.domain.notification.dto.response.NotificationResponse;
 import com.example.tenpaws.domain.notification.service.NotificationService;
-import com.example.tenpaws.global.entity.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

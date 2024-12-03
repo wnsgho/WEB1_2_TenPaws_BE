@@ -3,7 +3,6 @@ package com.example.tenpaws.domain.notification.factory;
 import com.example.tenpaws.domain.notification.dto.request.NotificationRequest;
 import com.example.tenpaws.domain.notification.entity.NotificationType;
 import com.example.tenpaws.domain.notification.template.NotificationTemplate;
-import com.example.tenpaws.global.entity.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
