@@ -23,36 +23,40 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     private final AdminRepository adminRepository;
     private final AnnouncementRepository announcementRepository;
 
+    @Override
     @Transactional
-    public Announcement create(CreateAnnouncementRequest request) {
+    public AnnouncementResponse create(CreateAnnouncementRequest request) {
         Admin admin = adminRepository.findById(request.getAdminId())
                 .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
-        return announcementRepository.save(request.toEntity(admin));
+        Announcement savedAnnouncement = announcementRepository.save(request.toEntity(admin));
+        return new AnnouncementResponse(savedAnnouncement);
     }
 
+    @Override
     public Page<AnnouncementListViewResponse> getList(Pageable pageable) {
         return announcementRepository.findAll(pageable)
                 .map(AnnouncementListViewResponse::new);
     }
 
+    @Override
     @Transactional
     public AnnouncementResponse findById(Long announcementId) {
         Announcement announcement = announcementRepository.findById(announcementId)
                 .orElseThrow(() -> new BaseException(ErrorCode.ANNOUNCEMENT_NOT_FOUND));
-
         announcement.incrementViewCount();
         return new AnnouncementResponse(announcement);
     }
 
+    @Override
     @Transactional
-    public Announcement update(Long announcementId, UpdateAnnouncementRequest request) {
+    public AnnouncementResponse update(Long announcementId, UpdateAnnouncementRequest request) {
         Announcement announcement = announcementRepository.findById(announcementId)
                 .orElseThrow(() -> new BaseException(ErrorCode.ANNOUNCEMENT_NOT_FOUND));
-
         announcement.update(request.getCategory(), request.getTitle(), request.getContent());
-        return announcement;
+        return new AnnouncementResponse(announcement);
     }
 
+    @Override
     @Transactional
     public void delete(Long announcementId) {
         announcementRepository.findById(announcementId)
