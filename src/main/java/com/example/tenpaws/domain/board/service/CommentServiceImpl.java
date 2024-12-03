@@ -4,6 +4,7 @@ import com.example.tenpaws.domain.admin.entity.Admin;
 import com.example.tenpaws.domain.admin.repository.AdminRepository;
 import com.example.tenpaws.domain.board.dto.request.CreateCommentRequest;
 import com.example.tenpaws.domain.board.dto.request.UpdateCommentRequest;
+import com.example.tenpaws.domain.board.dto.response.CommentResponse;
 import com.example.tenpaws.domain.board.entity.Comment;
 import com.example.tenpaws.domain.board.entity.Inquiry;
 import com.example.tenpaws.domain.board.repository.CommentRepository;
@@ -26,8 +27,9 @@ public class CommentServiceImpl implements CommentService {
     private final NotificationService notificationService;
     private final NotificationFactory notificationFactory;
 
+    @Override
     @Transactional
-    public Comment create(Long inquiryId, CreateCommentRequest request) {
+    public CommentResponse create(Long inquiryId, CreateCommentRequest request) {
         Inquiry inquiry = inquiryRepository.findById(inquiryId)
                 .orElseThrow(() -> new BaseException(ErrorCode.INQUIRY_NOT_FOUND));
         Admin admin = adminRepository.findById(request.getAdminId())
@@ -46,17 +48,20 @@ public class CommentServiceImpl implements CommentService {
                         inquiry.getWriterRole()
                 )
         );
-        return comment;
+
+        return new CommentResponse(comment);
     }
 
+    @Override
     @Transactional
-    public Comment update(Long commentId, UpdateCommentRequest request) {
+    public CommentResponse update(Long commentId, UpdateCommentRequest request) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new BaseException(ErrorCode.COMMENT_NOT_FOUND));
         comment.update(request.getContent());
-        return comment;
+        return new CommentResponse(comment);
     }
 
+    @Override
     @Transactional
     public void delete(Long commentId) {
         if (!commentRepository.existsById(commentId)) {
