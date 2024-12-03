@@ -47,8 +47,8 @@ public class ChatRoomServiceTests {
     @Transactional
     void create() {
         ChatRoomRequest chatRoomRequest = ChatRoomRequest.builder()
-                .user1("user")
-                .user2("shelter")
+                .userEmail("user")
+                .oppositeEmail("shelter")
                 .build();
 
         ChatRoomResponse chatRoomResponse = chatRoomService.create(chatRoomRequest);
