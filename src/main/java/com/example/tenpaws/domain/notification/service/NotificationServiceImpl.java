@@ -6,8 +6,6 @@ import com.example.tenpaws.domain.notification.dto.response.NotificationResponse
 import com.example.tenpaws.domain.notification.entity.Notification;
 import com.example.tenpaws.domain.notification.entity.NotificationType;
 import com.example.tenpaws.domain.notification.sse.SseEmitters;
-import com.example.tenpaws.domain.shelter.repository.ShelterRepository;
-import com.example.tenpaws.domain.user.repositoty.UserRepository;
 import com.example.tenpaws.global.exception.BaseException;
 import com.example.tenpaws.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +27,6 @@ public class NotificationServiceImpl implements NotificationService {
     private static final Logger log = LoggerFactory.getLogger(NotificationServiceImpl.class);
     private final NotificationRepository notificationRepository;
     private final SseEmitters sseEmitters;
-    private final UserRepository userRepository;
-    private final ShelterRepository shelterRepository;
     private static final Long DEFAULT_TIMEOUT = 60L * 1000 * 60;
 
     @Override
@@ -64,8 +60,6 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     @Transactional
     public NotificationResponse create(NotificationRequest request) {
-        validateRecipientEmail(request.getRecipientEmail());
-
         Notification savedNotification = notificationRepository.save(request.toEntity());
         if (savedNotification.getType().name().equals(NotificationType.NEW_CHAT_MESSAGE.name())) {
             return new NotificationResponse(savedNotification);
@@ -116,14 +110,5 @@ public class NotificationServiceImpl implements NotificationService {
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTIFICATION_NOT_FOUND));
         notificationRepository.delete(notification);
-    }
-
-    private void validateRecipientEmail(String email) {
-        boolean isValidUser = userRepository.existsByEmail(email) ||
-                            shelterRepository.existsByEmail(email);
-
-        if (!isValidUser) {
-            throw new BaseException(ErrorCode.MEMBER_OR_SHELTER_NOT_FOUND);
-        }
     }
 }
