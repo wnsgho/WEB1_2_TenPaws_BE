@@ -1,12 +1,13 @@
 package com.example.tenpaws.domain.board.controller;
 
-import com.example.tenpaws.domain.board.dto.request.CreateCommentRequest;
-import com.example.tenpaws.domain.board.dto.request.UpdateCommentRequest;
+import com.example.tenpaws.domain.board.dto.request.CommentRequest;
+import com.example.tenpaws.domain.board.dto.request.CommentRequest;
 import com.example.tenpaws.domain.board.dto.response.CommentResponse;
 import com.example.tenpaws.domain.board.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,15 +20,17 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<CommentResponse> create(
             @PathVariable Long inquiryId,
-            @RequestBody CreateCommentRequest request) {
-        return ResponseEntity.ok(commentService.create(inquiryId, request));
+            @RequestBody CommentRequest request,
+            Authentication authentication) {
+        String email = authentication.getName();
+        return ResponseEntity.ok(commentService.create(inquiryId, request, email));
     }
 
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN') and @ownershipVerifier.isCommentOwner(#commentId, authentication.name)")
     @PutMapping("/{commentId}")
     public ResponseEntity<CommentResponse> update(
             @PathVariable Long commentId,
-            @RequestBody UpdateCommentRequest request) {
+            @RequestBody CommentRequest request) {
         return ResponseEntity.ok(commentService.update(commentId, request));
     }
 
