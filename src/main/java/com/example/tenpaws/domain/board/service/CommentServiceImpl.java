@@ -42,12 +42,8 @@ public class CommentServiceImpl implements CommentService {
 
         // 문의 답변 알림 생성 및 저장
         notificationService.create(
-                notificationFactory.createInquiryAnsweredNotification(
-                        inquiry.getWriterId(),
-                        inquiry.getWriterRole()
-                )
+                notificationFactory.createInquiryAnsweredNotification(inquiry.getWriterEmail())
         );
-
         return new CommentResponse(comment);
     }
 
