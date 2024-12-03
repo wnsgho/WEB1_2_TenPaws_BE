@@ -94,11 +94,13 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     // 알림 조회 관련 메서드
+    @Override
     public Page<NotificationResponse> getList(Long userId, Pageable pageable) {
         return notificationRepository.findByUserIdOrderByCreatedAtDesc(userId, pageable)
                 .map(NotificationResponse::new);
     }
 
+    @Override
     @Transactional
     public void markAsRead(Long notificationId) {
         Notification notification = notificationRepository.findById(notificationId)
@@ -106,10 +108,12 @@ public class NotificationServiceImpl implements NotificationService {
         notification.markAsRead();
     }
 
+    @Override
     public Long getUnreadCount(Long userId) {
         return notificationRepository.countByUserIdAndIsReadFalse(userId);
     }
 
+    @Override
     @Transactional
     public void delete(Long notificationId) {
         Notification notification = notificationRepository.findById(notificationId)
