@@ -2,8 +2,7 @@ package com.example.tenpaws.domain.board.service;
 
 import com.example.tenpaws.domain.admin.entity.Admin;
 import com.example.tenpaws.domain.admin.repository.AdminRepository;
-import com.example.tenpaws.domain.board.dto.request.CreateAnnouncementRequest;
-import com.example.tenpaws.domain.board.dto.request.UpdateAnnouncementRequest;
+import com.example.tenpaws.domain.board.dto.request.AnnouncementRequest;
 import com.example.tenpaws.domain.board.dto.response.AnnouncementListViewResponse;
 import com.example.tenpaws.domain.board.dto.response.AnnouncementResponse;
 import com.example.tenpaws.domain.board.entity.Announcement;
@@ -25,8 +24,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
     @Override
     @Transactional
-    public AnnouncementResponse create(CreateAnnouncementRequest request) {
-        Admin admin = adminRepository.findById(request.getAdminId())
+    public AnnouncementResponse create(AnnouncementRequest request, String email) {
+        Admin admin = adminRepository.findByEmail(email)
                 .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
         Announcement savedAnnouncement = announcementRepository.save(request.toEntity(admin));
         return new AnnouncementResponse(savedAnnouncement);
@@ -49,7 +48,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
     @Override
     @Transactional
-    public AnnouncementResponse update(Long announcementId, UpdateAnnouncementRequest request) {
+    public AnnouncementResponse update(Long announcementId, AnnouncementRequest request) {
         Announcement announcement = announcementRepository.findById(announcementId)
                 .orElseThrow(() -> new BaseException(ErrorCode.ANNOUNCEMENT_NOT_FOUND));
         announcement.update(request.getCategory(), request.getTitle(), request.getContent());
