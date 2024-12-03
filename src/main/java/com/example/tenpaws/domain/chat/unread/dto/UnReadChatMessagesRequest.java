@@ -12,21 +12,21 @@ public class UnReadChatMessagesRequest {
     private Long chatRoomId;
 
     @NonNull
-    private String username;
+    private String userEmail;
 
     private int unReadCount;
 
     @Builder
-    public UnReadChatMessagesRequest(@NonNull Long chatRoomId, @NonNull String username, int unReadCount) {
+    public UnReadChatMessagesRequest(@NonNull Long chatRoomId, @NonNull String userEmail, int unReadCount) {
         this.chatRoomId = chatRoomId;
-        this.username = username;
+        this.userEmail = userEmail;
         this.unReadCount = unReadCount;
     }
 
     public UnReadChatMessages toEntity(ChatRoom chatRoom) {
         return UnReadChatMessages.builder()
                 .chatroom(chatRoom)
-                .username(username)
+                .username(userEmail)
                 .build();
     }
 }
