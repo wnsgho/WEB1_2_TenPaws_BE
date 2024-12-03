@@ -18,7 +18,6 @@ import java.util.Map;
 public class FaqController {
     private final FaqService faqService;
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPER_ADMIN')")
     @GetMapping
     public ResponseEntity<List<FaqResponse>> getAll() {
         return ResponseEntity.ok(faqService.findAll());
