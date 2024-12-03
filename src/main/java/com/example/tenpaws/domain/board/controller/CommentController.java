@@ -1,7 +1,6 @@
 package com.example.tenpaws.domain.board.controller;
 
 import com.example.tenpaws.domain.board.dto.request.CommentRequest;
-import com.example.tenpaws.domain.board.dto.request.CommentRequest;
 import com.example.tenpaws.domain.board.dto.response.CommentResponse;
 import com.example.tenpaws.domain.board.service.CommentService;
 import lombok.RequiredArgsConstructor;
