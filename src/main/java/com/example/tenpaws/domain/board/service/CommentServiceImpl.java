@@ -2,8 +2,7 @@ package com.example.tenpaws.domain.board.service;
 
 import com.example.tenpaws.domain.admin.entity.Admin;
 import com.example.tenpaws.domain.admin.repository.AdminRepository;
-import com.example.tenpaws.domain.board.dto.request.CreateCommentRequest;
-import com.example.tenpaws.domain.board.dto.request.UpdateCommentRequest;
+import com.example.tenpaws.domain.board.dto.request.CommentRequest;
 import com.example.tenpaws.domain.board.dto.response.CommentResponse;
 import com.example.tenpaws.domain.board.entity.Comment;
 import com.example.tenpaws.domain.board.entity.Inquiry;
@@ -29,10 +28,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public CommentResponse create(Long inquiryId, CreateCommentRequest request) {
+    public CommentResponse create(Long inquiryId, CommentRequest request, String email) {
         Inquiry inquiry = inquiryRepository.findById(inquiryId)
                 .orElseThrow(() -> new BaseException(ErrorCode.INQUIRY_NOT_FOUND));
-        Admin admin = adminRepository.findById(request.getAdminId())
+        Admin admin = adminRepository.findByEmail(email)
                 .orElseThrow(() -> new BaseException(ErrorCode.ADMIN_NOT_FOUND));
 
         Comment comment = commentRepository.save(Comment.builder()
@@ -54,7 +53,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public CommentResponse update(Long commentId, UpdateCommentRequest request) {
+    public CommentResponse update(Long commentId, CommentRequest request) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new BaseException(ErrorCode.COMMENT_NOT_FOUND));
         comment.update(request.getContent());
