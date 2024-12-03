@@ -48,6 +48,13 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public CommentResponse findById(Long commentId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new BaseException(ErrorCode.COMMENT_NOT_FOUND));
+        return new CommentResponse(comment);
+    }
+
+    @Override
     @Transactional
     public CommentResponse update(Long commentId, CommentRequest request) {
         Comment comment = commentRepository.findById(commentId)
