@@ -1,7 +1,6 @@
 package com.example.tenpaws.domain.board.controller;
 
-import com.example.tenpaws.domain.board.dto.request.CreateInquiryRequest;
-import com.example.tenpaws.domain.board.dto.request.UpdateInquiryRequest;
+import com.example.tenpaws.domain.board.dto.request.InquiryRequest;
 import com.example.tenpaws.domain.board.dto.response.InquiryDetailResponse;
 import com.example.tenpaws.domain.board.dto.response.InquiryListViewResponse;
 import com.example.tenpaws.domain.board.dto.response.InquiryResponse;
@@ -13,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,8 +23,11 @@ public class InquiryController {
 
     @PreAuthorize("hasAnyRole('USER', 'SHELTER')")
     @PostMapping
-    public ResponseEntity<InquiryResponse> create(@RequestBody CreateInquiryRequest request) {
-        return ResponseEntity.ok(inquiryService.create(request));
+    public ResponseEntity<InquiryResponse> create(
+            @RequestBody InquiryRequest request,
+            Authentication authentication) {
+        String email = authentication.getName();
+        return ResponseEntity.ok(inquiryService.create(request, email));
     }
 
     @PreAuthorize("permitAll()")
@@ -44,7 +47,7 @@ public class InquiryController {
     @PutMapping("/{inquiryId}")
     public ResponseEntity<InquiryResponse> update(
             @PathVariable Long inquiryId,
-            @RequestBody UpdateInquiryRequest request) {
+            @RequestBody InquiryRequest request) {
         return ResponseEntity.ok(inquiryService.update(inquiryId, request));
     }
 
