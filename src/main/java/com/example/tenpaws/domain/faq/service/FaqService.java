@@ -15,4 +15,6 @@ public interface FaqService {
     void delete(Long faqId);
 
     List<FaqResponse> findByParentId(Long parentId);
+
+    List<FaqResponse> findAll();
 }

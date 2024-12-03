@@ -73,4 +73,9 @@ public class FaqServiceImpl implements FaqService {
         }
         return faqResponseList;
     }
+
+    @Override
+    public List<FaqResponse> findAll() {
+        return faqRepository.findAll().stream().map(FaqResponse::new).toList();
+    }
 }
