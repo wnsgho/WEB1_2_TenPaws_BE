@@ -7,7 +7,6 @@ import com.example.tenpaws.domain.chat.unread.dto.UnReadChatMessagesRequest;
 import com.example.tenpaws.domain.chat.unread.service.UnReadChatMessagesService;
 import com.example.tenpaws.domain.notification.dto.request.CreateNotificationRequest;
 import com.example.tenpaws.domain.notification.dto.response.NotificationResponse;
-import com.example.tenpaws.domain.notification.entity.Notification;
 import com.example.tenpaws.domain.notification.entity.NotificationType;
 import com.example.tenpaws.domain.notification.service.NotificationService;
 import com.example.tenpaws.global.entity.UserRole;
@@ -36,8 +35,8 @@ public class ChatController {
 
     @MessageMapping("/chat/send/{chatRoomId}")
     public void sendMessage(@DestinationVariable Long chatRoomId, ChatMessageRequest chatMessageRequest) {
-        String sender = chatMessageRequest.getSender();
-        String receiver = chatMessageRequest.getReceiver();
+        String sender = chatMessageRequest.getSenderEmail();
+        String receiver = chatMessageRequest.getReceiverEmail();
         String destination = "/topic/chatroom/" + chatRoomId;
         Map<String, Object> senderData = customUserDetailsService.getInfosByEmail(sender);
         Map<String, Object> receiverData = customUserDetailsService.getInfosByEmail(receiver);
@@ -53,7 +52,7 @@ public class ChatController {
 
         if (!isUserSubscribed(receiver, destination)) {
             unReadChatMessagesService.update(
-                    UnReadChatMessagesRequest.builder().chatRoomId(chatRoomId).username(receiver).unReadCount(1).build());
+                    UnReadChatMessagesRequest.builder().chatRoomId(chatRoomId).userEmail(receiver).unReadCount(1).build());
 
             NotificationResponse notificationResponse = notificationService.create(CreateNotificationRequest.builder()
                     .content(chatMessageResponse.getSenderName() + "님이 채팅을 보내셨습니다.")
