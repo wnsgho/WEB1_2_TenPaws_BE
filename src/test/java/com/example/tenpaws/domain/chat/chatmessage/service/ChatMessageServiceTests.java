@@ -62,7 +62,7 @@ public class ChatMessageServiceTests {
     void createChatMessage() {
         ChatMessageRequest chatMessageRequest = ChatMessageRequest.builder()
                 .message("test message")
-                .sender("user")
+                .senderEmail("user")
                 .chatRoomId(savedId)
                 .build();
 
