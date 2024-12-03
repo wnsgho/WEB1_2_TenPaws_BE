@@ -100,4 +100,11 @@ public class FaqServiceTests {
             faqService.delete(faqId);
         });
     }
+
+    @Test
+    void testFindAll() {
+        List<FaqResponse> faqResponseList = faqService.findAll();
+
+        assertEquals(4, faqResponseList.size());
+    }
 }
