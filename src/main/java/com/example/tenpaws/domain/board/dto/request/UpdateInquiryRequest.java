@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateInquiryRequest {
-    private Long userId;
-    private Long shelterId;
     private String title;
     private String content;
 }
