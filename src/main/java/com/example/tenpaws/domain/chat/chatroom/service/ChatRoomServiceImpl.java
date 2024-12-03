@@ -24,7 +24,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Transactional
     public ChatRoomResponse create(ChatRoomRequest chatRoomRequest) {
         try {
-            Optional<ChatRoom> optionalChatRoom = chatRoomRepository.findByUsers(chatRoomRequest.getUser1(), chatRoomRequest.getUser2());
+            Optional<ChatRoom> optionalChatRoom = chatRoomRepository.findByUsers(chatRoomRequest.getUserEmail(), chatRoomRequest.getOppositeEmail());
             return optionalChatRoom.map(ChatRoomResponse::new)
                     .orElseGet(() -> new ChatRoomResponse(chatRoomRepository.save(chatRoomRequest.toEntity())));
         } catch (Exception e) {
