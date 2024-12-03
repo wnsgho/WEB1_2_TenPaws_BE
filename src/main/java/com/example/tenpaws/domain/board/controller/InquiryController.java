@@ -5,7 +5,6 @@ import com.example.tenpaws.domain.board.dto.request.UpdateInquiryRequest;
 import com.example.tenpaws.domain.board.dto.response.InquiryDetailResponse;
 import com.example.tenpaws.domain.board.dto.response.InquiryListViewResponse;
 import com.example.tenpaws.domain.board.dto.response.InquiryResponse;
-import com.example.tenpaws.domain.board.entity.Inquiry;
 import com.example.tenpaws.domain.board.service.InquiryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,45 +21,37 @@ import org.springframework.web.bind.annotation.*;
 public class InquiryController {
     private final InquiryService inquiryService;
 
-    @PreAuthorize("hasRole('USER') or hasRole('SHELTER')")
+    @PreAuthorize("hasAnyRole('USER', 'SHELTER')")
     @PostMapping
     public ResponseEntity<InquiryResponse> create(@RequestBody CreateInquiryRequest request) {
-        Inquiry savedInquiry = inquiryService.create(request);
-        return ResponseEntity.ok().body(new InquiryResponse(savedInquiry));
+        return ResponseEntity.ok(inquiryService.create(request));
     }
 
+    @PreAuthorize("permitAll()")
     @GetMapping
     public ResponseEntity<Page<InquiryListViewResponse>> getList(
             @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok(inquiryService.getList(pageable));
     }
 
+    @PreAuthorize("permitAll()")
     @GetMapping("/{inquiryId}")
     public ResponseEntity<InquiryDetailResponse> findById(@PathVariable Long inquiryId) {
-        InquiryDetailResponse response = inquiryService.findById(inquiryId);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok(inquiryService.findById(inquiryId));
     }
 
-    @PreAuthorize("hasRole('USER') or hasRole('SHELTER')")
+    @PreAuthorize("hasAnyRole('USER', 'SHELTER') and @ownershipVerifier.isInquiryOwner(#inquiryId, authentication.name)")
     @PutMapping("/{inquiryId}")
     public ResponseEntity<InquiryResponse> update(
             @PathVariable Long inquiryId,
             @RequestBody UpdateInquiryRequest request) {
-        Inquiry updatedInquiry = inquiryService.update(inquiryId, request);
-        return ResponseEntity.ok().body(new InquiryResponse(updatedInquiry));
+        return ResponseEntity.ok(inquiryService.update(inquiryId, request));
     }
 
-    /**
-     * userId와 shelterId가 선택적인 값이므로 @RequestParam 적용.
-     * PathVariable을 사용하면 URL이 복잡해짐
-     * ex. @DeleteMapping("/{inquiryId}/users/{userId}/shelters/{shelterId}")
-     */
+    @PreAuthorize("hasAnyRole('USER', 'SHELTER') and @ownershipVerifier.isInquiryOwner(#inquiryId, authentication.name)")
     @DeleteMapping("/{inquiryId}")
-    public ResponseEntity<String> delete(
-            @PathVariable Long inquiryId,
-            @RequestParam(required = false) Long userId,
-            @RequestParam(required = false) Long shelterId) {
-        inquiryService.delete(inquiryId, userId, shelterId);
+    public ResponseEntity<String> delete(@PathVariable Long inquiryId) {
+        inquiryService.delete(inquiryId);
         return ResponseEntity.ok("문의글이 성공적으로 삭제되었습니다.");
     }
 }
