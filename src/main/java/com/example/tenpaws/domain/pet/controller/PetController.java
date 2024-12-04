@@ -18,6 +18,11 @@ public class PetController {
     @Autowired
     private PetService petService;
 
+    @GetMapping("{petId}")
+    public PetResponseDTO getPetById(@PathVariable Long petId) {
+        return petService.getPetById(petId, null);
+    }
+    
     @GetMapping
     public List<PetResponseDTO> getPetList() {
         return petService.getPetList();
