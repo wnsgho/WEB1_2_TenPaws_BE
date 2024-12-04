@@ -156,4 +156,12 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllSocialUsers());
     }
 
+    // 소셜 로그인 유저 이름 변경
+    @PatchMapping("/{userId}/username")
+    public ResponseEntity<OAuth2UserDTO> updateUsername(
+            @PathVariable String userId,
+            @RequestBody UpdateSocialUsernameRequestDTO requestDTO) {
+        OAuth2UserDTO responseDTO = userService.updateSocialUsername(userId, requestDTO);
+        return ResponseEntity.ok(responseDTO);
+    }
 }

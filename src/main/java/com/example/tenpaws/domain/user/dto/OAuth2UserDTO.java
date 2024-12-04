@@ -16,13 +16,15 @@ public class OAuth2UserDTO {
     private String email;
     private String type;
     private String role;
+    private String username;
 
     public static OAuth2UserDTO fromEntity(OAuth2UserEntity oAuth2UserEntity) {
         return new OAuth2UserDTO(
                 oAuth2UserEntity.getUserId(),
                 oAuth2UserEntity.getEmail(),
                 oAuth2UserEntity.getType(),
-                oAuth2UserEntity.getRole()
+                oAuth2UserEntity.getRole(),
+                oAuth2UserEntity.getUsername()
         );
     }
 }
