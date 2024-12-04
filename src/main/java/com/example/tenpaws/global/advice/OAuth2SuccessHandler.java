@@ -26,7 +26,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     ) throws IOException, ServletException {
         CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
         String userId = oAuth2User.getName();
-        String token = jwtUtil.createSocialJwt(userId);
+        String email = oAuth2User.getEmail();
+        String token = jwtUtil.createSocialJwt(userId, email);
 
         // 로그인 성공 후, 발급된 토큰을 포함한 url 주소로 리다이렉팅
         // 프론트 팀에서는 적절하게 해당 토큰을 저장하고, 유저가 서비스를 사용 가능하게 페이지 구축 또는 다른 주소로 연결

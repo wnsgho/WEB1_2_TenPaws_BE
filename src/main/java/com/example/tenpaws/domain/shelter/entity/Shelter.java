@@ -79,5 +79,11 @@ public class Shelter {
     public void changePassword(String password) {
         this.password = password;
     }
+    public void changeEmail(String email) {
+        this.email = email;
+    }
+    public void changeUserRole(UserRole userRole) {
+        this.userRole = userRole;
+    }
 }
 

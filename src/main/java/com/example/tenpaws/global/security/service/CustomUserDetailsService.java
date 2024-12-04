@@ -4,11 +4,12 @@ import com.example.tenpaws.domain.admin.entity.Admin;
 import com.example.tenpaws.domain.admin.repository.AdminRepository;
 import com.example.tenpaws.domain.shelter.entity.Shelter;
 import com.example.tenpaws.domain.shelter.repository.ShelterRepository;
+import com.example.tenpaws.domain.user.entity.OAuth2UserEntity;
 import com.example.tenpaws.domain.user.entity.User;
+import com.example.tenpaws.domain.user.repositoty.OAuth2UserRepository;
 import com.example.tenpaws.domain.user.repositoty.UserRepository;
-import com.example.tenpaws.global.security.dto.AdminUserDetails;
-import com.example.tenpaws.global.security.dto.NormalUserDetails;
-import com.example.tenpaws.global.security.dto.ShelterUserDetails;
+import com.example.tenpaws.global.entity.UserRole;
+import com.example.tenpaws.global.security.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,6 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
     private final ShelterRepository shelterRepository;
     private final AdminRepository adminRepository;
+    private final OAuth2UserRepository oAuth2UserRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -40,7 +42,15 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         Admin admin = adminRepository.findByEmail(email).orElse(null);
         if (admin != null) {
+            if (admin.getUserRole() == UserRole.ROLE_SUPER_ADMIN) {
+                return new SuperAdminDetails(admin);
+            }
             return new AdminUserDetails(admin);
+        }
+
+        OAuth2UserEntity oAuth2UserEntity = oAuth2UserRepository.findByEmail(email).orElse(null);
+        if (oAuth2UserEntity != null) {
+            return new OAuth2UserDetails(oAuth2UserEntity);
         }
 
         throw new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + email);

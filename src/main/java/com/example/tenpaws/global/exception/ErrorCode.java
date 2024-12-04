@@ -10,6 +10,7 @@ public enum ErrorCode {
 
     // User
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found"),
+    SOCIAL_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "Social user not found"),
     MEMBER_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "Not authorized User"),
     MEMBER_ALREADY_EXIST(HttpStatus.CONFLICT, "User already exists"),
     EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, "Email already exists"),

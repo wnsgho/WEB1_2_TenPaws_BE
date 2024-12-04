@@ -2,10 +2,7 @@ package com.example.tenpaws.domain.user.controller;
 
 import com.example.tenpaws.domain.recommendation.service.RecommendService;
 import com.example.tenpaws.domain.shelter.dto.ShelterRequestDTO;
-import com.example.tenpaws.domain.user.dto.UserJoinDTO;
-import com.example.tenpaws.domain.user.dto.UserResponseDTO;
-import com.example.tenpaws.domain.user.dto.UserUpdateRequestDTO;
-import com.example.tenpaws.domain.user.dto.UserUpdateResponseDTO;
+import com.example.tenpaws.domain.user.dto.*;
 import com.example.tenpaws.domain.user.entity.User;
 import com.example.tenpaws.domain.user.repositoty.UserRepository;
 import com.example.tenpaws.domain.user.service.UserService;
@@ -13,12 +10,17 @@ import com.example.tenpaws.global.exception.BaseException;
 import com.example.tenpaws.global.exception.ErrorCode;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("/api/v1/users")
 public class UserController {
 
@@ -113,6 +116,15 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
+    // 단일 소셜 유저 조회
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/my-info")
+    public ResponseEntity<Object> getMyInfo(Authentication authentication) {
+        String userId = authentication.getName();
+        log.info("단일 소셜 로그인 조회 : {}", userId);
+        return ResponseEntity.ok(userService.getSocialUserInfo(userId));
+    }
+
     // 유저 정보 수정
     @PreAuthorize("hasRole('ROLE_USER') and @userServiceImpl.isUserOwn(#id) or hasRole('ROLE_SHELTER') and @userServiceImpl.isUserOwn(#id)")
     @PutMapping("/{id}")
@@ -132,8 +144,16 @@ public class UserController {
 
     // 모든 일반 유저 불러오기
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') or hasRole('ROLE_ADMIN')")
-    @GetMapping
+    @GetMapping("/retrieve-web")
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
+
+    // 모든 소셜 유저 불러오기
+    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') or hasRole('ROLE_ADMIN')")
+    @GetMapping("/retrieve-social")
+    public ResponseEntity<List<OAuth2UserDTO>> getAllSocialUsers() {
+        return ResponseEntity.ok(userService.getAllSocialUsers());
+    }
+
 }

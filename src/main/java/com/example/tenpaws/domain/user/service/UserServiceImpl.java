@@ -3,31 +3,37 @@ package com.example.tenpaws.domain.user.service;
 import com.example.tenpaws.domain.shelter.dto.ShelterRequestDTO;
 import com.example.tenpaws.domain.shelter.entity.Shelter;
 import com.example.tenpaws.domain.shelter.repository.ShelterRepository;
-import com.example.tenpaws.domain.user.dto.UserJoinDTO;
-import com.example.tenpaws.domain.user.dto.UserResponseDTO;
-import com.example.tenpaws.domain.user.dto.UserUpdateRequestDTO;
-import com.example.tenpaws.domain.user.dto.UserUpdateResponseDTO;
+import com.example.tenpaws.domain.user.dto.*;
+import com.example.tenpaws.domain.user.entity.OAuth2UserEntity;
 import com.example.tenpaws.domain.user.entity.User;
+import com.example.tenpaws.domain.user.repositoty.OAuth2UserRepository;
 import com.example.tenpaws.domain.user.repositoty.UserRepository;
 import com.example.tenpaws.global.exception.BaseException;
 import com.example.tenpaws.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Struct;
+import java.util.IllegalFormatCodePointException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final ShelterRepository shelterRepository;
+    private final OAuth2UserRepository oAuth2UserRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     // 일반 유저 등록
@@ -119,12 +125,35 @@ public class UserServiceImpl implements UserService {
 
     // 일반 유저 목록 불러오기 : 관리자 전용 기능
     @Override
+    @Transactional(readOnly = true)
     public List<UserResponseDTO> getAllUsers() {
         List<User> users = userRepository.findAll();
 
         return users.stream()
                 .map(UserResponseDTO::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    // 소셜 로그인 유저 목록 불러오기 : 관리자 전용 기능
+    @Override
+    @Transactional(readOnly = true)
+    public List<OAuth2UserDTO> getAllSocialUsers() {
+        List<OAuth2UserEntity> oAuth2UserEntities = oAuth2UserRepository.findAll();
+
+        return oAuth2UserEntities.stream()
+                .map(OAuth2UserDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    // 소셜 로그인 유저 단일 정보 조회
+    @Override
+    @Transactional(readOnly = true)
+    public OAuth2UserDTO getSocialUserInfo(String userId) {
+        log.info("가져오는 유저 고유 아이디 정보 : {}", userId);
+        OAuth2UserEntity oAuth2UserEntity = oAuth2UserRepository.findByEmail(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.SOCIAL_MEMBER_NOT_FOUND));
+
+        return OAuth2UserDTO.fromEntity(oAuth2UserEntity);
     }
 
     public boolean isUserOwn(Long id) {
