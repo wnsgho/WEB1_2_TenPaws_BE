@@ -1,5 +1,6 @@
 package com.example.tenpaws.domain.user.service;
 
+import com.example.tenpaws.domain.pet.species.Species;
 import com.example.tenpaws.domain.shelter.dto.ShelterRequestDTO;
 import com.example.tenpaws.domain.shelter.entity.Shelter;
 import com.example.tenpaws.domain.shelter.repository.ShelterRepository;
@@ -48,6 +49,7 @@ class UserServiceImplTest {
                 LocalDate.of(1990, 1, 1),
                 "010-1234-5678",
                 "123 Street",
+                Species.강아지,
                 "medium",
                 "Friendly",
                 5,

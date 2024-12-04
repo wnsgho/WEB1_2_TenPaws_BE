@@ -20,7 +20,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Tag(name = "펫 기능 API", description = "펫 기능을 모아둔 컨트롤러 입니다")
 @RequestMapping("/api/v1/pets")
-@RequiredArgsConstructor
 public class PetController {
 
     private final PetService petService;
