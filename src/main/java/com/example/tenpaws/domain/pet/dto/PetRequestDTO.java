@@ -19,15 +19,15 @@ import java.util.Set;
 public class PetRequestDTO {
     private String petName;
 
-    // species 필드를 추가
+//    // species 필드를 추가
     private Species species; // Species 필드를 추가
-
-    // @JsonCreator를 이용해 Species를 직접 매핑
-    @JsonCreator
-    public void setSpecies(@JsonProperty("species") String species) {
-        // Species 값을 문자열로 받아서 매핑하는 방식
-        this.species = Species.fromString(species);
-    }
+//
+//    // @JsonCreator를 이용해 Species를 직접 매핑
+//    @JsonCreator
+//    public void setSpecies(@JsonProperty("species") String species) {
+//        // Species 값을 문자열로 받아서 매핑하는 방식
+//        this.species = Species.fromString(species);
+//    }
 
     private String size;
     private int age;
