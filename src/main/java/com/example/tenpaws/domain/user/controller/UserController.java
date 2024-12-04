@@ -2,6 +2,7 @@ package com.example.tenpaws.domain.user.controller;
 
 import com.example.tenpaws.domain.recommendation.service.RecommendService;
 import com.example.tenpaws.domain.shelter.dto.ShelterRequestDTO;
+import com.example.tenpaws.domain.shelter.service.ShelterService;
 import com.example.tenpaws.domain.user.dto.*;
 import com.example.tenpaws.domain.user.entity.User;
 import com.example.tenpaws.domain.user.repositoty.UserRepository;
@@ -11,18 +12,17 @@ import com.example.tenpaws.global.exception.ErrorCode;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -35,6 +35,7 @@ public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final RecommendService recommendService;
+    private final ShelterService shelterService;
 
     // 일반 유저 가입
     @PostMapping("/regular/join")
@@ -154,6 +155,36 @@ public class UserController {
     @GetMapping("/retrieve-social")
     public ResponseEntity<List<OAuth2UserDTO>> getAllSocialUsers() {
         return ResponseEntity.ok(userService.getAllSocialUsers());
+    }
+
+    // 본인을 제외한 모든 유저 불러오기 for Chat
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_SHELTER')")
+    @GetMapping("/chat")
+    public ResponseEntity<List<UserResponseForChatDTO>> getAllUsersForChat(Authentication authentication) {
+        String userEmail = authentication.getName();
+        List<UserResponseForChatDTO> result = new ArrayList<>();
+        boolean userRemoved;
+
+        List<UserResponseForChatDTO> normalUser = new ArrayList<>(userService.getAllUsers().stream().map(userResponseDTO ->
+                new UserResponseForChatDTO(userResponseDTO.getUsername(), userResponseDTO.getEmail())).toList());
+        List<UserResponseForChatDTO> socialUser = new ArrayList<>(userService.getAllSocialUsers().stream().map(oAuth2UserDTO ->
+                new UserResponseForChatDTO(oAuth2UserDTO.getUserId(), oAuth2UserDTO.getEmail())).toList());
+        List<UserResponseForChatDTO> shelterUser = new ArrayList<>(shelterService.getAllShelters().stream().map(shelterResponseDTO ->
+                new UserResponseForChatDTO(shelterResponseDTO.getShelterName(), shelterResponseDTO.getEmail())).toList());
+
+        userRemoved = normalUser.removeIf(userResponseForChatDTO -> userEmail.equals(userResponseForChatDTO.getEmail()));
+        if (!userRemoved) {
+            userRemoved = socialUser.removeIf(userResponseForChatDTO -> userEmail.equals(userResponseForChatDTO.getEmail()));
+        }
+        if (!userRemoved) {
+            shelterUser.removeIf(userResponseForChatDTO -> userEmail.equals(userResponseForChatDTO.getEmail()));
+        }
+
+        result.addAll(normalUser);
+        result.addAll(socialUser);
+        result.addAll(shelterUser);
+
+        return ResponseEntity.ok(result);
     }
 
 }
