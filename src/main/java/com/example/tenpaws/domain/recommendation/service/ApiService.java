@@ -13,10 +13,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+//@Transactional http 요청 보내므로, 트랜잭션 관리가 필요하지 않다.
 public class ApiService {
 
     @Value("${openai.api.key}")
@@ -26,12 +30,10 @@ public class ApiService {
     private static final Logger logger = LoggerFactory.getLogger(ApiService.class);
 
     private final OkHttpClient client = new OkHttpClient();
-
     private final ObjectMapper objectMapper = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     public String getRecommendation(String prompt) throws IOException {
-        // 요청 데이터 생성
         ChatRequest chatRequest = new ChatRequest(prompt);
         String json = objectMapper.writeValueAsString(chatRequest);
         logger.info("Sending request to OpenAI API: {}", json);
@@ -48,10 +50,23 @@ public class ApiService {
                 throw new IOException("Unexpected response: " + response);
             }
 
-            // 응답 JSON 반환 / 글자로 변환해주던 chatResponse 삭제
             String responseBody = response.body().string();
             logger.info("Received JSON response: {}", responseBody);
-            return responseBody;
+
+            // 응답 파싱
+            Map<String, Object> jsonResponse = objectMapper.readValue(responseBody, Map.class);
+            List<Map<String, Object>> choices = (List<Map<String, Object>>) jsonResponse.get("choices");
+
+            if (choices != null && !choices.isEmpty()) {
+                Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
+                if (message != null) {
+                    String content = (String) message.get("content");
+                    logger.info("Parsed content: {}", content);
+                    return content;
+                }
+            }
+
+            throw new IOException("Unexpected response format");
         }
     }
 
@@ -77,4 +92,23 @@ public class ApiService {
             }
         }
     }
+
+//    @Getter
+//    @Setter
+//    public static class AiResponse {
+//        private List<Choice> choices;
+//
+//        @Getter
+//        @Setter
+//        public static class Choice {
+//            private Message message;
+//        }
+//
+//        @Getter
+//        @Setter
+//        public static class Message {
+//            private String content;
+//        }
+//    }
+
 }

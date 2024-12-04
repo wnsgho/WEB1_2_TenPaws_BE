@@ -22,6 +22,8 @@ public class Notification {
     @Column(name = "id", updatable = false)
     private Long id;
 
+    private String recipientEmail;
+
     @Column
     private String content;
 
@@ -30,16 +32,14 @@ public class Notification {
 
     private Boolean isRead;
 
-    private Long userId;
-
     @CreatedDate
     private LocalDateTime createdAt;
 
     @Builder
-    public Notification(String content, NotificationType type, Long userId) {
+    public Notification(String content, NotificationType type, String recipientEmail) {
         this.content = content;
         this.type = type;
-        this.userId = userId;
+        this.recipientEmail = recipientEmail;
         this.isRead = false;
     }
 

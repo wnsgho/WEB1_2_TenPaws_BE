@@ -3,11 +3,14 @@ package com.example.tenpaws.domain.chat.chatroom.controller;
 import com.example.tenpaws.domain.chat.chatroom.dto.ChatRoomRequest;
 import com.example.tenpaws.domain.chat.chatroom.dto.ChatRoomResponse;
 import com.example.tenpaws.domain.chat.chatroom.service.ChatRoomService;
+import com.example.tenpaws.domain.chat.unread.dto.UnReadChatMessagesResponse;
+import com.example.tenpaws.domain.chat.unread.service.UnReadChatMessagesService;
+import com.example.tenpaws.global.security.service.CustomUserDetailsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.user.SimpUserRegistry;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,47 +21,43 @@ import java.util.Map;
 @RequestMapping("/api/v1/chatrooms")
 public class ChatRoomController {
     private final ChatRoomService chatRoomService;
-    private final SimpMessagingTemplate messagingTemplate;
-    private final SimpUserRegistry userRegistry;
+    private final UnReadChatMessagesService unReadChatMessagesService;
+    private final CustomUserDetailsService customUserDetailsService;
 
-    @GetMapping("/{chatRoomId}")
-    public ResponseEntity<ChatRoomResponse> findChatRoomById(@PathVariable("chatRoomId") Long chatRoomId) {
-        return ResponseEntity.ok(chatRoomService.getChatRoom(chatRoomId));
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_SHELTER', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN')")
+    @GetMapping("/user")
+    public ResponseEntity<List<ChatRoomResponse>> findChatRoomsByUser(Authentication authentication) {
+        String user = authentication.getName();
+        List<ChatRoomResponse> chatRoomResponseList = chatRoomService.getChatRoomsByUser(user);
+        List<UnReadChatMessagesResponse> unReadChatMessagesResponseList = unReadChatMessagesService.read(user);
+        for (int i = 0; i < chatRoomResponseList.size(); i++) {
+            String email1 = chatRoomResponseList.get(i).getUserEmail();
+            String email2 = chatRoomResponseList.get(i).getOppositeEmail();
+            chatRoomResponseList.get(i).setUserEmail(user);
+            chatRoomResponseList.get(i).setOppositeEmail(user.equals(email1) ? email2 : email1);
+            String oppositeName = customUserDetailsService.getInfosByEmail(chatRoomResponseList.get(i).getOppositeEmail()).get("username").toString();
+            chatRoomResponseList.get(i).setOppositeName(oppositeName);
+            chatRoomResponseList.get(i).setUnReadCount(unReadChatMessagesResponseList.get(i).getUnReadCount());
+        }
+        return ResponseEntity.ok(chatRoomResponseList);
     }
 
-    @GetMapping("/{user1}/{user2}")
-    public ResponseEntity<ChatRoomResponse> findChatRoomByUsers(@PathVariable("user1") String user1, @PathVariable("user2") String user2) {
-        return ResponseEntity.ok(chatRoomService.getChatRoomByUsers(user1, user2));
-    }
-
-    @GetMapping("/user/{user}")
-    public ResponseEntity<List<ChatRoomResponse>> findChatRoomsByUser(@PathVariable("user") String user) {
-        return ResponseEntity.ok(chatRoomService.getChatRoomsByUser(user));
-    }
-
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPER_ADMIN') or (hasAnyRole('ROLE_USER', 'ROLE_SHELTER') and #chatRoomRequest.userEmail == authentication.name)")
     @PostMapping
     public ResponseEntity<ChatRoomResponse> createChatRoom(@Valid @RequestBody ChatRoomRequest chatRoomRequest) {
         ChatRoomResponse chatRoomResponse = chatRoomService.create(chatRoomRequest);
-        notifyUserForSubscription(chatRoomResponse.getChatRoomId(), chatRoomResponse.getUser2());
+        chatRoomResponse.setUserEmail(chatRoomRequest.getUserEmail());
+        chatRoomResponse.setOppositeEmail(chatRoomRequest.getOppositeEmail());
+        String oppositeName = customUserDetailsService.getInfosByEmail(chatRoomResponse.getOppositeEmail()).get("username").toString();
+        chatRoomResponse.setOppositeName(oppositeName);
+        unReadChatMessagesService.create(chatRoomResponse.getChatRoomId(), chatRoomResponse.getUserEmail(), chatRoomResponse.getOppositeEmail());
         return ResponseEntity.ok(chatRoomResponse);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPER_ADMIN') or (hasAnyRole('ROLE_USER', 'ROLE_SHELTER') and @chatRoomServiceImpl.isUserParticipated(#chatRoomId))")
     @DeleteMapping("/{chatRoomId}")
     public ResponseEntity<Map<String, String>> deleteChatRoom(@PathVariable("chatRoomId") Long chatRoomId) {
         chatRoomService.delete(chatRoomId);
         return ResponseEntity.ok(Map.of("message", "ChatRoom deleted"));
-    }
-
-    public void notifyUserForSubscription(Long chatRoomId, String targetUsername) {
-        boolean isConnected = userRegistry.getUsers().stream()
-                .anyMatch(user -> user.getName().equals(targetUsername));
-
-        if (isConnected) {
-            messagingTemplate.convertAndSendToUser(
-                    targetUsername,
-                    "/queue/subscribe",
-                    chatRoomId
-            );
-        }
     }
 }

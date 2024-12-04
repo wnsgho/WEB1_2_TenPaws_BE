@@ -58,14 +58,15 @@ public class JwtUtil {
     }
 
     // 소셜 유저 jwt 생성
-    public String createSocialJwt(String userId) {
+    public String createSocialJwt(String userId, String email) {
         long oneHour = 3600000L; // 1시간
         return Jwts.builder()
                 .claim("category", "Social")
                 .claim("userId", userId)
+                .claim("email", email)
                 .claim("role", UserRole.ROLE_USER.name())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + oneHour))
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + oneHour))
                 .signWith(secretKey)
                 .compact();
     }

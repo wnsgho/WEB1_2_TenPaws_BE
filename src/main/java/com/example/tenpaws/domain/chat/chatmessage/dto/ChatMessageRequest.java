@@ -3,42 +3,35 @@ package com.example.tenpaws.domain.chat.chatmessage.dto;
 import com.example.tenpaws.domain.chat.chatmessage.entity.ChatMessage;
 import com.example.tenpaws.domain.chat.chatroom.entity.ChatRoom;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class ChatMessageRequest {
     @NotBlank
     private String message;
 
     @NotBlank
-    private String sender;
+    private String senderEmail;
 
-    private String receiver;
+    @NotBlank
+    private String receiverEmail;
 
     @NonNull
     private Long chatRoomId;
 
     @Builder
-    public ChatMessageRequest(String message, String sender, @NonNull Long chatRoomId) {
+    public ChatMessageRequest(String message, String senderEmail, @NonNull Long chatRoomId) {
         this.message = message;
-        this.sender = sender;
+        this.senderEmail = senderEmail;
         this.chatRoomId = chatRoomId;
-    }
-
-    public ChatMessageRequest(ChatMessage chatMessage) {
-        this.message = chatMessage.getMessage();
-        this.sender = chatMessage.getSender();
-        this.chatRoomId = chatMessage.getChatRoom().getId();
     }
 
     public ChatMessage toEntity(ChatRoom chatRoom) {
         return ChatMessage.builder()
                 .message(message)
-                .sender(sender)
+                .sender(senderEmail)
                 .chatRoom(chatRoom)
                 .build();
     }

@@ -1,5 +1,9 @@
 package com.example.tenpaws.global.config;
 
+import com.example.tenpaws.domain.admin.repository.AdminRepository;
+import com.example.tenpaws.domain.shelter.repository.ShelterRepository;
+import com.example.tenpaws.domain.user.repositoty.OAuth2UserRepository;
+import com.example.tenpaws.domain.user.repositoty.UserRepository;
 import com.example.tenpaws.global.advice.OAuth2SuccessHandler;
 import com.example.tenpaws.global.security.jwt.JwtFilter;
 import com.example.tenpaws.global.security.jwt.JwtUtil;
@@ -12,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -28,6 +33,7 @@ import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -36,6 +42,10 @@ public class SecurityConfig {
     private final RefreshRepository refreshRepository;
     private final DefaultOAuth2UserService oAuth2UserService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final UserRepository userRepository;
+    private final ShelterRepository shelterRepository;
+    private final AdminRepository adminRepository;
+    private final OAuth2UserRepository oAuth2UserRepository;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -92,10 +102,21 @@ public class SecurityConfig {
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository), UsernamePasswordAuthenticationFilter.class);
 
         httpSecurity
-                .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class);
+                .addFilterBefore(new JwtFilter(jwtUtil, userRepository, shelterRepository, adminRepository, oAuth2UserRepository), LoginFilter.class);
 
         httpSecurity
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
+
+        // 필터 순서가 조금 헷갈리는 부분이 존재, 어떤 게 먼저 실행되어야 하는 지에 따라 결과가 달라지므로 조금만 더 생각이 필요
+//        httpSecurity
+//                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository), UsernamePasswordAuthenticationFilter.class);
+//
+//        httpSecurity
+//                .addFilterBefore(new JwtFilter(jwtUtil, userRepository, shelterRepository, adminRepository, oAuth2UserRepository), UsernamePasswordAuthenticationFilter.class);
+//
+//        httpSecurity
+//                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
+
 
         // oauth2
         httpSecurity

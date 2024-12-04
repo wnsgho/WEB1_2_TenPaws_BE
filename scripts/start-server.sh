@@ -7,11 +7,6 @@ exec 1> >(tee -a "$LOG_FILE") 2>&1
 
 echo "-------------서버 시작 $(date)-------------"
 
-# MySQL 데이터 디렉토리 생성
-echo "MySQL 데이터 디렉토리 생성..."
-mkdir -p /home/ubuntu/instagram-server/mysql_data
-chmod 777 /home/ubuntu/instagram-server/mysql_data
-
 # 작업 디렉토리 이동
 echo "작업 디렉토리 이동..."
 cd /home/ubuntu/instagram-server || {

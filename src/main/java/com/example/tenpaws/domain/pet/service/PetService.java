@@ -39,13 +39,18 @@ public class PetService {
                 .collect(Collectors.toList());
     }
 
-    public PetResponseDTO getPetById(Long shelterId, Long petId) {
-        Shelter shelter = getShelter(shelterId);
-        Optional<Pet> optionalPet = petRepository.findById(petId); //optional과 아래 updatePet의 코드 비교해보기. 뭐가 더 효율적인가?
-        return optionalPet
-                .filter(pet -> pet.getShelter().equals(shelter))
-                .map(PetResponseDTO::fromEntity)
+    public PetResponseDTO getPetById(Long petId, Long shelterId) {
+        Pet pet = petRepository.findById(petId)
                 .orElseThrow(() -> new BaseException(ErrorCode.PET_NOT_FOUND));
+
+        if (shelterId != null) {
+            Shelter shelter = getShelter(shelterId);
+            if (!pet.getShelter().equals(shelter)) {
+                throw new BaseException(ErrorCode.PET_NOT_FOUND);
+            }
+        }
+
+        return PetResponseDTO.fromEntity(pet);
     }
 
     public PetResponseDTO createPet(Long shelterId, PetRequestDTO requestDTO) {

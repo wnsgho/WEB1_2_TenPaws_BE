@@ -36,7 +36,9 @@ public class Apply {
 
     public enum ApplyStatus {
         PENDING,
+        CANCELED,
         UNDER_REVIEW,
+        REJECTED,
         COMPLETED
     }
 

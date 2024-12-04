@@ -32,7 +32,7 @@ public class OAuth2UserServiceImplement extends DefaultOAuth2UserService {
 
         OAuth2UserEntity oAuth2UserEntity = null;
         String userId = null;
-        String email = "empty@email.com";
+        String email = null;
 
         if (oauthClientName.equals("kakao")) {
             Map<String, Object> kakaoAccount = (Map<String, Object>) oAuth2User.getAttributes().get("kakao_account");
@@ -52,6 +52,6 @@ public class OAuth2UserServiceImplement extends DefaultOAuth2UserService {
 
         oAuth2UserRepository.save(oAuth2UserEntity);
 
-        return new CustomOAuth2User(userId);
+        return new CustomOAuth2User(userId, email);
     }
 }
