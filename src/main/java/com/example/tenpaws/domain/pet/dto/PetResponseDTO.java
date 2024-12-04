@@ -1,6 +1,5 @@
 package com.example.tenpaws.domain.pet.dto;
 
-import com.example.tenpaws.domain.pet.entity.Image;
 import com.example.tenpaws.domain.pet.entity.Pet;
 import com.example.tenpaws.domain.pet.species.Species;
 import lombok.AllArgsConstructor;
@@ -9,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -31,7 +29,6 @@ public class PetResponseDTO {
     private int exerciseLevel;
     private List<String> imageUrls;
 
-
     public static PetResponseDTO fromEntity(Pet pet) {
         PetResponseDTO dto = new PetResponseDTO();
         dto.setPetId(pet.getId());
@@ -47,12 +44,11 @@ public class PetResponseDTO {
         dto.setExtra(pet.getExtra());
         dto.setPersonality(pet.getPersonality());
         dto.setExerciseLevel(pet.getExerciseLevel());
-        if (pet.getImages() != null) {
-            dto.setImageUrls(pet.getImages()
-                    .stream()
-                    .map(Image::getImageUrl)
-                    .collect(Collectors.toList()));
+        // Convert List<MultipartFile> to List<String> (image URLs)
+        if (pet.getImageUrls() != null) {
+            dto.setImageUrls(pet.getImageUrls()); // Pet 클래스에는 List<String> imageUrls 필드가 있음
         }
         return dto;
     }
+
 }
