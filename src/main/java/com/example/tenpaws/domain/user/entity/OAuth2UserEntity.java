@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Entity
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -19,6 +21,7 @@ public class OAuth2UserEntity {
     private String email;
     private String type;
     private String role;
+    private String username = UUID.randomUUID().toString(); // 유저 이름 변경 가능하게 필드 추가
 
     public OAuth2UserEntity (String userId, String email, String type) {
         this.userId = userId;
@@ -33,5 +36,9 @@ public class OAuth2UserEntity {
 
     public void changeUserRole(UserRole userRole) {
         this.role = userRole.name();
+    }
+
+    public void changeUsername(String username) {
+        this.username = username;
     }
 }
