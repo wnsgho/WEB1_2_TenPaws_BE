@@ -8,6 +8,7 @@ import com.example.tenpaws.domain.user.entity.OAuth2UserEntity;
 import com.example.tenpaws.domain.user.entity.User;
 import com.example.tenpaws.domain.user.repositoty.OAuth2UserRepository;
 import com.example.tenpaws.domain.user.repositoty.UserRepository;
+import com.example.tenpaws.global.entity.UserRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/features")
@@ -53,19 +55,40 @@ public class UserFeatureController {
             return ResponseEntity.ok(Map.of("role", "ROLE_SHELTER"));
         }
 
+        // 관리자 유저 정보인 지 체크, 슈퍼 관리자와 일반 관리자 구분
+        Optional<Admin> optionalAdmin = adminRepository.findByEmail(email);
+        if (optionalAdmin.isPresent()) {
+            Admin admin = optionalAdmin.get();
+            String role = admin.getUserRole().name();
+
+            if ("ROLE_SUPER_ADMIN".equals(role)) {
+                return ResponseEntity.ok(Map.of("role", "ROLE_SUPER_ADMIN"));
+            } else if ("ROLE_ADMIN".equals(role)) {
+                return ResponseEntity.ok(Map.of("role", "ROLE_ADMIN"));
+            }
+        }
+
+        // 소셜 로그인 유저 정보인 지 체크
+        if (oAuth2UserRepository.findByEmail(email).isPresent()) {
+            return ResponseEntity.ok(Map.of("role", "ROLE_USER"));
+        }
+
         return ResponseEntity.status(404).body(Map.of("Error", "User not found"));
     }
 
     // 모든 사용자 이메일 중복 체크 가입 로직
     @GetMapping("/check-email")
     public ResponseEntity<Map<String, Boolean>> checkEmail(@RequestParam String email) {
-        boolean isAvailable = !userRepository.existsByEmail(email)
-                && !shelterRepository.existsByEmail(email)
-                && !adminRepository.existsByEmail(email);
+        boolean isDuplicate =
+                userRepository.existsByEmail(email) ||
+                        shelterRepository.existsByEmail(email) ||
+                        adminRepository.existsByEmail(email) ||
+                        oAuth2UserRepository.existsByEmail(email);
 
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("isAvailable", isAvailable);
-        return ResponseEntity.ok(response);
+        // 사용 가능 여부는 중복 여부의 반대
+        boolean isAvailable = !isDuplicate;
+
+        return ResponseEntity.ok(Map.of("isAvailable", isAvailable));
     }
 
     // 사용자의 id 반환 api
