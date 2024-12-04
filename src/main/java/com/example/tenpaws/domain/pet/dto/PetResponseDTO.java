@@ -27,6 +27,7 @@ public class PetResponseDTO {
     private String extra;
     private String personality;
     private int exerciseLevel;
+    private Long shelterId;
     private List<String> imageUrls;
 
     public static PetResponseDTO fromEntity(Pet pet) {
@@ -44,6 +45,7 @@ public class PetResponseDTO {
         dto.setExtra(pet.getExtra());
         dto.setPersonality(pet.getPersonality());
         dto.setExerciseLevel(pet.getExerciseLevel());
+        dto.setShelterId(pet.getShelter().getId());
         // Convert List<MultipartFile> to List<String> (image URLs)
         if (pet.getImageUrls() != null) {
             dto.setImageUrls(pet.getImageUrls()); // Pet 클래스에는 List<String> imageUrls 필드가 있음
