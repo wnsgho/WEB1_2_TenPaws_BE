@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class OAuth2UserEntity {
 
     @Id
@@ -25,5 +25,13 @@ public class OAuth2UserEntity {
         this.email = email;
         this.type = type;
         this.role = UserRole.ROLE_USER.name();
+    }
+
+    public void changeEmail(String email) {
+        this.email = email;
+    }
+
+    public void changeUserRole(UserRole userRole) {
+        this.role = userRole.name();
     }
 }
