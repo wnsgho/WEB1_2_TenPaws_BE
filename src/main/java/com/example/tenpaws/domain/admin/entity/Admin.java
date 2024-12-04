@@ -9,7 +9,7 @@ import lombok.*;
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,12 +39,13 @@ public class Admin {
     public void changeUsername(String username) {
         this.username = username;
     }
-
     public void changePassword(String password) {
         this.password = password;
     }
-
     public void changeEmail(String email) {
         this.email = email;
+    }
+    public void changeUserRole(UserRole userRole) {
+        this.userRole = userRole;
     }
 }
