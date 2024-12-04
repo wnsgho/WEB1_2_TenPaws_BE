@@ -21,8 +21,12 @@ services:
           sleep 3  
         done  
         java -jar project.jar  
-      "  
-
+      "
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
 
   tenpaws-db:
     image: mysql
@@ -37,3 +41,8 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 5s
       retries: 10
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
