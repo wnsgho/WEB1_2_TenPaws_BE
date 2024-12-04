@@ -20,8 +20,6 @@ import org.springframework.messaging.simp.user.SimpUser;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.stereotype.Controller;
 
-import java.util.Map;
-
 @Controller
 @RequiredArgsConstructor
 public class ChatController {
@@ -37,13 +35,12 @@ public class ChatController {
         String sender = chatMessageRequest.getSenderEmail();
         String receiver = chatMessageRequest.getReceiverEmail();
         String destination = "/topic/chatroom/" + chatRoomId;
-        Map<String, Object> senderData = customUserDetailsService.getInfosByEmail(sender);
-        Map<String, Object> receiverData = customUserDetailsService.getInfosByEmail(receiver);
+        String senderName = customUserDetailsService.getInfosByEmail(sender).get("username").toString();
 
         chatMessageRequest.setChatRoomId(chatRoomId);
         ChatMessageResponse chatMessageResponse = chatMessageService.createChatMessage(chatMessageRequest);
 
-        chatMessageResponse.setSenderName(senderData.get("username").toString());
+        chatMessageResponse.setSenderName(senderName);
         messagingTemplate.convertAndSend(
                 destination,
                 chatMessageResponse
@@ -54,7 +51,7 @@ public class ChatController {
                     UnReadChatMessagesRequest.builder().chatRoomId(chatRoomId).userEmail(receiver).unReadCount(1).build());
 
             NotificationResponse notificationResponse = notificationService.create(NotificationRequest.builder()
-                    .content(chatMessageResponse.getSenderName() + "님이 채팅을 보내셨습니다.")
+                    .content(senderName + "님이 채팅을 보내셨습니다.")
                     .type(NotificationType.NEW_CHAT_MESSAGE)
                     .recipientEmail(receiver)
                     .build());
