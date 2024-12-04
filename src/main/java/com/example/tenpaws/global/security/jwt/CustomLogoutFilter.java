@@ -47,7 +47,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
             try {
                 jwtUtil.isExpired(accessToken);
                 String category = jwtUtil.getCategory(accessToken);
-                if (!category.equals("access")) {
+                if (!category.equals("access") && !category.equals("Social")) {
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     return;
                 }
