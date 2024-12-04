@@ -9,6 +9,8 @@ import com.example.tenpaws.domain.user.repositoty.UserRepository;
 import com.example.tenpaws.domain.user.service.UserService;
 import com.example.tenpaws.global.exception.BaseException;
 import com.example.tenpaws.global.exception.ErrorCode;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +30,7 @@ import java.util.ArrayList;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "사용자 기능 API", description = "사용자 기능을 모아둔 컨트롤러 입니다")
 @RequestMapping("/api/v1/users")
 public class UserController {
 
@@ -37,6 +40,7 @@ public class UserController {
     private final ShelterService shelterService;
 
     // 일반 유저 가입
+    @Operation(summary = "회원가입", description = "일반 유저 회원가입을 위한 API")
     @PostMapping("/regular/join")
     public ResponseEntity<?> usersJoin(
             @Valid @RequestBody UserJoinDTO userJoinDTO, BindingResult bindingResult) {
@@ -60,6 +64,7 @@ public class UserController {
     }
 
     // 보호소 유저 가입
+    @Operation(summary = "회원가입", description = "보호소 유저 회원가입을 위한 API")
     @PostMapping("/shelter/join")
     public ResponseEntity<?> sheltersJoin(
             @Valid @RequestBody ShelterRequestDTO shelterRequestDTO, BindingResult bindingResult) {
@@ -85,6 +90,7 @@ public class UserController {
     /**
      * 사용자의 선호 기준에 맞는 반려동물 추천
      */
+    @Operation(summary = "반려 동물 추천", description = "사용자의 선호 기준에 맞는 반려동물 추천")
     @PostMapping("/{id}/recommend-pet")
     public ResponseEntity<Map<String, Object>> recommendPet(@PathVariable Long id) {
         try {
@@ -110,6 +116,7 @@ public class UserController {
     }
 
     // 단일 유저 조회
+    @Operation(summary = "일반 유저 조회", description = "일반 유저 조회를 위한 API, 관리자는 모든 회원 정보 열람 가능, 일반 회원은 자신의 정보만 열람 가능")
     @PreAuthorize("hasRole('ROLE_USER') and @userServiceImpl.isUserOwn(#id) or hasRole('ROLE_SHELTER') and @userServiceImpl.isUserOwn(#id) or hasRole('ROLE_SUPER_ADMIN') or hasRole('ROLE_ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
@@ -117,6 +124,7 @@ public class UserController {
     }
 
     // 단일 소셜 유저 조회
+    @Operation(summary = "소셜 유저 조회", description = "소셜 유저 조회를 위한 API")
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/my-info")
     public ResponseEntity<Object> getMyInfo(Authentication authentication) {
@@ -126,6 +134,7 @@ public class UserController {
     }
 
     // 유저 정보 수정
+    @Operation(summary = "유저 정보 수정", description = "유저 정보 수정을 위한 API")
     @PreAuthorize("hasRole('ROLE_USER') and @userServiceImpl.isUserOwn(#id) or hasRole('ROLE_SHELTER') and @userServiceImpl.isUserOwn(#id)")
     @PutMapping("/{id}")
     public ResponseEntity<UserUpdateResponseDTO> updateUser(
@@ -135,6 +144,7 @@ public class UserController {
     }
 
     // 유저 탈퇴
+    @Operation(summary = "유저 탈퇴", description = "유저 탈퇴를 위한 API")
     @PreAuthorize("hasRole('ROLE_USER') and @userServiceImpl.isUserOwn(#id) or hasRole('ROLE_SHELTER') and @userServiceImpl.isUserOwn(#id) or hasRole('ROLE_SUPER_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
@@ -143,6 +153,7 @@ public class UserController {
     }
 
     // 모든 일반 유저 불러오기
+    @Operation(summary = "모든 유저 정보 조회", description = "모든 유저 정보 조회을 위한 API, 관리자만 가능")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') or hasRole('ROLE_ADMIN')")
     @GetMapping("/retrieve-web")
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
@@ -150,6 +161,7 @@ public class UserController {
     }
 
     // 모든 소셜 유저 불러오기
+    @Operation(summary = "모든 소셜 유저 정보 조회", description = "모든 소셜 유저 정보 조회을 위한 API, 관리자만 가능")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') or hasRole('ROLE_ADMIN')")
     @GetMapping("/retrieve-social")
     public ResponseEntity<List<OAuth2UserDTO>> getAllSocialUsers() {
@@ -157,6 +169,7 @@ public class UserController {
     }
 
     // 소셜 로그인 유저 이름 변경
+    @Operation(summary = "소셜 유저 이름 수정", description = "소셜 유저 이름 수정을 위한 API")
     @PatchMapping("/{userId}/username")
     public ResponseEntity<OAuth2UserDTO> updateUsername(
             @PathVariable String userId,
@@ -166,6 +179,7 @@ public class UserController {
     }
 
     // 본인을 제외한 모든 유저 불러오기 for Chat
+    @Operation(summary = "본인 제외 모든 유저 정보 조회", description = "본인 제외 모든 유저 정보 조회을 위한 API")
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_SHELTER')")
     @GetMapping("/chat-users")
     public ResponseEntity<List<UserResponseForChatDTO>> getAllUsersForChat(Authentication authentication) {

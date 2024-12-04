@@ -5,6 +5,8 @@ import com.example.tenpaws.global.security.entity.RefreshEntity;
 import com.example.tenpaws.global.security.jwt.JwtUtil;
 import com.example.tenpaws.global.security.repository.RefreshRepository;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,12 +22,14 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "리프레시 토큰 재발급 API", description = "엑세스 만료, 리프레시 만료 전일 경우, 엑세스와 리프레시 토큰 모두 재발급")
 @RequestMapping("/api/v1")
 public class ReissueController {
 
     private final JwtUtil jwtUtil;
     private final RefreshRepository refreshRepository;
 
+    @Operation(summary = "리프레시 토큰 재발급", description = "클라이언트로부터 데이터를 받아 만료 체크")
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
 
