@@ -167,7 +167,7 @@ public class UserController {
 
     // 본인을 제외한 모든 유저 불러오기 for Chat
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_SHELTER')")
-    @GetMapping("/chat")
+    @GetMapping("/chat-users")
     public ResponseEntity<List<UserResponseForChatDTO>> getAllUsersForChat(Authentication authentication) {
         String userEmail = authentication.getName();
         List<UserResponseForChatDTO> result = new ArrayList<>();
