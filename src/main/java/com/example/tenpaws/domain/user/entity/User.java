@@ -37,6 +37,7 @@ public class User {
     @Column(nullable = false)
     private String address;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "species")
     private Species species;
 
