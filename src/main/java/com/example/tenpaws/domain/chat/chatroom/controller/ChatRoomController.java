@@ -6,6 +6,8 @@ import com.example.tenpaws.domain.chat.chatroom.service.ChatRoomService;
 import com.example.tenpaws.domain.chat.unread.dto.UnReadChatMessagesResponse;
 import com.example.tenpaws.domain.chat.unread.service.UnReadChatMessagesService;
 import com.example.tenpaws.global.security.service.CustomUserDetailsService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +20,14 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "채팅방 생성 API", description = "채팅방 기능을 모아둔 컨트롤러 입니다")
 @RequestMapping("/api/v1/chatrooms")
 public class ChatRoomController {
     private final ChatRoomService chatRoomService;
     private final UnReadChatMessagesService unReadChatMessagesService;
     private final CustomUserDetailsService customUserDetailsService;
 
+    @Operation(summary = "채팅방 목록 조회", description = "채팅방 목록 조회 API")
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_SHELTER', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN')")
     @GetMapping("/user")
     public ResponseEntity<List<ChatRoomResponse>> findChatRoomsByUser(Authentication authentication) {
@@ -42,6 +46,7 @@ public class ChatRoomController {
         return ResponseEntity.ok(chatRoomResponseList);
     }
 
+    @Operation(summary = "채팅방 생성", description = "채팅방 생성 API")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPER_ADMIN') or (hasAnyRole('ROLE_USER', 'ROLE_SHELTER') and #chatRoomRequest.userEmail == authentication.name)")
     @PostMapping
     public ResponseEntity<ChatRoomResponse> createChatRoom(@Valid @RequestBody ChatRoomRequest chatRoomRequest) {
@@ -54,6 +59,7 @@ public class ChatRoomController {
         return ResponseEntity.ok(chatRoomResponse);
     }
 
+    @Operation(summary = "채팅방 삭제", description = "채팅방 삭제 API")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPER_ADMIN') or (hasAnyRole('ROLE_USER', 'ROLE_SHELTER') and @chatRoomServiceImpl.isUserParticipated(#chatRoomId))")
     @DeleteMapping("/{chatRoomId}")
     public ResponseEntity<Map<String, String>> deleteChatRoom(@PathVariable("chatRoomId") Long chatRoomId) {
