@@ -99,6 +99,10 @@ public class UserServiceImpl implements UserService {
             user.changeBirthDate(userUpdateRequestDTO.getBirthDate());
         }
 
+        if (userUpdateRequestDTO.getSpecies() != null) {
+            user.chageSpecies(userUpdateRequestDTO.getSpecies());
+        }
+
         if (userUpdateRequestDTO.getPreferredSize() != null) {
             user.changePreferredSize(userUpdateRequestDTO.getPreferredSize());
         }

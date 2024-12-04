@@ -1,10 +1,12 @@
 package com.example.tenpaws.domain.pet.dto;
 
-import com.example.tenpaws.domain.pet.entity.Image;
 import com.example.tenpaws.domain.pet.entity.Pet;
 import com.example.tenpaws.domain.pet.species.Species;
 import com.example.tenpaws.domain.shelter.entity.Shelter;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashSet;
 import java.util.List;
@@ -16,7 +18,17 @@ import java.util.Set;
 @NoArgsConstructor
 public class PetRequestDTO {
     private String petName;
-    private Species species;
+
+//    // species 필드를 추가
+    private Species species; // Species 필드를 추가
+//
+//    // @JsonCreator를 이용해 Species를 직접 매핑
+//    @JsonCreator
+//    public void setSpecies(@JsonProperty("species") String species) {
+//        // Species 값을 문자열로 받아서 매핑하는 방식
+//        this.species = Species.fromString(species);
+//    }
+
     private String size;
     private int age;
     private String gender;
@@ -27,22 +39,12 @@ public class PetRequestDTO {
     private String extra;
     private String personality;
     private int exerciseLevel;
-    private List<String> imageUrls;
+    private List<MultipartFile> images; // Store multiple image files
 
-    public Pet toEntity(Shelter shelter) {
-        Set<Image> images = new HashSet<>();
-        if (imageUrls != null && !imageUrls.isEmpty()) {
-            for (String imageUrl : imageUrls) {
-                Image image = new Image();
-                image.setImageUrl(imageUrl);
-                images.add(image);
-            }
-        }
-
+    public Pet toEntity(Shelter shelter, List<String> imageUrls) {
         return Pet.builder()
-                .petName(petName)
-                .species(this.species)
                 .petName(this.petName)
+                .species(this.species) // species 필드 사용
                 .size(this.size)
                 .age(this.age)
                 .gender(this.gender)
@@ -54,7 +56,8 @@ public class PetRequestDTO {
                 .personality(this.personality)
                 .exerciseLevel(this.exerciseLevel)
                 .shelter(shelter)
-                .images(images) // 이미지 추가
+                .imageUrls(imageUrls)
                 .build();
     }
 }
+

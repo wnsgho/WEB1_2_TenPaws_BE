@@ -1,5 +1,6 @@
 package com.example.tenpaws.domain.pet.entity;
 
+import org.springframework.web.multipart.MultipartFile;
 import com.example.tenpaws.domain.pet.dto.PetRequestDTO;
 import com.example.tenpaws.domain.pet.species.Species;
 import com.example.tenpaws.domain.shelter.entity.Shelter;
@@ -9,7 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Set;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -64,8 +66,11 @@ public class Pet {
     @JoinColumn(name = "shelter_id")
     private Shelter shelter;
 
-    @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<Image> images;
+    @ElementCollection
+    @CollectionTable(name = "pet_images", joinColumns = @JoinColumn(name = "pet_id"))
+    @Column(name = "image_url")
+    private List<String> imageUrls;
+
 
     // pet 신청 상태
     @Enumerated(EnumType.STRING)
@@ -76,7 +81,8 @@ public class Pet {
     }
 
     @Builder
-    public Pet(Long id, String petName, Species species,  String size, int age, String gender, Boolean neutering, String reason, String preAdoption, Boolean vaccinated, String extra, String personality, int exerciseLevel, Shelter shelter, Set<Image> images) {
+    public Pet(Long id, String petName, Species species,  String size, int age, String gender, Boolean neutering, String reason,
+               String preAdoption, Boolean vaccinated, String extra, String personality, int exerciseLevel, Shelter shelter, List<String> imageUrls) {
         this.id = id;
         this.petName = petName;
         this.species = species;
@@ -91,20 +97,23 @@ public class Pet {
         this.personality = personality;
         this.exerciseLevel = exerciseLevel;
         this.shelter = shelter;
-        this.images = images;
+        this.imageUrls = imageUrls;
     }
 
     // 필드 업데이트 메서드
     public void updateFields(PetRequestDTO requestDTO) {
-        if (requestDTO.getSpecies() != null) this.species = requestDTO.getSpecies();
+        this.petName = requestDTO.getPetName();
+        this.species = requestDTO.getSpecies();
+        this.size = requestDTO.getSize();
+        this.age = requestDTO.getAge();
+        this.gender = requestDTO.getGender();
+        this.neutering = requestDTO.getNeutering();
+        this.reason = requestDTO.getReason();
+        this.preAdoption = requestDTO.getPreAdoption();
+        this.vaccinated = requestDTO.getVaccinated();
+        this.extra = requestDTO.getExtra();
+        this.personality = requestDTO.getPersonality();
+        this.exerciseLevel = requestDTO.getExerciseLevel();
 
-        if (requestDTO.getSize() != null) this.size = requestDTO.getSize();
-        if (requestDTO.getAge() != 0) this.age = requestDTO.getAge();
-        if (requestDTO.getGender() != null) this.gender = requestDTO.getGender();
-        if (requestDTO.getNeutering() != null) this.neutering = requestDTO.getNeutering();
-        if (requestDTO.getReason() != null) this.reason = requestDTO.getReason();
-        if (requestDTO.getPreAdoption() != null) this.preAdoption = requestDTO.getPreAdoption();
-        if (requestDTO.getPersonality() != null) this.personality = requestDTO.getPersonality();
-        if (requestDTO.getExerciseLevel() != 0) this.exerciseLevel = requestDTO.getExerciseLevel();
     }
 }
