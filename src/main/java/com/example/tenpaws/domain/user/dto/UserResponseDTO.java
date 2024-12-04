@@ -1,5 +1,6 @@
 package com.example.tenpaws.domain.user.dto;
 
+import com.example.tenpaws.domain.pet.species.Species;
 import com.example.tenpaws.domain.user.entity.User;
 import com.example.tenpaws.global.entity.UserRole;
 import lombok.*;
@@ -18,6 +19,7 @@ public class UserResponseDTO {
     private LocalDate birthDate;
     private String phoneNumber;
     private String address;
+    private Species species;
     private String preferredSize;
     private String preferredPersonality;
     private Integer preferredExerciseLevel;
@@ -31,6 +33,7 @@ public class UserResponseDTO {
                 .birthDate(user.getBirthDate())
                 .phoneNumber(user.getPhoneNumber())
                 .address(user.getAddress())
+                .species(user.getSpecies())
                 .preferredSize(user.getPreferredSize())
                 .preferredPersonality(user.getPreferredPersonality())
                 .preferredExerciseLevel(user.getPreferredExerciseLevel())
