@@ -1,5 +1,6 @@
 package com.example.tenpaws.domain.user.entity;
 
+import com.example.tenpaws.domain.pet.species.Species;
 import com.example.tenpaws.global.entity.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
@@ -36,6 +37,10 @@ public class User {
     @Column(nullable = false)
     private String address;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "species")
+    private Species species;
+
     @Column(name = "preferred_size")
     private String preferredSize;
 
@@ -57,6 +62,7 @@ public class User {
     public void changePhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
     public void changeAddress(String address) { this.address = address; }
     public void changeUserRole(UserRole userRole) { this.userRole = userRole; }
+    public void chageSpecies(Species species) { this.species = species; }
     public void changePreferredSize(String preferredSize) { this.preferredSize = preferredSize; }
     public void changePreferredPersonality(String preferredPersonality) { this.preferredPersonality = preferredPersonality; }
     public void changePreferredExerciseLevel(Integer preferredExerciseLevel) { this.preferredExerciseLevel = preferredExerciseLevel; }
