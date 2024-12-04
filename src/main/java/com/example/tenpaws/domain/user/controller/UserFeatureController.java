@@ -1,10 +1,17 @@
 package com.example.tenpaws.domain.user.controller;
 
+import com.example.tenpaws.domain.admin.entity.Admin;
 import com.example.tenpaws.domain.admin.repository.AdminRepository;
+import com.example.tenpaws.domain.shelter.entity.Shelter;
 import com.example.tenpaws.domain.shelter.repository.ShelterRepository;
+import com.example.tenpaws.domain.user.entity.OAuth2UserEntity;
+import com.example.tenpaws.domain.user.entity.User;
+import com.example.tenpaws.domain.user.repositoty.OAuth2UserRepository;
 import com.example.tenpaws.domain.user.repositoty.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,12 +24,15 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/features")
 @RequiredArgsConstructor
+@Slf4j
 public class UserFeatureController {
 
     private final UserRepository userRepository;
     private final ShelterRepository shelterRepository;
     private final AdminRepository adminRepository;
+    private final OAuth2UserRepository oAuth2UserRepository;
 
+    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_SHELTER')")
     @GetMapping("/role")
     public ResponseEntity<Map<String, String>> getRole(Authentication authentication) {
 
@@ -56,5 +66,39 @@ public class UserFeatureController {
         Map<String, Boolean> response = new HashMap<>();
         response.put("isAvailable", isAvailable);
         return ResponseEntity.ok(response);
+    }
+
+    // 사용자의 id 반환 api
+    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_SHELTER')")
+    @GetMapping("/user-id")
+    public ResponseEntity<Map<String, Object>> getUserId(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            log.info("Authentication is null : {}", authentication);
+            return ResponseEntity.status(401).body(Map.of("Error", "Unauthorized"));
+        }
+
+        String email = authentication.getName();
+
+        if (userRepository.findByEmail(email).isPresent()) {
+            User user = userRepository.findByEmail(email).get();
+            return ResponseEntity.ok(Map.of("Id", user.getId()));
+        }
+
+        if (oAuth2UserRepository.findByEmail(email).isPresent()) {
+            OAuth2UserEntity oAuth2UserEntity = oAuth2UserRepository.findByEmail(email).get();
+            return ResponseEntity.ok(Map.of("Id", oAuth2UserEntity.getUserId()));
+        }
+
+        if (shelterRepository.findByEmail(email).isPresent()) {
+            Shelter shelter = shelterRepository.findByEmail(email).get();
+            return ResponseEntity.ok(Map.of("Id", shelter.getId()));
+        }
+
+        if (adminRepository.findByEmail(email).isPresent()) {
+            Admin admin = adminRepository.findByEmail(email).get();
+            return ResponseEntity.ok(Map.of("Id", admin.getId()));
+        }
+
+        return ResponseEntity.status(404).body(Map.of("Error", "User not found"));
     }
 }
