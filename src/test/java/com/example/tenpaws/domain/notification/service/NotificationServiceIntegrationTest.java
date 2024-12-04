@@ -9,8 +9,6 @@ import com.example.tenpaws.domain.notification.sse.SseEmitters;
 import com.example.tenpaws.domain.user.entity.User;
 import com.example.tenpaws.domain.user.repositoty.UserRepository;
 import com.example.tenpaws.global.entity.UserRole;
-import com.example.tenpaws.global.exception.BaseException;
-import com.example.tenpaws.global.exception.ErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +24,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @ActiveProfiles("test")
