@@ -42,7 +42,7 @@ public class ChatRoomController {
         return ResponseEntity.ok(chatRoomResponseList);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_SHELTER', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN') and #chatRoomRequest.userEmail == authentication.name")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPER_ADMIN') or (hasAnyRole('ROLE_USER', 'ROLE_SHELTER') and #chatRoomRequest.userEmail == authentication.name)")
     @PostMapping
     public ResponseEntity<ChatRoomResponse> createChatRoom(@Valid @RequestBody ChatRoomRequest chatRoomRequest) {
         ChatRoomResponse chatRoomResponse = chatRoomService.create(chatRoomRequest);
@@ -54,7 +54,7 @@ public class ChatRoomController {
         return ResponseEntity.ok(chatRoomResponse);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_SHELTER', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN') and @chatRoomServiceImpl.isUserParticipated(#chatRoomId)")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPER_ADMIN') or (hasAnyRole('ROLE_USER', 'ROLE_SHELTER') and @chatRoomServiceImpl.isUserParticipated(#chatRoomId))")
     @DeleteMapping("/{chatRoomId}")
     public ResponseEntity<Map<String, String>> deleteChatRoom(@PathVariable("chatRoomId") Long chatRoomId) {
         chatRoomService.delete(chatRoomId);

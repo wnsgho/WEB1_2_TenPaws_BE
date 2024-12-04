@@ -79,6 +79,13 @@ public class CustomUserDetailsService implements UserDetailsService {
             map.put("username", admin.getUsername());
             return map;
         }
+        OAuth2UserEntity oAuth2UserEntity = oAuth2UserRepository.findByEmail(email).orElse(null);
+        if (oAuth2UserEntity != null) {
+            map.put("id", oAuth2UserEntity.getUserId());
+            map.put("role", oAuth2UserEntity.getRole());
+            map.put("username", oAuth2UserEntity.getUsername());
+            return map;
+        }
         throw new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + email);
     }
 }
