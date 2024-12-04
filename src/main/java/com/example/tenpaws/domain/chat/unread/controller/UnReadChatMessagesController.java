@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UnReadChatMessagesController {
     private final UnReadChatMessagesService unreadChatMessagesService;
 
-    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_SHELTER', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_SHELTER', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN') and #unReadChatMessagesRequest.userEmail == authentication.name")
     @PutMapping("/init")
     public void update(@Valid @RequestBody UnReadChatMessagesRequest unReadChatMessagesRequest) {
         unReadChatMessagesRequest.setUnReadCount(0);

@@ -28,19 +28,28 @@ public class HttpHandShakeInterceptor implements HandshakeInterceptor {
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
         if (request instanceof ServletServerHttpRequest servletRequest) {
             HttpServletRequest httpRequest = servletRequest.getServletRequest();
-            String token = httpRequest.getParameter("token");
-            if (token != null && !jwtUtil.isExpired(token)) {
-                User user = User.builder()
-                        .email(jwtUtil.getEmail(token))
-                        .userRole(jwtUtil.getRole(token))
-                        .build();
-                NormalUserDetails normalUserDetails = new NormalUserDetails(user);
-                Authentication authToken = new UsernamePasswordAuthenticationToken(normalUserDetails, null, normalUserDetails.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-                attributes.put("user", jwtUtil.getEmail(token));
-                return true;
+            String authorization = httpRequest.getParameter("authorization");
+            if (authorization != null) {
+                String token = authorization.replace("Bearer ", "");
+                try {
+                    if (jwtUtil.isExpired(token)) {
+                        log.warn("JWT token expired");
+                        return false;
+                    }
+                    User user = User.builder()
+                            .email(jwtUtil.getEmail(token))
+                            .userRole(jwtUtil.getRole(token))
+                            .build();
+                    NormalUserDetails normalUserDetails = new NormalUserDetails(user);
+                    Authentication authToken = new UsernamePasswordAuthenticationToken(normalUserDetails, null, normalUserDetails.getAuthorities());
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                    return true;
+                } catch (Exception e) {
+                    log.error("JWT token not valid");
+                    return false;
+                }
             } else {
-                log.error("JWT token would be null or expired");
+                log.error("JWT token is null");
             }
         }
         return false;

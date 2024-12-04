@@ -38,7 +38,7 @@ public class UnReadChatMessagesServiceImpl implements UnReadChatMessagesService 
     @Transactional
     public void update(UnReadChatMessagesRequest unReadChatMessagesRequest) {
         UnReadChatMessages unReadChatMessages = unReadChatMessagesRepository.findByChatRoomIdAndUsername(
-                        unReadChatMessagesRequest.getChatRoomId(), unReadChatMessagesRequest.getUsername())
+                        unReadChatMessagesRequest.getChatRoomId(), unReadChatMessagesRequest.getUserEmail())
                 .orElseThrow(() -> new BaseException(ErrorCode.UNREAD_CHAT_MESSAGES_NOT_FOUND));
         try {
             unReadChatMessages.changeUnReadCount(unReadChatMessagesRequest.getUnReadCount());
@@ -59,7 +59,7 @@ public class UnReadChatMessagesServiceImpl implements UnReadChatMessagesService 
         optionalUnReadChatMessages.map(UnReadChatMessagesResponse::new)
                 .orElseGet(() -> new UnReadChatMessagesResponse(
                         unReadChatMessagesRepository.save(
-                                UnReadChatMessagesRequest.builder().chatRoomId(chatRoomId).username(user).build()
+                                UnReadChatMessagesRequest.builder().chatRoomId(chatRoomId).userEmail(user).build()
                                         .toEntity(chatRoom))));
     }
 }

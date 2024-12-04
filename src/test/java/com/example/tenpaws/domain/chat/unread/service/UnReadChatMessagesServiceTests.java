@@ -57,7 +57,7 @@ public class UnReadChatMessagesServiceTests {
     void testUpdate() {
         UnReadChatMessagesRequest unReadChatMessagesRequest = UnReadChatMessagesRequest.builder()
                 .chatRoomId(savedId)
-                .username("user1")
+                .userEmail("user1")
                 .unReadCount(1)
                 .build();
 

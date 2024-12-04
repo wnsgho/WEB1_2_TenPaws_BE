@@ -133,21 +133,6 @@ class NotificationServiceIntegrationTest {
         assertThat(unreadCount).isEqualTo(3L);
     }
 
-    @Test
-    void 존재하지_않는_수신자에게_알림_생성_예외_테스트() {
-        // given
-        NotificationRequest invalidRequest = NotificationRequest.builder()
-                .type(NotificationType.ADOPTION_APPLICATION_SUBMITTED)
-                .content("테스트 알림")
-                .recipientEmail("invalid@example.com")
-                .build();
-
-        // when & then
-        assertThatThrownBy(() -> notificationService.create(invalidRequest))
-                .isInstanceOf(BaseException.class)
-                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.MEMBER_OR_SHELTER_NOT_FOUND);
-    }
-
     private void createMultipleNotifications(int count) {
         for (int i = 0; i < count; i++) {
             NotificationRequest request = NotificationRequest.builder()

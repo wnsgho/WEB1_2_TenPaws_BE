@@ -10,21 +10,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ChatRoomRequest {
     @NotBlank
-    private String user1;
+    private String userEmail;
 
     @NotBlank
-    private String user2;
+    private String oppositeEmail;
 
     @Builder
-    public ChatRoomRequest(String user1, String user2) {
-        this.user1 = user1;
-        this.user2 = user2;
+    public ChatRoomRequest(String userEmail, String oppositeEmail) {
+        this.userEmail = userEmail;
+        this.oppositeEmail = oppositeEmail;
     }
 
     public ChatRoom toEntity() {
         return ChatRoom.builder()
-                .user1(user1)
-                .user2(user2)
+                .user1(userEmail)
+                .user2(oppositeEmail)
                 .build();
     }
 }
