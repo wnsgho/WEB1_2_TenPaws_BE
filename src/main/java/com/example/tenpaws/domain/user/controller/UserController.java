@@ -16,14 +16,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.security.Principal;
 import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.ArrayList;
 
 @RestController
 @RequiredArgsConstructor
@@ -156,6 +159,15 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllSocialUsers());
     }
 
+    // 소셜 로그인 유저 이름 변경
+    @PatchMapping("/{userId}/username")
+    public ResponseEntity<OAuth2UserDTO> updateUsername(
+            @PathVariable String userId,
+            @RequestBody UpdateSocialUsernameRequestDTO requestDTO) {
+        OAuth2UserDTO responseDTO = userService.updateSocialUsername(userId, requestDTO);
+        return ResponseEntity.ok(responseDTO);
+    }
+
     // 본인을 제외한 모든 유저 불러오기 for Chat
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_SHELTER')")
     @GetMapping("/chat")
@@ -185,5 +197,4 @@ public class UserController {
 
         return ResponseEntity.ok(result);
     }
-
 }

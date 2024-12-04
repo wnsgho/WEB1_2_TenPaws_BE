@@ -17,4 +17,5 @@ public interface UserService {
     List<UserResponseDTO> getAllUsers();
     List<OAuth2UserDTO> getAllSocialUsers();
     OAuth2UserDTO getSocialUserInfo(String userId);
+    OAuth2UserDTO updateSocialUsername(String userId, UpdateSocialUsernameRequestDTO requestDTO);
 }

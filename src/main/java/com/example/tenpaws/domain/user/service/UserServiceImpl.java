@@ -156,6 +156,16 @@ public class UserServiceImpl implements UserService {
         return OAuth2UserDTO.fromEntity(oAuth2UserEntity);
     }
 
+    @Override
+    public OAuth2UserDTO updateSocialUsername(String userId, UpdateSocialUsernameRequestDTO requestDTO) {
+        OAuth2UserEntity oAuth2UserEntity = oAuth2UserRepository.findByUserId(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.SOCIAL_MEMBER_NOT_FOUND));
+
+        oAuth2UserEntity.changeUsername(requestDTO.getUsername());
+
+        return OAuth2UserDTO.fromEntity(oAuth2UserEntity);
+    }
+
     public boolean isUserOwn(Long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentEmail = authentication.getName();
