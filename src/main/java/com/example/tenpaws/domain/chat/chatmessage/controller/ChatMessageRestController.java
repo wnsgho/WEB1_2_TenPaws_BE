@@ -21,7 +21,7 @@ public class ChatMessageRestController {
     private final ChatMessageService chatMessageService;
     private final CustomUserDetailsService customUserDetailsService;
 
-    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_SHELTER', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN') and @chatRoomServiceImpl.isUserParticipated(#chatRoomId)")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPER_ADMIN') or (hasAnyRole('ROLE_USER', 'ROLE_SHELTER') and @chatRoomServiceImpl.isUserParticipated(#chatRoomId))")
     @GetMapping("/{chatRoomId}")
     public ResponseEntity<List<ChatMessageResponse>> getChatMessages(@PathVariable("chatRoomId") Long chatRoomId) {
         List<ChatMessageResponse> chatMessageResponseList = chatMessageService.getChatMessagesByChatRoomId(chatRoomId);
