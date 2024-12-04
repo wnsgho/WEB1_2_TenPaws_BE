@@ -29,6 +29,7 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
@@ -75,14 +76,14 @@ public class SecurityConfig {
                             @Override
                             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                                 CorsConfiguration configuration = new CorsConfiguration();
-
-                                configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-                                configuration.setAllowedMethods(Collections.singletonList("*"));
+                                configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://15.164.103.160:8080"));
+                                //configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+                                //configuration.setAllowedOrigins(Collections.singletonList("http://15.164.103.160:8080"));
+                                configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
                                 configuration.setAllowCredentials(true);
-                                configuration.setAllowedHeaders(Collections.singletonList("*"));
+                                configuration.setAllowedHeaders(Arrays.asList("*"));
                                 configuration.setMaxAge(3600L);
-
-                                configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+                                configuration.setExposedHeaders(Arrays.asList("Authorization"));
 
                                 return configuration;
                             }
@@ -95,7 +96,7 @@ public class SecurityConfig {
         // 모든 기능 완성되면 그 때 엔드포인트 보고 접근 권한 수정!
         httpSecurity
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/join","/oauth2/**").permitAll()
+                        .requestMatchers("/**").permitAll()
                         .anyRequest().permitAll());
 
         httpSecurity
@@ -106,17 +107,6 @@ public class SecurityConfig {
 
         httpSecurity
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
-
-        // 필터 순서가 조금 헷갈리는 부분이 존재, 어떤 게 먼저 실행되어야 하는 지에 따라 결과가 달라지므로 조금만 더 생각이 필요
-//        httpSecurity
-//                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository), UsernamePasswordAuthenticationFilter.class);
-//
-//        httpSecurity
-//                .addFilterBefore(new JwtFilter(jwtUtil, userRepository, shelterRepository, adminRepository, oAuth2UserRepository), UsernamePasswordAuthenticationFilter.class);
-//
-//        httpSecurity
-//                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
-
 
         // oauth2
         httpSecurity
