@@ -8,9 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.File;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +18,7 @@ import java.util.Map;
 public class PetController {
 
     private final PetService petService;
+
 
     @GetMapping("{petId}")
     public PetResponseDTO getPetById(@PathVariable Long petId) {
@@ -46,7 +45,9 @@ public class PetController {
     @PostMapping("/{shelterId}")
     public ResponseEntity<PetResponseDTO> createPet(
             @PathVariable Long shelterId,
-            @RequestPart("petData") PetRequestDTO petRequestDTO) {
+            @RequestPart("petData") PetRequestDTO petRequestDTO,
+            @RequestPart(value = "images", required = false) List<MultipartFile> images) {
+        petRequestDTO.setImages(images);
         PetResponseDTO createdPet = petService.createPet(shelterId, petRequestDTO);
         return ResponseEntity.ok(createdPet);
     }
@@ -56,7 +57,9 @@ public class PetController {
     public ResponseEntity<PetResponseDTO> updatePet(
             @PathVariable Long shelterId,
             @PathVariable Long petId,
-            @RequestPart("petData") PetRequestDTO petRequestDTO) {
+            @RequestPart("petData") PetRequestDTO petRequestDTO,
+            @RequestPart(value = "images", required = false) List<MultipartFile> images) {
+        petRequestDTO.setImages(images);
         PetResponseDTO updatedPet = petService.updatePet(shelterId, petId, petRequestDTO);
         return ResponseEntity.ok(updatedPet);
     }
