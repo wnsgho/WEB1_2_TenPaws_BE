@@ -9,6 +9,8 @@ import com.example.tenpaws.domain.user.entity.User;
 import com.example.tenpaws.domain.user.repositoty.OAuth2UserRepository;
 import com.example.tenpaws.domain.user.repositoty.UserRepository;
 import com.example.tenpaws.global.entity.UserRole;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/features")
 @RequiredArgsConstructor
+@Tag(name = "유저 기능 API", description = "클라이언트로 요청을 받아 데이터를 반환해주는 기능 컨트롤러")
 @Slf4j
 public class UserFeatureController {
 
@@ -34,6 +37,7 @@ public class UserFeatureController {
     private final AdminRepository adminRepository;
     private final OAuth2UserRepository oAuth2UserRepository;
 
+    @Operation(summary = "유저 role 반환", description = "유저 role 반환을 위한 API")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_SHELTER')")
     @GetMapping("/role")
     public ResponseEntity<Map<String, String>> getRole(Authentication authentication) {
@@ -77,6 +81,7 @@ public class UserFeatureController {
     }
 
     // 모든 사용자 이메일 중복 체크 가입 로직
+    @Operation(summary = "이메일 중복 체크", description = "이메일 중복 체크를 위한 API")
     @GetMapping("/check-email")
     public ResponseEntity<Map<String, Boolean>> checkEmail(@RequestParam String email) {
         boolean isDuplicate =
@@ -92,6 +97,7 @@ public class UserFeatureController {
     }
 
     // 사용자의 id 반환 api
+    @Operation(summary = "사용자 id 반환", description = "사용자 id 반환을 위한 API")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') or hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_SHELTER')")
     @GetMapping("/user-id")
     public ResponseEntity<Map<String, Object>> getUserId(Authentication authentication) {
