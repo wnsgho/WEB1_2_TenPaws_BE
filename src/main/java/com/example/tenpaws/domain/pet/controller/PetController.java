@@ -31,11 +31,6 @@ public class PetController {
         return petService.getPetList();
     }
 
-    @GetMapping("{petId}")
-    public PetResponseDTO getPetById(@PathVariable Long petId) {
-        return petService.getPetById(petId, null);
-    }
-
     @GetMapping("/{shelterId}/list")
     public List<PetResponseDTO> getAllPets(@PathVariable Long shelterId) {
         return petService.getAllPets(shelterId);
