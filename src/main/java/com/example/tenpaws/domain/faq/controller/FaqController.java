@@ -16,37 +16,37 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "질의응답 기능 API", description = "질의응답 기능을 모아둔 컨트롤러 입니다")
+@Tag(name = "FAQ 기능 API", description = "FAQ 기능을 모아둔 컨트롤러 입니다")
 @RequestMapping("/api/v1/faqs")
 public class FaqController {
     private final FaqService faqService;
 
-    @Operation(summary = "모든 질의응답 조회", description = "모든 질의응답 조회 API")
+    @Operation(summary = "모든 FAQ 조회", description = "모든 FAQ 조회 API")
     @GetMapping
     public ResponseEntity<List<FaqResponse>> getAll() {
         return ResponseEntity.ok(faqService.findAll());
     }
 
-    @Operation(summary = "최상단 질의응답 조회", description = "최상단 질의응답 조회 API")
+    @Operation(summary = "최상위 FAQ 조회", description = "최상위 FAQ 조회 API")
     @GetMapping("/top-level")
     public ResponseEntity<List<FaqResponse>> getTopLevelFaq() {
         return ResponseEntity.ok(faqService.read());
     }
 
-    @Operation(summary = "???", description = "???")
+    @Operation(summary = "하위 FAQ 조회", description = "하위 FAQ 조회 API")
     @GetMapping("/{parentId}")
     public ResponseEntity<List<FaqResponse>> getChildFaq(@PathVariable("parentId") Long parentId) {
         return ResponseEntity.ok(faqService.findByParentId(parentId));
     }
 
-    @Operation(summary = "질의응답 생성", description = "질의응답 생성 API")
+    @Operation(summary = "FAQ 생성", description = "FAQ 생성 API")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPER_ADMIN')")
     @PostMapping
     public ResponseEntity<FaqResponse> createFaq(@Valid @RequestBody FaqRequest faqRequest) {
         return ResponseEntity.ok(faqService.create(faqRequest));
     }
 
-    @Operation(summary = "모든 질의응답 조회", description = "모든 질의응답 조회 API")
+    @Operation(summary = "FAQ 수정", description = "FAQ 수정 API")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPER_ADMIN')")
     @PutMapping("/{faqId}")
     public ResponseEntity<FaqResponse> updateFaq(@Valid @RequestBody FaqRequest faqRequest, @PathVariable("faqId") Long faqId) {
@@ -54,7 +54,7 @@ public class FaqController {
         return ResponseEntity.ok(faqService.update(faqRequest));
     }
 
-    @Operation(summary = "질의응답 삭제", description = "질의응답 삭제 API")
+    @Operation(summary = "FAQ 삭제", description = "FAQ 삭제 API")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPER_ADMIN')")
     @DeleteMapping("/{faqId}")
     public ResponseEntity<Map<String, String>> deleteFaq(@PathVariable("faqId") Long faqId) {
