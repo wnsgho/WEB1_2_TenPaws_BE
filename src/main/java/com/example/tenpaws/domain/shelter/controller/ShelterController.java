@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class ShelterController {
 
     // 전체 쉘터 조회
     @Operation(summary = "전체 쉘터 조회", description = "전체 쉘터 정보 반환을 위한 API")
+    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN')")
     @GetMapping
     public ResponseEntity<List<ShelterResponseDTO>> getAllShelters() {
         return ResponseEntity.ok(shelterService.getAllShelters());
@@ -27,20 +29,22 @@ public class ShelterController {
 
     // ID로 쉘터 조회
     @Operation(summary = "ID로 쉘터 조회", description = "ID를 통한 쉘터 정보 반환 API")
+    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_SHELTER')")
     @GetMapping("/{id}")
     public ResponseEntity<ShelterResponseDTO> getShelterById(@PathVariable Long id) {
         return ResponseEntity.ok(shelterService.getShelterById(id));
     }
 
     // 쉘터 등록
-    @PostMapping
-    public ResponseEntity<ShelterResponseDTO> createShelter(@RequestBody ShelterRequestDTO shelterRequestDTO) {
-        ShelterResponseDTO createdShelter = shelterService.createShelter(shelterRequestDTO);
-        return ResponseEntity.ok(createdShelter);
-    }
+//    @PostMapping
+//    public ResponseEntity<ShelterResponseDTO> createShelter(@RequestBody ShelterRequestDTO shelterRequestDTO) {
+//        ShelterResponseDTO createdShelter = shelterService.createShelter(shelterRequestDTO);
+//        return ResponseEntity.ok(createdShelter);
+//    }
 
     // 쉘터 정보 수정
     @Operation(summary = "쉘터 정보 수정", description = "쉘터 정보 수정을 위한 API")
+    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_SHELTER')")
     @PutMapping("/{id}")
     public ResponseEntity<ShelterResponseDTO> updateShelter(@PathVariable Long id, @RequestBody ShelterRequestDTO shelterRequestDTO) {
         ShelterResponseDTO updatedShelter = shelterService.updateShelter(id, shelterRequestDTO);
@@ -49,6 +53,7 @@ public class ShelterController {
 
     // 쉘터 삭제
     @Operation(summary = "쉘터 정보 삭제", description = "쉘터 정보 삭제를 위한 API")
+    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_SHELTER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteShelter(@PathVariable Long id) {
         shelterService.deleteShelter(id);

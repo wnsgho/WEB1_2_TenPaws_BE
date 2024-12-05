@@ -6,10 +6,9 @@ import com.example.tenpaws.domain.pet.service.PetService;
 import lombok.RequiredArgsConstructor;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,33 +23,38 @@ public class PetController {
 
     private final PetService petService;
 
-    @Operation(summary = "반려동물 정보 조회", description = "반려동물 정보 조회를 위한 API")
-    @GetMapping("{petId}")
+    @Operation(summary = "반려동물 상세 정보 조회", description = "반려동물 상세 정보 조회를 위한 API")
+    @PreAuthorize("permitAll()")
+    @GetMapping("/{petId}")
     public PetResponseDTO getPetById(@PathVariable Long petId) {
         return petService.getPetById(petId, null);
     }
 
-    @Operation(summary = "반려동물 리스트 정보 조회", description = "반려동물 리스트 정보 조회를 위한 API")
+    @Operation(summary = "반려동물 전체 리스트 정보 조회", description = "반려동물 전체 리스트 정보 조회를 위한 API")
+    @PreAuthorize("permitAll()")
     @GetMapping
     public List<PetResponseDTO> getPetList() {
         return petService.getPetList();
     }
 
-    @Operation(summary = "반려동물 전체 정보 조회", description = "반려동물 전체 정보 조회를 위한 API")
+    @Operation(summary = "보호소 반려동물 정보 조회", description = "보호소별 반려동물 전체 정보 조회를 위한 API")
+    @PreAuthorize("hasAnyRole('ROLE_SHELTER')")
     @GetMapping("/{shelterId}/list")
     public List<PetResponseDTO> getAllPets(@PathVariable Long shelterId) {
         return petService.getAllPets(shelterId);
     }
 
-    @Operation(summary = "ID를 통한 반려동물 정보 조회", description = "ID를 통한 반려동물 정보 조회를 위한 API")
-    @GetMapping("/{shelterId}/{petId}")
+    @Operation(summary = "ID를 통한 반려동물 정보 조회", description = "보호소ID를 통한 반려동물 상세 정보 조회를 위한 API")
+    @PreAuthorize("hasAnyRole('ROLE_SHELTER')")
+    @GetMapping("/{petId}/{shelterId}")
     public PetResponseDTO getPetById(
-            @PathVariable Long shelterId,
-            @PathVariable Long petId) {
-        return petService.getPetById(shelterId, petId);
+            @PathVariable Long petId,
+            @PathVariable Long shelterId) {
+        return petService.getPetById(petId, shelterId);
     }
 
     @Operation(summary = "반려동물 등록", description = "반려동물 등록을 위한 API")
+    @PreAuthorize("hasAnyRole('ROLE_SHELTER')")
     @PostMapping("/{shelterId}")
     public ResponseEntity<PetResponseDTO> createPet(
             @PathVariable Long shelterId,
@@ -63,6 +67,7 @@ public class PetController {
 
 
     @Operation(summary = "반려동물 정보 수정", description = "반려동물 정보 수정을 위한 API")
+    @PreAuthorize("hasAnyRole('ROLE_SHELTER')")
     @PutMapping("/{shelterId}/{petId}")
     public ResponseEntity<PetResponseDTO> updatePet(
             @PathVariable Long shelterId,
@@ -78,6 +83,7 @@ public class PetController {
 
 
     @Operation(summary = "반려동물 정보 삭제", description = "반려동물 정보 삭제를 위한 API")
+    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_SHELTER')")
     @DeleteMapping("/{shelterId}/{petId}")
     public ResponseEntity<Map<String, String>> deletePet(
             @PathVariable Long shelterId,

@@ -16,7 +16,7 @@ public class InquiryListViewResponse {
     public InquiryListViewResponse(Inquiry inquiry) {
         this.id = inquiry.getId();
         this.title = inquiry.getTitle();
-        this.writerName = inquiry.getUser() == null ? inquiry.getShelter().getShelterName() : inquiry.getUser().getUsername();
+        this.writerName = inquiry.getWriterName();
         this.viewCount = inquiry.getViewCount();
         this.created_at = inquiry.getCreated_at();
     }

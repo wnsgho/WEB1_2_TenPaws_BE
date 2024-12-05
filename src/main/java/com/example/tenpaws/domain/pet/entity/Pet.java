@@ -42,7 +42,7 @@ public class Pet {
     private String gender;
 
     @Column(name = "neutering", nullable = false)
-    private Boolean neutering; // 중성화
+    private String neutering; // 중성화
 
     @Column(name = "reason", nullable = false)
     private String reason; // 보호소 입소 이유
@@ -51,7 +51,7 @@ public class Pet {
     private String preAdoption; // 이전 가정환경
 
     @Column(name = "vaccinated")
-    private Boolean vaccinated;
+    private String vaccinated;
 
     @Column(name = "extra")
     private String extra;
@@ -81,8 +81,8 @@ public class Pet {
     }
 
     @Builder
-    public Pet(Long id, String petName, Species species,  String size, int age, String gender, Boolean neutering, String reason,
-               String preAdoption, Boolean vaccinated, String extra, String personality, int exerciseLevel, Shelter shelter, List<String> imageUrls) {
+    public Pet(Long id, String petName, Species species,  String size, int age, String gender, String neutering, String reason,
+               String preAdoption, String vaccinated, String extra, String personality, int exerciseLevel, Shelter shelter, List<String> imageUrls) {
         this.id = id;
         this.petName = petName;
         this.species = species;
@@ -114,6 +114,5 @@ public class Pet {
         this.extra = requestDTO.getExtra();
         this.personality = requestDTO.getPersonality();
         this.exerciseLevel = requestDTO.getExerciseLevel();
-
     }
 }

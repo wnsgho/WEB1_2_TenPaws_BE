@@ -65,4 +65,14 @@ public class InquiryController {
         inquiryService.delete(inquiryId);
         return ResponseEntity.ok("문의글이 성공적으로 삭제되었습니다.");
     }
+
+    @Operation(summary = "내가 작성한 문의 목록 조회", description = "사용자가 작성한 문의 목록을 조회하는 API")
+    @PreAuthorize("hasAnyRole('USER', 'SHELTER')")
+    @GetMapping("/my")
+    public ResponseEntity<Page<InquiryListViewResponse>> getMyList(
+            @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            Authentication authentication) {
+        String email = authentication.getName();
+        return ResponseEntity.ok(inquiryService.getMyList(email, pageable));
+    }
 }

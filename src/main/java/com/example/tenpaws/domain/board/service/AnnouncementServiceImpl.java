@@ -62,4 +62,10 @@ public class AnnouncementServiceImpl implements AnnouncementService {
                 .orElseThrow(() -> new BaseException(ErrorCode.ANNOUNCEMENT_NOT_FOUND));
         announcementRepository.deleteById(announcementId);
     }
+
+    @Override
+    public Page<AnnouncementListViewResponse> getMyList(String email, Pageable pageable) {
+        return announcementRepository.findByAdminEmail(email, pageable)
+                .map(AnnouncementListViewResponse::new);
+    }
 }

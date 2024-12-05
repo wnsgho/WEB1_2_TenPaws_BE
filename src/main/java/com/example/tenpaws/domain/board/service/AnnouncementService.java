@@ -12,4 +12,5 @@ public interface AnnouncementService {
     AnnouncementResponse findById(Long announcementId);
     AnnouncementResponse update(Long announcementId, AnnouncementRequest request);
     void delete(Long announcementId);
+    Page<AnnouncementListViewResponse> getMyList(String email, Pageable pageable);
 }

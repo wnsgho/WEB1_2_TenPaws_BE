@@ -13,4 +13,5 @@ public interface InquiryService {
     InquiryDetailResponse findById(Long inquiryId);
     InquiryResponse update(Long inquiryId, InquiryRequest request);
     void delete(Long inquiryId);
+    Page<InquiryListViewResponse> getMyList(String email, Pageable pageable);
 }
