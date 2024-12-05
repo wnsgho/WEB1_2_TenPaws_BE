@@ -10,6 +10,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
@@ -46,6 +47,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         if (accessToken != null) {
             try {
                 jwtUtil.isExpired(accessToken);
+                jwtUtil.blacklistToken(accessToken);
                 String category = jwtUtil.getCategory(accessToken);
                 if (!category.equals("access") && !category.equals("Social")) {
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -83,7 +85,10 @@ public class CustomLogoutFilter extends GenericFilterBean {
             response.addCookie(cookie);
         }
 
+        SecurityContextHolder.clearContext();
+
         response.setStatus(HttpServletResponse.SC_OK);
+        response.getWriter().write("{\"message\": \"Successfully logged out\"}");
     }
 
     // 헤더에서 Access Token 추출
