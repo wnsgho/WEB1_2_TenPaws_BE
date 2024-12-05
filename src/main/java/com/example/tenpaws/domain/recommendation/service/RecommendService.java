@@ -50,7 +50,9 @@ public class RecommendService {
             List<Pet> filteredPets = petRepository.findAll().stream()
                     .filter(pet -> !excludedPetIds.contains(pet.getId()))
                     .collect(Collectors.toList());
+            // No pets avaliable이 발생하면 추천된 반려동물 id 목록 초기화
             if (filteredPets.isEmpty()) {
+                userRecommendedPets.remove(user.getId());
                 throw new BaseException(ErrorCode.NO_PETS_AVAILABLE);
             }
 
@@ -63,12 +65,19 @@ public class RecommendService {
 
             String prompt = String.format(
                     "User prefers: Size: %s, Personality: %s, Exercise Level: %s." +
-                            "\nAvailable pets:\n%s\nPlease recommend only one pet that perfectly suits to the all of user's preferences.If there is no pet that suits, just recommend closest one. Size should be equal. id should be said as ID: ?. Answer in Korean.",
+                            "\nAvailable pets:\n%s\nPlease recommend only one pet that perfectly suits to the all of user's preferences. If there is no pet that suits, just recommend closest one. Size should be equal. id should be said as ID: ?. Answer in Korean.",
                     size, personality, exerciseLevel, petDescriptions);
 
             // Step 5: OpenAI 호출
             String aiResponseContent = apiService.getRecommendation(prompt);  // aiResponseContent로 바로 처리;
             String recommendedId = extractRecommendedId(aiResponseContent);
+
+            if (recommendedId == null) {
+                // recommendedId가 null인 경우, AI 응답만 반환
+                Map<String, Object> result = new HashMap<>();
+                result.put("content", aiResponseContent);
+                return result;
+            }
 
             // Step 5: 추천된 반려동물 정보 가져오기
             Long petId = Long.valueOf(recommendedId);

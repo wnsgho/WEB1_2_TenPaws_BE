@@ -107,8 +107,9 @@ public class UserController {
 
             return ResponseEntity.ok(response);
         } catch (BaseException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("error", "추천 실패: " + e.getMessage()));
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("message", "더이상 추천할 동물이 없습니다. 처음부터 다시 추천합니다.");
+            return ResponseEntity.ok(errorResponse);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "서버 오류: " + e.getMessage()));
