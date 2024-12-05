@@ -9,10 +9,13 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class JwtUtil {
     private SecretKey secretKey;
+    private final Set<String> blacklistedTokens = ConcurrentHashMap.newKeySet();
 
     public JwtUtil(@Value("${spring.jwt.secret}")String secret) {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
@@ -78,6 +81,33 @@ public class JwtUtil {
             return "Social".equals(category) && !isExpired(token);
         } catch (Exception e) {
             return false;
+        }
+    }
+
+    // 블랙리스트에 토큰 추가
+    public void blacklistToken(String token) {
+        blacklistedTokens.add(token);
+    }
+
+    // 블랙리스트 확인
+    public boolean isBlacklisted(String token) {
+        return blacklistedTokens.contains(token);
+    }
+
+    // 필요에 따라 사용, 일단 쓸 거 같지는 않은데 필요하긴 할 듯
+    public void removeFromBlacklist(String token) {
+        blacklistedTokens.remove(token);
+    }
+
+    // 엑세스 토큰 만료 여부 및 블랙리스트 확인
+    public boolean isValidAccessToken(String token) {
+        try {
+            if (isBlacklisted(token)) {
+                return false; // 토큰이 블랙리스트에 있음 == 유효하지 않음
+            }
+            return !isExpired(token); // 토큰이 만료x == true, 토큰이 만료 == false
+        } catch (Exception e) {
+            return false; // 예외 발생한 경우, 토큰이 유효하지 않음 false
         }
     }
 }

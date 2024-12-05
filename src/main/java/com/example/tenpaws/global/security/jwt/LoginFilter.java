@@ -48,6 +48,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         UserRole userRole = UserRole.valueOf(authentication.getAuthorities().iterator().next().getAuthority());
 
+        String accessTokenFromRequest = getAccessTokenFromHeader(request);
+
+        if (accessTokenFromRequest != null && jwtUtil.isValidAccessToken(accessTokenFromRequest)) {
+            return;
+        }
+
         RefreshEntity existingRefreshEntity = refreshRepository.findByEmail(email);
         String refresh;
         if (existingRefreshEntity != null) {
@@ -93,5 +99,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         refreshEntity.setExpiration(date.toString());
 
         refreshRepository.save(refreshEntity);
+    }
+
+    private String getAccessTokenFromHeader(HttpServletRequest request) {
+        String header = request.getHeader("Authorization");
+        if (header != null && header.startsWith("Bearer ")) {
+            return header.substring(7); // "Bearer " 부분을 제외한 토큰만 반환
+        }
+        return null;
     }
 }
