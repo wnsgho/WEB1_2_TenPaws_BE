@@ -13,6 +13,8 @@ import com.example.tenpaws.domain.notification.service.NotificationService;
 import com.example.tenpaws.global.exception.BaseException;
 import com.example.tenpaws.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -70,5 +72,11 @@ public class CommentServiceImpl implements CommentService {
             throw new BaseException(ErrorCode.COMMENT_NOT_FOUND);
         }
         commentRepository.deleteById(commentId);
+    }
+
+    @Override
+    public Page<CommentResponse> getMyList(String email, Pageable pageable) {
+        return commentRepository.findByAdminEmail(email, pageable)
+                .map(CommentResponse::new);
     }
 }
