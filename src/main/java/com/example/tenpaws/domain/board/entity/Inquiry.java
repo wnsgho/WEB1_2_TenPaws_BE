@@ -45,6 +45,12 @@ public class Inquiry {
     @Column(name = "view_count", nullable = false)
     private Long viewCount;
 
+    @Column(name = "writer_email", nullable = false)
+    private String writerEmail;
+
+    @Column(name = "writer_name", nullable = false)
+    private String writerName;
+
     @OneToMany(mappedBy = "inquiry", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
@@ -58,6 +64,16 @@ public class Inquiry {
         this.title = title;
         this.content = content;
         this.viewCount = viewCount;
+
+        if (user != null) {
+            this.writerEmail = user.getEmail();
+            this.writerName = user.getUsername();
+        } else if (shelter != null) {
+            this.writerEmail = shelter.getEmail();
+            this.writerName = shelter.getShelterName();
+        } else {
+            throw new BaseException(ErrorCode.WRITER_NOT_FOUND);
+        }
     }
 
     public void update(String title, String content) {
@@ -69,13 +85,15 @@ public class Inquiry {
         this.viewCount++;
     }
 
-    public String getWriterEmail() {
+    public void updateWriterInfo() {
         if (user != null) {
-            return user.getEmail();
+            this.writerEmail = user.getEmail();
+            this.writerName = user.getUsername();
+        } else if (shelter != null) {
+            this.writerEmail = shelter.getEmail();
+            this.writerName = shelter.getShelterName();
+        } else {
+            throw new BaseException(ErrorCode.WRITER_NOT_FOUND);
         }
-        if (shelter != null) {
-            return shelter.getEmail();
-        }
-        throw new BaseException(ErrorCode.WRITER_NOT_FOUND);
     }
 }
