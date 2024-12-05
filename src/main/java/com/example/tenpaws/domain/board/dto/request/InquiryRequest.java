@@ -16,7 +16,8 @@ public class InquiryRequest {
 
     public Inquiry toEntity(User user) {
         return Inquiry.builder()
-                .user(user)
+                .writerEmail(user.getEmail())
+                .writerName(user.getUsername())
                 .title(title)
                 .content(content)
                 .viewCount(0L)
@@ -25,7 +26,8 @@ public class InquiryRequest {
 
     public Inquiry toEntity(Shelter shelter) {
         return Inquiry.builder()
-                .shelter(shelter)
+                .writerEmail(shelter.getEmail())
+                .writerName(shelter.getShelterName())
                 .title(title)
                 .content(content)
                 .viewCount(0L)
