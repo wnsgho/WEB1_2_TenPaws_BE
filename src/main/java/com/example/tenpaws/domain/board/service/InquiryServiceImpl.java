@@ -11,7 +11,9 @@ import com.example.tenpaws.domain.notification.factory.NotificationFactory;
 import com.example.tenpaws.domain.notification.service.NotificationService;
 import com.example.tenpaws.domain.shelter.entity.Shelter;
 import com.example.tenpaws.domain.shelter.repository.ShelterRepository;
+import com.example.tenpaws.domain.user.entity.OAuth2UserEntity;
 import com.example.tenpaws.domain.user.entity.User;
+import com.example.tenpaws.domain.user.repositoty.OAuth2UserRepository;
 import com.example.tenpaws.domain.user.repositoty.UserRepository;
 import com.example.tenpaws.global.entity.UserRole;
 import com.example.tenpaws.global.exception.BaseException;
@@ -32,6 +34,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class InquiryServiceImpl implements InquiryService {
     private final UserRepository userRepository;
+    private final OAuth2UserRepository oauth2UserRepository;
     private final ShelterRepository shelterRepository;
     private final InquiryRepository inquiryRepository;
     private final NotificationService notificationService;
@@ -44,17 +47,30 @@ public class InquiryServiceImpl implements InquiryService {
         Map<String, Object> userInfo = userDetailsService.getInfosByEmail(email);
         UserRole role = (UserRole) userInfo.get("role");
 
+        if (role != UserRole.ROLE_USER && role != UserRole.ROLE_SHELTER) {
+            throw new BaseException(ErrorCode.UNAUTHORIZED_ACCESS);
+        }
+
         Inquiry inquiry;
         if (role == UserRole.ROLE_USER) {
+            // 일반 회원 또는 소셜 로그인 회원 처리
             User user = userRepository.findByEmail(email)
-                    .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
+                    .orElseGet(() -> {
+                        // 일반 회원에서 찾지 못한 경우 소셜 로그인 회원 확인
+                        OAuth2UserEntity oauth2User = oauth2UserRepository.findByEmail(email)
+                                .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
+                        return User.builder()
+                                .email(oauth2User.getEmail())
+                                .username(oauth2User.getUsername())
+                                .userRole(UserRole.ROLE_USER)
+                                .build();
+                    });
             inquiry = inquiryRepository.save(request.toEntity(user));
-        } else if (role == UserRole.ROLE_SHELTER) {
+        } else {
+            // 보호소 회원 처리
             Shelter shelter = shelterRepository.findByEmail(email)
                     .orElseThrow(() -> new BaseException(ErrorCode.SHELTER_NOT_FOUND));
             inquiry = inquiryRepository.save(request.toEntity(shelter));
-        } else {
-            throw new BaseException(ErrorCode.UNAUTHORIZED_ACCESS);
         }
 
         notificationService.create(
