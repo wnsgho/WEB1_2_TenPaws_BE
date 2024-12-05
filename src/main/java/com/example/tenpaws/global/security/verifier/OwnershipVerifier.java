@@ -35,15 +35,7 @@ public class OwnershipVerifier {
 
     public boolean isInquiryOwner(Long id, String email) {
         return inquiryRepository.findById(id)
-                .map(inquiry -> {
-                    if (inquiry.getUser() != null) {
-                        return inquiry.getUser().getEmail().equals(email);
-                    }
-                    if (inquiry.getShelter() != null) {
-                        return inquiry.getShelter().getEmail().equals(email);
-                    }
-                    return false;
-                })
+                .map(inquiry -> inquiry.getWriterEmail().equals(email))
                 .orElse(false);
     }
 }
