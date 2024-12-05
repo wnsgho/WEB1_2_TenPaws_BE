@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -37,13 +38,14 @@ public class NotificationController {
     }
 
     @Operation(summary = "알림 읽음 표시", description = "알림 읽음 표시 API")
+    @PreAuthorize("@ownershipVerifier.isNotificationOwner(#notificationId, authentication.name)")
     @PatchMapping("/{notificationId}/read")
     public ResponseEntity<String> markAsRead(@PathVariable Long notificationId) {
         notificationService.markAsRead(notificationId);
         return ResponseEntity.ok("Message read status updated successfully");
     }
 
-    @Operation(summary = "???", description = "???")
+    @Operation(summary = "읽지 않은 알림 개수 조회", description = "읽지 않은 알림 개수 조회 API")
     @GetMapping("/unread-count")
     public ResponseEntity<Long> getUnreadCount(Authentication authentication) {
         String email = authentication.getName();
@@ -51,6 +53,7 @@ public class NotificationController {
     }
 
     @Operation(summary = "알림 삭제", description = "알림 삭제 API")
+    @PreAuthorize("@ownershipVerifier.isNotificationOwner(#notificationId, authentication.name)")
     @DeleteMapping("/{notificationId}")
     public ResponseEntity<String> delete(@PathVariable Long notificationId) {
         notificationService.delete(notificationId);
