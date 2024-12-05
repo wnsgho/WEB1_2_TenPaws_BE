@@ -22,18 +22,6 @@ public class ApplyController {
     private final ApplyService applyService;
 
     // 회원의 입양 신청
-//    @Operation(summary = "입양 신청", description = "입양 신청 API")
-//    @PostMapping
-//    public ResponseEntity<String> applyForPet(@RequestParam Long petId, @RequestParam Long userId) {
-//        //applyId 내에 들어가는 petId와 userId는 사용자가 신청하려는 동물과 사용자를 식별하는 값일 뿐, Apply 엔티티의 고유 ID인 applyId와는 구분됨
-//        try {
-//            applyService.ensureUserCanApply(userId, petId);
-//            applyService.applyForPet(petId, userId);
-//            return ResponseEntity.ok("Application submitted successfully.");
-//        } catch (RuntimeException e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
     @Operation(summary = "입양 신청", description = "입양 신청 API")
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @PostMapping
