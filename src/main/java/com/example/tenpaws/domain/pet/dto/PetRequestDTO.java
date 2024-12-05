@@ -8,9 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -32,10 +30,10 @@ public class PetRequestDTO {
     private String size;
     private int age;
     private String gender;
-    private Boolean neutering;
+    private String neutering;
     private String reason;
     private String preAdoption;
-    private Boolean vaccinated;
+    private String vaccinated;
     private String extra;
     private String personality;
     private int exerciseLevel;
