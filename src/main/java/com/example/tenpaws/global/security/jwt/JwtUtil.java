@@ -84,7 +84,7 @@ public class JwtUtil {
         }
     }
 
-    // 블략리스트에 토큰 추가
+    // 블랙리스트에 토큰 추가
     public void blacklistToken(String token) {
         blacklistedTokens.add(token);
     }
