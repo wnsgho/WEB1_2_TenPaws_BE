@@ -63,16 +63,12 @@ public class RecommendService {
 
             String prompt = String.format(
                     "User prefers: Size: %s, Personality: %s, Exercise Level: %s." +
-                            "\nAvailable pets:\n%s\nPlease recommend only one pet that perfectly suits to the all of user's preferences. Size should be equal. id should be said as ID: ?. Answer in Korean.",
+                            "\nAvailable pets:\n%s\nPlease recommend only one pet that perfectly suits to the all of user's preferences.If there is no pet that suits, just recommend closest one. Size should be equal. id should be said as ID: ?. Answer in Korean.",
                     size, personality, exerciseLevel, petDescriptions);
 
             // Step 5: OpenAI 호출
             String aiResponseContent = apiService.getRecommendation(prompt);  // aiResponseContent로 바로 처리;
             String recommendedId = extractRecommendedId(aiResponseContent);
-
-            if (recommendedId == null) {
-                throw new BaseException(ErrorCode.RECOMMENDATION_FAILED);
-            }
 
             // Step 5: 추천된 반려동물 정보 가져오기
             Long petId = Long.valueOf(recommendedId);
