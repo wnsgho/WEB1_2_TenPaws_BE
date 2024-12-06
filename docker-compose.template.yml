@@ -2,6 +2,7 @@ version: "3.7"
 
 volumes:
   mysql_data:
+  uploads_data:  # 파일 업로드를 위한 볼륨 추가
 
 services:
   tenpaws-server:
@@ -12,6 +13,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://tenpaws-db:3306/tenpaws
       SPRING_DATASOURCE_USERNAME: MYSQL_USERNAME_PLACEHOLDER
       SPRING_DATASOURCE_PASSWORD: MYSQL_PASSWORD_PLACEHOLDER
+    volumes:
+      - uploads_data:/home/ubuntu/instagram-server/uploads  # 업로드 디렉토리 마운트
     depends_on:
       - tenpaws-db
     entrypoint: >
@@ -20,7 +23,7 @@ services:
           echo 'Waiting for MySQL Database to be available...'  
           sleep 3  
         done  
-        java -jar project.jar  
+        java -jar project.jar --spring.config.location=file:/home/ubuntu/instagram-server/src/main/resources/application.properties  
       "
     logging:
       options:
