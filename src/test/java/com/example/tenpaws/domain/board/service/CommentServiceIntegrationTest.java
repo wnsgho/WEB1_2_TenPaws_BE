@@ -9,8 +9,6 @@ import com.example.tenpaws.domain.board.repository.CommentRepository;
 import com.example.tenpaws.domain.board.repository.InquiryRepository;
 import com.example.tenpaws.domain.notification.factory.NotificationFactory;
 import com.example.tenpaws.domain.notification.service.NotificationService;
-import com.example.tenpaws.domain.user.entity.User;
-import com.example.tenpaws.domain.user.repositoty.UserRepository;
 import com.example.tenpaws.global.entity.UserRole;
 import com.example.tenpaws.global.exception.BaseException;
 import com.example.tenpaws.global.exception.ErrorCode;
@@ -44,9 +42,6 @@ class CommentServiceIntegrationTest {
     @Autowired
     private AdminRepository adminRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
     @MockBean
     private NotificationService notificationService;
 
@@ -56,6 +51,8 @@ class CommentServiceIntegrationTest {
     private Admin admin;
     private Inquiry inquiry;
     private CommentRequest request;
+    private final String userEmail = "user@test.com";
+    private final String userName = "사용자";
 
     @BeforeEach
     void setUp() {
@@ -68,24 +65,13 @@ class CommentServiceIntegrationTest {
                 .build();
         adminRepository.save(admin);
 
-        // User 생성
-        User user = User.builder()
-                .username("사용자")
-                .email("user@test.com")
-                .password("password123")
-                .birthDate(LocalDate.of(1990, 1, 1))
-                .phoneNumber("010-1234-5678")
-                .address("서울시 강남구")
-                .userRole(UserRole.ROLE_USER)
-                .build();
-        userRepository.save(user);
-
-        // Inquiry 생성 (User 정보 포함)
+        // Inquiry 생성
         inquiry = Inquiry.builder()
                 .title("문의 제목")
                 .content("문의 내용")
+                .writerEmail(userEmail)
+                .writerName(userName)
                 .viewCount(0L)
-                .user(user)    // User 설정
                 .build();
         inquiryRepository.save(inquiry);
 

@@ -110,4 +110,8 @@ public class JwtUtil {
             return false; // 예외 발생한 경우, 토큰이 유효하지 않음 false
         }
     }
+
+    public void removeExpiredTokensFromBlacklist() {
+        blacklistedTokens.removeIf(this::isExpired);
+    }
 }
