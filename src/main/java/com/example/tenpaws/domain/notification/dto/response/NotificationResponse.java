@@ -9,11 +9,13 @@ import java.time.LocalDateTime;
 public class NotificationResponse {
     private final Long id;
     private final String content;
+    private final boolean isRead;
     private final LocalDateTime createdAt;
 
     public NotificationResponse(Notification notification) {
         this.id = notification.getId();
         this.content = notification.getContent();
+        this.isRead = notification.getIsRead();
         this.createdAt = notification.getCreatedAt();
     }
 }
