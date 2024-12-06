@@ -68,12 +68,12 @@ public class ChatRoomController {
     public ResponseEntity<Map<String, String>> deleteChatRoom(@PathVariable("chatRoomId") Long chatRoomId, Authentication authentication) {
         ChatRoomResponse chatRoom = chatRoomService.getChatRoom(chatRoomId);
         String receiver = authentication.getName().equals(chatRoom.getUserEmail()) ? chatRoom.getOppositeEmail() : chatRoom.getUserEmail();
+        chatRoomService.delete(chatRoomId);
         messagingTemplate.convertAndSendToUser(
                 receiver,
                 "/queue/chatroom-close",
                 new ClosedChatRoomResponse(chatRoomId, "상대방이 채팅방을 나갔습니다.")
         );
-        chatRoomService.delete(chatRoomId);
         return ResponseEntity.ok(Map.of("message", "ChatRoom deleted"));
     }
 }
