@@ -101,4 +101,10 @@ public class InquiryServiceImpl implements InquiryService {
                 .orElseThrow(() -> new BaseException(ErrorCode.INQUIRY_NOT_FOUND));
         inquiryRepository.deleteById(inquiryId);
     }
+
+    @Override
+    public Page<InquiryListViewResponse> getMyList(String email, Pageable pageable) {
+        return inquiryRepository.findByWriterEmail(email, pageable)
+                .map(InquiryListViewResponse::new);
+    }
 }

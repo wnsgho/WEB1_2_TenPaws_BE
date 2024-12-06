@@ -64,4 +64,14 @@ public class AnnouncementController {
         announcementService.delete(announcementId);
         return ResponseEntity.ok("Announcement successfully deleted");
     }
+
+    @Operation(summary = "내가 작성한 공지사항 목록 조회", description = "관리자가 작성한 공지사항 목록을 조회하는 API")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
+    @GetMapping("/my")
+    public ResponseEntity<Page<AnnouncementListViewResponse>> getMyList(
+            @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            Authentication authentication) {
+        String email = authentication.getName();
+        return ResponseEntity.ok(announcementService.getMyList(email, pageable));
+    }
 }
