@@ -3,6 +3,9 @@ package com.example.tenpaws.domain.apply.service;
 import com.example.tenpaws.domain.apply.dto.ApplyDto;
 import com.example.tenpaws.domain.apply.entity.Apply;
 import com.example.tenpaws.domain.apply.repository.ApplyRepository;
+import com.example.tenpaws.domain.notification.dto.request.NotificationRequest;
+import com.example.tenpaws.domain.notification.factory.NotificationFactory;
+import com.example.tenpaws.domain.notification.service.NotificationService;
 import com.example.tenpaws.domain.pet.entity.Pet;
 import com.example.tenpaws.domain.pet.repository.PetRepository;
 import com.example.tenpaws.domain.user.entity.User;
@@ -22,6 +25,8 @@ public class ApplyService {
     private final ApplyRepository applyRepository;
     private final PetRepository petRepository;
     private final UserRepository userRepository;
+    private final NotificationFactory notificationFactory;
+    private final NotificationService notificationService;
 
     public ApplyDto applyForPet(Long petId, Long userId) {
         Pet pet = petRepository.findById(petId)
@@ -38,32 +43,46 @@ public class ApplyService {
         // Optional에서 값을 추출
         Optional<Apply> existingApplicationOptional = applyRepository.findByPetAndUserAndApplyStatus(pet, user, Apply.ApplyStatus.CANCELED);
 
+        Apply savedApply;
         if (existingApplicationOptional.isPresent()) {
             Apply existingApplication = existingApplicationOptional.get(); // Optional에서 값 가져오기
             // 취소된 신청을 복구
             existingApplication.setApplyStatus(Apply.ApplyStatus.PENDING);
-            applyRepository.save(existingApplication);
+            savedApply = applyRepository.save(existingApplication);
 
             // 동물 상태를 다시 APPLIED로 변경
             pet.setStatus(Pet.PetStatus.APPLIED);
             petRepository.save(pet);
+        } else {
+            Apply apply = Apply.builder()
+                    .pet(pet)
+                    .user(user)
+                    .applyDate(new java.util.Date())
+                    .applyStatus(Apply.ApplyStatus.PENDING)
+                    .build();
 
-            return ApplyDto.fromEntity(existingApplication);
+            // 동물의 상태를 'APPLIED'로 변경
+            pet.setStatus(Pet.PetStatus.APPLIED);
+            petRepository.save(pet); // 상태 업데이트
+
+            savedApply = applyRepository.save(apply);
         }
 
-        Apply apply = Apply.builder()
-                .pet(pet)
-                .user(user)
-                .applyDate(new java.util.Date())
-                .applyStatus(Apply.ApplyStatus.PENDING)
-                .build();
+        // 입양 신청자에게 알림 전송
+        NotificationRequest userNotification = notificationFactory
+                .createAdoptionSubmittedNotification(user.getEmail());
+        notificationService.create(userNotification);
 
-        // 동물의 상태를 'APPLIED'로 변경
-        pet.setStatus(Pet.PetStatus.APPLIED);
-        petRepository.save(pet); // 상태 업데이트
+        // 보호소에 알림 전송
+        NotificationRequest shelterNotification = notificationFactory
+                .createAdoptionReceivedNotification(
+                        pet.getShelter().getEmail(),
+                        user.getUsername(),
+                        pet.getPetName()
+                );
+        notificationService.create(shelterNotification);
 
-        applyRepository.save(apply);
-        return ApplyDto.fromEntity(apply);
+        return ApplyDto.fromEntity(savedApply);
     }
 
     // 신청 취소
@@ -109,14 +128,26 @@ public class ApplyService {
         try {
             Apply.ApplyStatus newStatus = Apply.ApplyStatus.valueOf(status.toUpperCase());
             apply.setApplyStatus(newStatus);
-            applyRepository.save(apply);
-        // 신청 상태가 거절 또는 취소일 경우, 동물 상태를 'AVAILABLE'로 변경
+            Apply savedApply = applyRepository.save(apply);
+
+            // 신청 상태가 거절 또는 취소일 경우, 동물 상태를 'AVAILABLE'로 변경
             if (newStatus == Apply.ApplyStatus.REJECTED || newStatus == Apply.ApplyStatus.CANCELED) {
                 Pet pet = apply.getPet();
                 pet.setStatus(Pet.PetStatus.AVAILABLE);
                 petRepository.save(pet);
             }
-            return ApplyDto.fromEntity(apply);
+
+            // 입양 신청 결과 알림 전송 (승인 또는 거절의 경우)
+            if (newStatus == Apply.ApplyStatus.COMPLETED || newStatus == Apply.ApplyStatus.REJECTED || newStatus == Apply.ApplyStatus.CANCELED) {
+                NotificationRequest resultNotification = notificationFactory
+                        .createAdoptionResultNotification(
+                                apply.getUser().getEmail(),
+                                apply.getPet().getPetName()
+                        );
+                notificationService.create(resultNotification);
+            }
+
+            return ApplyDto.fromEntity(savedApply);
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("Invalid status: " + status);
         }
@@ -135,6 +166,7 @@ public class ApplyService {
         if (isAlreadyAppliedToOtherPets) {
             throw new RuntimeException("This user has already applied for another pet.");
         }
+
         // 접속한 유저가 현재 동물에 신청했는지 확인
         // 취소 상태, 거절 상태가 아닌 신청이 있는지 확인
         boolean isAlreadyAppliedToThisPet = applyRepository.existsByPetAndUserAndApplyStatusNotIn(pet, user,

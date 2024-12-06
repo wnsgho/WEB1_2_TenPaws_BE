@@ -9,14 +9,11 @@ import com.example.tenpaws.domain.shelter.repository.ShelterRepository;
 import com.example.tenpaws.global.exception.BaseException;
 import com.example.tenpaws.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.ssl.SslProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
-
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

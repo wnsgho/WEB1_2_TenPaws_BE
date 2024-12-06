@@ -28,28 +28,20 @@ public class Inquiry {
     @Column(name = "id", updatable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shelter_id")
-    private Shelter shelter;
-
     @Column(name = "title", nullable = false)
     private String title;
 
     @Column(name = "content", nullable = false)
     private String content;
 
-    @Column(name = "view_count", nullable = false)
-    private Long viewCount;
-
     @Column(name = "writer_email", nullable = false)
     private String writerEmail;
 
     @Column(name = "writer_name", nullable = false)
     private String writerName;
+
+    @Column(name = "view_count", nullable = false)
+    private Long viewCount;
 
     @OneToMany(mappedBy = "inquiry", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
@@ -58,22 +50,12 @@ public class Inquiry {
     private LocalDate created_at;
 
     @Builder
-    public Inquiry(User user, Shelter shelter, String title, String content, Long viewCount) {
-        this.user = user;
-        this.shelter = shelter;
+    public Inquiry(String title, String content, String writerEmail, String writerName, Long viewCount) {
         this.title = title;
         this.content = content;
-        this.viewCount = viewCount;
-
-        if (user != null) {
-            this.writerEmail = user.getEmail();
-            this.writerName = user.getUsername();
-        } else if (shelter != null) {
-            this.writerEmail = shelter.getEmail();
-            this.writerName = shelter.getShelterName();
-        } else {
-            throw new BaseException(ErrorCode.WRITER_NOT_FOUND);
-        }
+        this.writerEmail = writerEmail;
+        this.writerName = writerName;
+        this.viewCount = viewCount != null ? viewCount : 0L;
     }
 
     public void update(String title, String content) {
@@ -83,17 +65,5 @@ public class Inquiry {
 
     public void incrementViewCount() {
         this.viewCount++;
-    }
-
-    public void updateWriterInfo() {
-        if (user != null) {
-            this.writerEmail = user.getEmail();
-            this.writerName = user.getUsername();
-        } else if (shelter != null) {
-            this.writerEmail = shelter.getEmail();
-            this.writerName = shelter.getShelterName();
-        } else {
-            throw new BaseException(ErrorCode.WRITER_NOT_FOUND);
-        }
     }
 }
