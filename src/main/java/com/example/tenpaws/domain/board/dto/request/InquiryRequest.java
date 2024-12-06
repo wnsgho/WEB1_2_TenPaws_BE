@@ -14,22 +14,12 @@ public class InquiryRequest {
     private String title;
     private String content;
 
-    public Inquiry toEntity(User user) {
+    public Inquiry toEntity(String email, String username) {
         return Inquiry.builder()
-                .writerEmail(user.getEmail())
-                .writerName(user.getUsername())
                 .title(title)
                 .content(content)
-                .viewCount(0L)
-                .build();
-    }
-
-    public Inquiry toEntity(Shelter shelter) {
-        return Inquiry.builder()
-                .writerEmail(shelter.getEmail())
-                .writerName(shelter.getShelterName())
-                .title(title)
-                .content(content)
+                .writerEmail(email)
+                .writerName(username)
                 .viewCount(0L)
                 .build();
     }
