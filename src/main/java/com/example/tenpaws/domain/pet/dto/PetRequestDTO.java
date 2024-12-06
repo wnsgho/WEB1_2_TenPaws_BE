@@ -3,9 +3,10 @@ package com.example.tenpaws.domain.pet.dto;
 import com.example.tenpaws.domain.pet.entity.Pet;
 import com.example.tenpaws.domain.pet.species.Species;
 import com.example.tenpaws.domain.shelter.entity.Shelter;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class PetRequestDTO {
 //    }
 
     private String size;
-    private int age;
+    private String age;
     private String gender;
     private String neutering;
     private String reason;

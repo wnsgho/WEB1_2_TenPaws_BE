@@ -2,6 +2,7 @@ version: "3.7"
 
 volumes:
   mysql_data:
+  uploads_data:  # 파일 업로드를 위한 볼륨 추가
 
 services:
   tenpaws-server:
@@ -9,9 +10,11 @@ services:
     ports:
       - 8080:8080
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://tenpaws-db:3306/tenpaws
+      SPRING_DATASOURCE_URL: jdbc:mysql://tenpaws-db:3306/tenpaws?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
       SPRING_DATASOURCE_USERNAME: MYSQL_USERNAME_PLACEHOLDER
       SPRING_DATASOURCE_PASSWORD: MYSQL_PASSWORD_PLACEHOLDER
+    volumes:
+      - uploads_data:/home/ubuntu/instagram-server/uploads  # 업로드 디렉토리 마운트
     depends_on:
       - tenpaws-db
     entrypoint: >
@@ -20,7 +23,7 @@ services:
           echo 'Waiting for MySQL Database to be available...'  
           sleep 3  
         done  
-        java -jar project.jar  
+        java -jar project.jar --spring.config.location=file:/home/ubuntu/instagram-server/src/main/resources/application.properties  
       "
     logging:
       options:
@@ -32,11 +35,15 @@ services:
     image: mysql
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf
     ports:
       - 3306:3306
     environment:
       MYSQL_ROOT_PASSWORD: MYSQL_PASSWORD_PLACEHOLDER
       MYSQL_DATABASE: tenpaws
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 5s

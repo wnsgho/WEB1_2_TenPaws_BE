@@ -9,10 +9,6 @@ import com.example.tenpaws.domain.board.entity.Inquiry;
 import com.example.tenpaws.domain.board.repository.InquiryRepository;
 import com.example.tenpaws.domain.notification.factory.NotificationFactory;
 import com.example.tenpaws.domain.notification.service.NotificationService;
-import com.example.tenpaws.domain.shelter.entity.Shelter;
-import com.example.tenpaws.domain.shelter.repository.ShelterRepository;
-import com.example.tenpaws.domain.user.entity.User;
-import com.example.tenpaws.domain.user.repositoty.UserRepository;
 import com.example.tenpaws.global.entity.UserRole;
 import com.example.tenpaws.global.exception.BaseException;
 import com.example.tenpaws.global.exception.ErrorCode;
@@ -31,8 +27,6 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class InquiryServiceImpl implements InquiryService {
-    private final UserRepository userRepository;
-    private final ShelterRepository shelterRepository;
     private final InquiryRepository inquiryRepository;
     private final NotificationService notificationService;
     private final NotificationFactory notificationFactory;
@@ -43,19 +37,14 @@ public class InquiryServiceImpl implements InquiryService {
     public InquiryResponse create(InquiryRequest request, String email) {
         Map<String, Object> userInfo = userDetailsService.getInfosByEmail(email);
         UserRole role = (UserRole) userInfo.get("role");
+        String username = (String) userInfo.get("username");
 
-        Inquiry inquiry;
-        if (role == UserRole.ROLE_USER) {
-            User user = userRepository.findByEmail(email)
-                    .orElseThrow(() -> new BaseException(ErrorCode.MEMBER_NOT_FOUND));
-            inquiry = inquiryRepository.save(request.toEntity(user));
-        } else if (role == UserRole.ROLE_SHELTER) {
-            Shelter shelter = shelterRepository.findByEmail(email)
-                    .orElseThrow(() -> new BaseException(ErrorCode.SHELTER_NOT_FOUND));
-            inquiry = inquiryRepository.save(request.toEntity(shelter));
-        } else {
+        if (role != UserRole.ROLE_USER && role != UserRole.ROLE_SHELTER) {
             throw new BaseException(ErrorCode.UNAUTHORIZED_ACCESS);
         }
+
+        Inquiry inquiry = request.toEntity(email, username);
+        inquiry = inquiryRepository.save(inquiry);
 
         notificationService.create(
                 notificationFactory.createInquirySubmittedNotification(email)

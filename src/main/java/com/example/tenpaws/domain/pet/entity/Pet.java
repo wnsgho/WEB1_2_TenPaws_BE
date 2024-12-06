@@ -36,7 +36,7 @@ public class Pet {
     private String size;
 
     @Column(name = "age", nullable = false)
-    private int age;
+    private String age;
 
     @Column(name = "gender", nullable = false)
     private String gender;
@@ -81,7 +81,7 @@ public class Pet {
     }
 
     @Builder
-    public Pet(Long id, String petName, Species species,  String size, int age, String gender, String neutering, String reason,
+    public Pet(Long id, String petName, Species species,  String size, String age, String gender, String neutering, String reason,
                String preAdoption, String vaccinated, String extra, String personality, int exerciseLevel, Shelter shelter, List<String> imageUrls) {
         this.id = id;
         this.petName = petName;
