@@ -66,9 +66,9 @@ jobs:
         # 태깅된 이미지를 ECR에 업로드
         run: docker push ${{ steps.login-ecr.outputs.registry }}/instagram-server:latest
 
-      # Step 11: 배포 스크립트 실행 권한 설정
-      - name: start-server.sh 실행 권한 추가
-        run: chmod +x scripts/start-server.sh
+      # Step 11: 배포 스크립트 실행 권한 설정 (scripts 디렉토리의 모든 파일에 실행 권한 부여)
+      - name: 배포 스크립트 실행 권한 추가
+        run: chmod -R +x scripts/
 
       # Step 12: docker-compose.yml 임시 생성
       - name: Generate docker-compose.yml
