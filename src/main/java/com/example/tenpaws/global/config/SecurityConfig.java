@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -103,8 +104,28 @@ public class SecurityConfig {
         // 모든 기능 완성되면 그 때 엔드포인트 보고 접근 권한 수정!
         httpSecurity
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/**").permitAll()
-                        .anyRequest().permitAll());
+                        // 웹소켓 관련 설정
+                        .requestMatchers("/ws/**").permitAll()
+                        // GET 요청에 대한 permitAll 허용
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/v1/announcements", "/api/v1/announcements/{announcementId}",
+                                "/api/v1/inquiries", "/api/v1/inquiries/{inquiryId}",
+                                "/api/v1/faqs", "/api/v1/faqs/top-level", "/api/v1/faqs/{parentId}",
+                                "/api/v1/features/check-email",
+                                "/api/v1/pets", "/api/v1/pets/{petId}",
+                                "/" // 홈 화면은 GET 요청만 허용
+                        ).permitAll()
+
+                        // POST 요청에 대한 permitAll 허용
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/v1/users/regular/join", "/api/v1/users/shelter/join",
+                                "/login", "/logout", "/api/v1/auth/oauth2/naver", "/api/v1/auth/oauth2/kakao"
+                        ).permitAll()
+
+                        // 나머지 요청에 대한 인증 필요
+                        .anyRequest().authenticated()
+                );
+
 
         httpSecurity
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository), UsernamePasswordAuthenticationFilter.class);
