@@ -27,7 +27,7 @@ public class PetService {
 
     private final ShelterRepository shelterRepository;
     private final PetRepository petRepository;
-    private final String uploadDir = System.getProperty("user.dir") + "/uploads";
+    private final String uploadDir = System.getProperty("user.dir") + "/uploads/images";
 
 
     public List<PetResponseDTO> getPetList() {
@@ -85,7 +85,7 @@ public class PetService {
                     String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
                     File savedFile = new File(directory, fileName);
                     file.transferTo(savedFile);
-                    imageUrls.add("/uploads/" + fileName); // 이미지 URL 생성
+                    imageUrls.add("/images/" + fileName); // 이미지 URL 생성
                 } catch (IOException e) {
                     throw new RuntimeException("File upload failed: " + e.getMessage());
                 }
@@ -142,10 +142,11 @@ public class PetService {
     private Shelter getShelter(Long shelterId) {
         return shelterRepository.findById(shelterId)
                 .orElseThrow(() -> new BaseException(ErrorCode.SHELTER_NOT_FOUND));
-    }  // 여기에 두는게 맞나?
+    }
 
     private Pet getPet(Long petId) {
         return petRepository.findById(petId)
                 .orElseThrow(() -> new BaseException(ErrorCode.PET_NOT_FOUND));
     }
+
 }

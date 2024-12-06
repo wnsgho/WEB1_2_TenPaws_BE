@@ -66,9 +66,9 @@ jobs:
         # 태깅된 이미지를 ECR에 업로드
         run: docker push ${{ steps.login-ecr.outputs.registry }}/instagram-server:latest
 
-      # Step 11: 배포 스크립트 실행 권한 설정
-      - name: start-server.sh 실행 권한 추가
-        run: chmod +x scripts/start-server.sh
+      # Step 11: 배포 스크립트 실행 권한 설정 (scripts 디렉토리의 모든 파일에 실행 권한 부여)
+      - name: 배포 스크립트 실행 권한 추가
+        run: chmod -R +x scripts/
 
       # Step 12: docker-compose.yml 임시 생성
       - name: Generate docker-compose.yml
@@ -83,7 +83,7 @@ jobs:
         # - appspec.yml: CodeDeploy 설정 파일
         # - scripts: 배포 스크립트들이 있는 디렉토리
         # - docker-compose.yml: 컨테이너 구성 파일
-        run: tar -czvf $GITHUB_SHA.tar.gz appspec.yml scripts docker-compose.yml my.cnf
+        run: tar -czvf $GITHUB_SHA.tar.gz appspec.yml scripts docker-compose.yml
 
       # Step 14: S3에 배포 파일 업로드
       - name: S3에 프로젝트 폴더 업로드
