@@ -50,7 +50,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String accessTokenFromRequest = getAccessTokenFromHeader(request);
 
-        if (accessTokenFromRequest != null && jwtUtil.isValidAccessToken(accessTokenFromRequest)) {
+        if (accessTokenFromRequest != null && jwtUtil.isBlacklisted(accessTokenFromRequest)) {
+            jwtUtil.removeFromBlacklist(accessTokenFromRequest);
+
+            String newAccessToken = jwtUtil.createJwt("access", email, userRole, ACCESS_TOKEN_EXPIRATION);
+            String newRefreshToken = jwtUtil.createJwt("refresh", email, userRole, REFRESH_TOKEN_EXPIRATION);
+
+            response.setHeader("Authorization", "Bearer " + newAccessToken);
+            response.addCookie(createCookie("refresh", newRefreshToken));
+            response.setStatus(HttpStatus.OK.value());
             return;
         }
 
