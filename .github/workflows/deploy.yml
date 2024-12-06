@@ -83,7 +83,7 @@ jobs:
         # - appspec.yml: CodeDeploy 설정 파일
         # - scripts: 배포 스크립트들이 있는 디렉토리
         # - docker-compose.yml: 컨테이너 구성 파일
-        run: tar -czvf $GITHUB_SHA.tar.gz appspec.yml scripts docker-compose.yml my.cnf
+        run: tar -czvf $GITHUB_SHA.tar.gz appspec.yml scripts docker-compose.yml
 
       # Step 14: S3에 배포 파일 업로드
       - name: S3에 프로젝트 폴더 업로드
