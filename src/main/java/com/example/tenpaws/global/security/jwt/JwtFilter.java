@@ -20,12 +20,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -40,9 +42,48 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
-        return path.equals("/login") || path.equals("/") || path.equals("/logout")
-                || path.equals("/api/v1/users/regular/join") || path.equals("/api/v1/users/shelter/join")
-                || path.equals("/api/v1/auth/oauth2/kakao") || path.equals("/api/v1/auth/oauth2/naver");
+        String method = request.getMethod();
+
+        // GET 메서드로 허용된 경로
+        Set<String> getAllowedPaths = Set.of(
+                "/api/v1/announcements",
+                "/api/v1/announcements/{announcementId}",
+                "/api/v1/inquiries",
+                "/api/v1/inquiries/{inquiryId}",
+                "/api/v1/faqs",
+                "/api/v1/faqs/top-level",
+                "/api/v1/faqs/{parentId}",
+                "/api/v1/features/check-email",
+                "/api/v1/pets",
+                "/api/v1/pets/{petId}",
+                "/"
+        );
+
+        // POST 메서드로 허용된 경로
+        Set<String> postAllowedPaths = Set.of(
+                "/login",
+                "/logout",
+                "/api/v1/users/regular/join",
+                "/api/v1/users/shelter/join",
+                "/api/v1/auth/oauth2/naver",
+                "/api/v1/auth/oauth2/kakao"
+        );
+
+        // 경로와 메서드 조건 확인
+        if (method.equals(HttpMethod.GET.name()) && getAllowedPaths.contains(path)) {
+            return true;
+        }
+
+        if (method.equals(HttpMethod.POST.name()) && postAllowedPaths.contains(path)) {
+            return true;
+        }
+
+        // /ws/** 패턴 허용
+        if (path.startsWith("/ws/")) {
+            return true;
+        }
+
+        return false;
     }
 
     @Override
