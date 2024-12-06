@@ -22,6 +22,10 @@ permissions:
 
 # 배포 수명 주기 이벤트 후크 설정
 hooks:
+  BeforeInstall:
+    - location: scripts/before_install.sh
+      timeout: 300
+      runas: ubuntu
   ApplicationStart:
     # 애플리케이션 시작 스크립트 실행 설정
     - location: scripts/start-server.sh
