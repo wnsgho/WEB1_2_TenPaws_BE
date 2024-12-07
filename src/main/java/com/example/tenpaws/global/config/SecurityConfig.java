@@ -106,6 +106,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         // 웹소켓 관련 설정
                         .requestMatchers("/ws/**").permitAll()
+                        // 사진 접근 허용
+                        .requestMatchers("/uploads/**").permitAll()
+                        .requestMatchers("/images/**").permitAll()
                         // GET 요청에 대한 permitAll 허용
                         .requestMatchers(HttpMethod.GET,
                                 "/api/v1/announcements", "/api/v1/announcements/{announcementId}",
