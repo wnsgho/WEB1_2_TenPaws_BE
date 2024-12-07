@@ -143,7 +143,37 @@ TENPAWS는 카카오 맵 API를 활용하여 사용자의 현재 위치에서 �
 
 <details>
   <summary>🔗 Flow chart</summary>
+<br>
 
+<details>
+  <summary>로그인</summary>
+![image](https://github.com/user-attachments/assets/0de7051f-33ac-4e97-9409-423c9c106fd8)
+
+</details>
+
+<details>
+  <summary>반려동물 매칭</summary>
+![image](https://github.com/user-attachments/assets/285f6714-a012-4370-ac51-95467b9d6ad5)
+
+</details>
+
+<details>
+  <summary>실시간 알림 전송</summary>
+![image](https://github.com/user-attachments/assets/7fec3f51-ac72-410e-9f11-11c96f9c73d0)
+
+</details>
+
+<details>
+  <summary>실시간 채팅 서비스</summary>
+![image](https://github.com/user-attachments/assets/fa761b28-6378-4c97-939a-a183adbb4eb1)
+
+</details>
+
+<details>
+  <summary>카카오 맵 API</summary>
+![image](https://github.com/user-attachments/assets/229862d9-15c7-40fc-b326-de91063fd5c6)
+
+</details>
 </details>
 
 <br>
