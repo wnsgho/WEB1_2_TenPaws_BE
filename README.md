@@ -69,7 +69,7 @@ TENPAWS는 카카오 맵 API를 활용하여 사용자의 현재 위치에서 �
 <details>
   <summary>프로젝트 구조 자세히 보기</summary>
 
-![CICD구조도4 drawio](https://github.com/user-attachments/assets/5bb83df5-3bb0-47cb-905d-9365824f4bff)
+
 
 
 </details>
@@ -87,6 +87,7 @@ TENPAWS는 카카오 맵 API를 활용하여 사용자의 현재 위치에서 �
 <details>
   <summary>🔗 System Architecture</summary>
 
+![CICD구조도4 drawio](https://github.com/user-attachments/assets/5bb83df5-3bb0-47cb-905d-9365824f4bff)
 
 </details>
 
