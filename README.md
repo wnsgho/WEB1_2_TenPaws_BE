@@ -97,17 +97,7 @@ TENPAWS는 카카오 맵 API를 활용하여 사용자의 현재 위치에서 �
 <br>
 
 <details>
-  <summary>로그인</summary>
-
-</details>
-
-<details>
   <summary>소셜 로그인</summary>
-
-</details>
-
-<details>
-  <summary>Jason Web Token</summary>
 
 </details>
 
