@@ -12,7 +12,6 @@ files:
   # ZIP 파일에 있는 모든 파일과 디렉토리가 동일한 구조로 복사됨(source: /)
   - source: /
     destination: /home/ubuntu/instagram-server
-    overwrite: true # 파일 덮어쓰기 옵션 추가
 
 # 파일 권한 설정
 permissions:
@@ -20,7 +19,6 @@ permissions:
   - object: /
     owner: ubuntu
     group: ubuntu
-    mode: 755 # 실행 권한 추가
 
 # 배포 수명 주기 이벤트 후크 설정
 hooks:
