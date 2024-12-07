@@ -1,4 +1,4 @@
-## ![image](https://github.com/user-attachments/assets/d8234c5d-5145-41e9-8c7a-4da948e80dce) PROGEAMMERS_FINAL_TEAM_PROJECT_TENPAWS
+## ![image](https://github.com/user-attachments/assets/d8234c5d-5145-41e9-8c7a-4da948e80dce) PROGRAMMERS_FINAL_TEAM_PROJECT_TENPAWS
 
 **TENPAWS**는 2024년 7월을 기점으로 초고령화 사회로 진입한 대한민국의 심각한 사회적 문제를 해결하고, 매년 10만 마리 이상 유기되는 동물들의 생명을 구하기 위해 탄생한 독거노인 - 반려동물 매칭 서비스 입니다. 독거 어르신과 보호소의 유기 동물을 연결함으로써, 서로에게 새로운 가족이 되어주는 따뜻한 연결의 가치를 실현합니다. TENPAWS는 단순한 서비스가 아닌, 사람과 동물 모두의 삶에 긍정적인 변화를 가져오는 사회적 동반자가 되고자 합니다.
 
