@@ -166,6 +166,9 @@ TENPAWS는 카카오 맵 API를 활용하여 사용자의 현재 위치에서 �
 <details>
   <summary>실시간 알림 전송</summary>
 
+  
+![image](https://github.com/user-attachments/assets/867340ad-6370-448d-a7dc-1c06f50d6098)
+
 </details>
 
 <details>
