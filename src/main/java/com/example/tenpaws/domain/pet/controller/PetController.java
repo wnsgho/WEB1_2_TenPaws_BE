@@ -38,14 +38,14 @@ public class PetController {
     }
 
     @Operation(summary = "보호소 반려동물 정보 조회", description = "보호소별 반려동물 전체 정보 조회를 위한 API")
-    @PreAuthorize("hasAnyRole('ROLE_SHELTER')")
+    @PreAuthorize("hasRole('ROLE_SHELTER')")
     @GetMapping("/{shelterId}/list")
     public List<PetResponseDTO> getAllPets(@PathVariable Long shelterId) {
         return petService.getAllPets(shelterId);
     }
 
     @Operation(summary = "ID를 통한 반려동물 정보 조회", description = "보호소ID를 통한 반려동물 상세 정보 조회를 위한 API")
-    @PreAuthorize("hasAnyRole('ROLE_SHELTER')")
+    @PreAuthorize("hasRole('ROLE_SHELTER')")
     @GetMapping("/{petId}/{shelterId}")
     public PetResponseDTO getPetById(
             @PathVariable Long petId,
@@ -54,7 +54,7 @@ public class PetController {
     }
 
     @Operation(summary = "반려동물 등록", description = "반려동물 등록을 위한 API")
-    @PreAuthorize("hasAnyRole('ROLE_SHELTER')")
+    @PreAuthorize("hasRole('ROLE_SHELTER') and @petService.isShelterApplicant(#shelterId)")
     @PostMapping("/{shelterId}")
     public ResponseEntity<PetResponseDTO> createPet(
             @PathVariable Long shelterId,
@@ -67,7 +67,7 @@ public class PetController {
 
 
     @Operation(summary = "반려동물 정보 수정", description = "반려동물 정보 수정을 위한 API")
-    @PreAuthorize("hasAnyRole('ROLE_SHELTER')")
+    @PreAuthorize("hasRole('ROLE_SHELTER')and @petService.isShelterApplicant(#shelterId)")
     @PutMapping("/{shelterId}/{petId}")
     public ResponseEntity<PetResponseDTO> updatePet(
             @PathVariable Long shelterId,
@@ -83,7 +83,7 @@ public class PetController {
 
 
     @Operation(summary = "반려동물 정보 삭제", description = "반려동물 정보 삭제를 위한 API")
-    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_SHELTER')")
+    @PreAuthorize("hasRole('ROLE_SHELTER') and @petService.isShelterApplicant(#shelterId) or hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN')")
     @DeleteMapping("/{shelterId}/{petId}")
     public ResponseEntity<Map<String, String>> deletePet(
             @PathVariable Long shelterId,

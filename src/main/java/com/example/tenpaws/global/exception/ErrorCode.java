@@ -62,6 +62,7 @@ public enum ErrorCode {
 
     // Shelter
     SHELTER_NOT_FOUND(HttpStatus.NOT_FOUND, "Shelter not found with ID"),
+    SHELTER_NOT_OWNER(HttpStatus.NOT_FOUND, "Shelter not owner"),
 
     // Pet
     PET_NOT_FOUND(HttpStatus.NOT_FOUND,"Pet not found with ID"),

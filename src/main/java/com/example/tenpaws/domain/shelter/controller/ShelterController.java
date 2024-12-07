@@ -35,16 +35,9 @@ public class ShelterController {
         return ResponseEntity.ok(shelterService.getShelterById(id));
     }
 
-    // 쉘터 등록
-//    @PostMapping
-//    public ResponseEntity<ShelterResponseDTO> createShelter(@RequestBody ShelterRequestDTO shelterRequestDTO) {
-//        ShelterResponseDTO createdShelter = shelterService.createShelter(shelterRequestDTO);
-//        return ResponseEntity.ok(createdShelter);
-//    }
-
     // 쉘터 정보 수정
     @Operation(summary = "쉘터 정보 수정", description = "쉘터 정보 수정을 위한 API")
-    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_SHELTER')")
+    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN') or hasRole('ROLE_SHELTER') and @petService.isShelterApplicant(#id)")
     @PutMapping("/{id}")
     public ResponseEntity<ShelterResponseDTO> updateShelter(@PathVariable Long id, @RequestBody ShelterRequestDTO shelterRequestDTO) {
         ShelterResponseDTO updatedShelter = shelterService.updateShelter(id, shelterRequestDTO);
@@ -53,7 +46,7 @@ public class ShelterController {
 
     // 쉘터 삭제
     @Operation(summary = "쉘터 정보 삭제", description = "쉘터 정보 삭제를 위한 API")
-    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_SHELTER')")
+    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN') or hasRole('ROLE_SHELTER') and @petService.isShelterApplicant(#id)")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteShelter(@PathVariable Long id) {
         shelterService.deleteShelter(id);

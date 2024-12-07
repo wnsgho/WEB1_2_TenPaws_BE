@@ -9,6 +9,8 @@ import com.example.tenpaws.domain.shelter.repository.ShelterRepository;
 import com.example.tenpaws.global.exception.BaseException;
 import com.example.tenpaws.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -148,5 +150,21 @@ public class PetService {
         return petRepository.findById(petId)
                 .orElseThrow(() -> new BaseException(ErrorCode.PET_NOT_FOUND));
     }
+
+    // 권한 검증
+
+    public boolean isShelterApplicant(Long shelterId){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentEmail = authentication.getName();
+
+        Shelter shelter = shelterRepository.findByEmail(currentEmail)
+                .orElseThrow(() -> new BaseException(ErrorCode.SHELTER_NOT_FOUND));
+        if (!shelter.getId().equals(shelterId)) {
+            throw new BaseException(ErrorCode.SHELTER_NOT_OWNER);
+        }
+        return true;
+    }
+
+
 
 }
