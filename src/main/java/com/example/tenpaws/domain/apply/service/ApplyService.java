@@ -8,9 +8,14 @@ import com.example.tenpaws.domain.notification.factory.NotificationFactory;
 import com.example.tenpaws.domain.notification.service.NotificationService;
 import com.example.tenpaws.domain.pet.entity.Pet;
 import com.example.tenpaws.domain.pet.repository.PetRepository;
+import com.example.tenpaws.domain.shelter.entity.Shelter;
 import com.example.tenpaws.domain.user.entity.User;
 import com.example.tenpaws.domain.user.repositoty.UserRepository;
+import com.example.tenpaws.global.exception.BaseException;
+import com.example.tenpaws.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
