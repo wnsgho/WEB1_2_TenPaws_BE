@@ -54,7 +54,7 @@ TENPAWS는 카카오 맵 API를 활용하여 사용자의 현재 위치에서 �
 ![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white)![H2](https://img.shields.io/badge/H2%20database-00205B?style=for-the-badge&logo=null&logoColor=white)
 
 ### Collaboration
-![intellij](https://img.shields.io/badge/IntelliJ_IDEA-00415E.svg?style=for-the-badge&logo=intellij-idea&logoColor=white)![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)![Notion](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white)![GitHub](https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=github&logoColor=white")![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)
+![intellij](https://img.shields.io/badge/IntelliJ_IDEA-00415E.svg?style=for-the-badge&logo=intellij-idea&logoColor=white)![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)![Notion](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white)![GitHub](https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=github&logoColor=white")![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)
 
 ### API
 ![ChatGPT](https://img.shields.io/badge/chatGPT-74aa9c?style=for-the-badge&logo=openai&logoColor=white)
