@@ -128,14 +128,13 @@ TENPAWS는 카카오 맵 API를 활용하여 사용자의 현재 위치에서 �
 
 <details>
   <summary>🔗 Usecase Diagram</summary>
+  
+![image](https://github.com/user-attachments/assets/f78ae845-b917-4915-8e37-0aee06656ca2)
 
 </details>
 
 <details>
   <summary>🔗 Flow chart</summary>
-  
-![image](https://github.com/user-attachments/assets/f78ae845-b917-4915-8e37-0aee06656ca2)
-
 
 <br>
 
