@@ -55,8 +55,8 @@ public class JwtFilter extends OncePerRequestFilter {
                 "/api/v1/faqs/{parentId}",
                 "/api/v1/features/check-email",
                 "/api/v1/pets",
-                "/api/v1/pets/{petId}",
-                "/"
+                "/api/v1/pets/{petId}"
+                // "/"
         );
 
         // POST 메서드로 허용된 경로
