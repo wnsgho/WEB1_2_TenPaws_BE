@@ -18,7 +18,7 @@ import java.util.List;
 public class PetRequestDTO {
     private String petName;
 
-//    // species 필드를 추가
+    //    // species 필드를 추가
     private Species species; // Species 필드를 추가
 //
 //    // @JsonCreator를 이용해 Species를 직접 매핑
@@ -39,6 +39,7 @@ public class PetRequestDTO {
     private String personality;
     private int exerciseLevel;
     private List<MultipartFile> images; // Store multiple image files
+    private Pet.PetStatus status;
 
     public Pet toEntity(Shelter shelter, List<String> imageUrls) {
         return Pet.builder()
@@ -56,6 +57,7 @@ public class PetRequestDTO {
                 .exerciseLevel(this.exerciseLevel)
                 .shelter(shelter)
                 .imageUrls(imageUrls)
+                .status(status)
                 .build();
     }
 }
