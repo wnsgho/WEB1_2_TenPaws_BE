@@ -114,8 +114,8 @@ public class SecurityConfig {
                                 "/api/v1/inquiries", "/api/v1/inquiries/{inquiryId}",
                                 "/api/v1/faqs", "/api/v1/faqs/top-level", "/api/v1/faqs/{parentId}",
                                 "/api/v1/features/check-email",
-                                "/api/v1/pets", "/api/v1/pets/{petId}",
-                                "/" // 홈 화면은 GET 요청만 허용
+                                "/api/v1/pets", "/api/v1/pets/{petId}"
+                                // "/" // 홈 화면은 GET 요청만 허용
                         ).permitAll()
 
                         // POST 요청에 대한 permitAll 허용
