@@ -5,6 +5,16 @@ volumes:
   uploads_data:  # 파일 업로드를 위한 볼륨 추가
 
 services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./frontend/build:/usr/share/nginx/html
+    depends_on:
+      - tenpaws-server
+
   tenpaws-server:
     image: 761018890747.dkr.ecr.ap-northeast-2.amazonaws.com/instagram-server:latest
     ports:
