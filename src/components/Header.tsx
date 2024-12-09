@@ -106,44 +106,44 @@ const Header = () => {
 
   return (
     <>
-      <header className="relative flex items-center justify-between px-10 py-3 sm:py-3 md:py-3 lg:py-3 xl:py-3 bg-white shadow-md z-50">
+      <header className="relative z-50 flex items-center justify-between px-10 py-3 bg-white shadow-md sm:py-3 md:py-3 lg:py-3 xl:py-3">
         {/* TENPAWS - 프로젝트명 */}
         <div
-          className="text-4xl md:text-4xl lg:text-4xl xl:text-4xl 2xl:text-4xl font-bold"
+          className="text-4xl font-bold md:text-4xl lg:text-4xl xl:text-4xl 2xl:text-4xl"
           style={{ color: "#7F5546" }}
         >
           <Link to="/">Ten<span className="text-[#f1a34a]">Paws</span></Link>
         </div>
 
         {/* 매칭, 안내, 내정보와 드롭다운 바 */}
-        <div className="hidden md:flex flex-1 justify-center relative">
-          <div className="flex justify-between items-center w-full max-w-3xl text-3xl md:text-3xl lg:text-3xl xl:text-3xl 2xl:text-3xl font-medium rounded-lg px-0 py-3 ">
+        <div className="relative justify-center flex-1 hidden md:flex">
+          <div className="flex items-center justify-between w-full max-w-3xl px-0 py-3 text-3xl font-medium rounded-lg md:text-3xl lg:text-3xl xl:text-3xl 2xl:text-3xl ">
             {/* 매칭 */}
             <div
-              className="relative flex-1 text-center hover:scale-105 transition-transform duration-200"
+              className="relative flex-1 text-center transition-transform duration-200 hover:scale-105"
               onMouseEnter={showDropdown}
               onMouseLeave={hideDropdown}
             >
               <span>매칭</span>
-              <div className="absolute top-full left-0 w-full h-4"></div>
+              <div className="absolute left-0 w-full h-4 top-full"></div>
             </div>
             {/* 안내 */}
             <div
-              className="relative flex-1 text-center hover:scale-105 transition-transform duration-200"
+              className="relative flex-1 text-center transition-transform duration-200 hover:scale-105"
               onMouseEnter={showDropdown}
               onMouseLeave={hideDropdown}
             >
               <span>안내</span>
-              <div className="absolute top-full left-0 w-full h-4"></div>
+              <div className="absolute left-0 w-full h-4 top-full"></div>
             </div>
             {/* 내정보 */}
             <div
-              className="relative flex-1 text-center hover:scale-105 transition-transform duration-200"
+              className="relative flex-1 text-center transition-transform duration-200 hover:scale-105"
               onMouseEnter={showDropdown}
               onMouseLeave={hideDropdown}
             >
               <span>내정보</span>
-              <div className="absolute top-full left-0 w-full h-4"></div>
+              <div className="absolute left-0 w-full h-4 top-full"></div>
             </div>
           </div>
 
@@ -162,75 +162,80 @@ const Header = () => {
             >
               <div className="flex divide-x divide-gray-300 py-7">
                 {/* 매칭 세부사항 */}
-                <div className="flex-1 flex flex-col items-center px-4">
+                <div className="flex flex-col items-center flex-1 px-4">
                   <Link
                     to="/matching"
-                    className="font-normal text-black mb-2 text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-2xl hover:scale-105 transition-transform duration-200"
+                    className="mb-2 text-sm font-normal text-black transition-transform duration-200 sm:text-lg md:text-xl lg:text-2xl xl:text-2xl hover:scale-105"
                   >
                     반려동물 조회
                   </Link>
                   {userRole === "ROLE_SHELTER" && (
                     <Link
                       to="/detailadd"
-                      className="font-normal text-black mb-2 text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-2xl hover:scale-105 transition-transform duration-200"
+                      className="mb-2 text-sm font-normal text-black transition-transform duration-200 sm:text-lg md:text-xl lg:text-2xl xl:text-2xl hover:scale-105"
                     >
                       반려동물 등록
                     </Link>
                   )}
-                  <Link
-                    to="/ai-matching"
-                    className="font-normal text-black mb-2 text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-2xl hover:scale-105 transition-transform duration-200"
-                  >
-                    AI 매칭 시스템
-                  </Link>
+                  {userRole === "ROLE_USER" && (
+                    <Link
+                      to="/ai-matching"
+                      className="mb-2 text-sm font-normal text-black transition-transform duration-200 sm:text-lg md:text-xl lg:text-2xl xl:text-2xl hover:scale-105"
+                    >
+                      AI 매칭 시스템
+                    </Link>
+                  )}
                 </div>
                 {/* 안내 세부사항 */}
-                <div className="flex-1 flex flex-col items-center px-4">
+                <div className="flex flex-col items-center flex-1 px-4">
                   <Link
                     to="/guide/announcement"
-                    className="font-normal text-black mb-2 text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-2xl hover:scale-105 transition-transform duration-200"
+                    className="mb-2 text-sm font-normal text-black transition-transform duration-200 sm:text-lg md:text-xl lg:text-2xl xl:text-2xl hover:scale-105"
                   >
                     공지사항
                   </Link>
                   <Link
                     to="/guide/facilities"
-                    className="font-normal text-black mb-2 text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-2xl hover:scale-105 transition-transform duration-200"
+                    className="mb-2 text-sm font-normal text-black transition-transform duration-200 sm:text-lg md:text-xl lg:text-2xl xl:text-2xl hover:scale-105"
                   >
                     관련 시설
                   </Link>
                   <Link
                     to="/guide/walking-course"
-                    className="font-normal text-black mb-2 text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-2xl hover:scale-105 transition-transform duration-200"
+                    className="mb-2 text-sm font-normal text-black transition-transform duration-200 sm:text-lg md:text-xl lg:text-2xl xl:text-2xl hover:scale-105"
                   >
                     산책 코스
                   </Link>
                 </div>
                 {/* 내정보 세부사항 */}
-                <div className="flex-1 flex flex-col items-center px-4">
+                <div className="flex flex-col items-center flex-1 px-4">
                   <Link
                     to={getUserInfoLink()}
-                    className="font-normal text-black mb-2 text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-2xl hover:scale-105 transition-transform duration-200"
+                    className="mb-2 text-sm font-normal text-black transition-transform duration-200 sm:text-lg md:text-xl lg:text-2xl xl:text-2xl hover:scale-105"
                   >
                     나의 정보
                   </Link>
-                  <Link
-                    to="/prefer"
-                    className="font-normal text-black mb-2 text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-2xl hover:scale-105 transition-transform duration-200"
-                  >
-                    선호 동물 입력 및 수정
-                  </Link>
+                  {userRole === "ROLE_USER" && (
+                    <Link
+                      to="/prefer"
+                      className="mb-2 text-sm font-normal text-black transition-transform duration-200 sm:text-lg md:text-xl lg:text-2xl xl:text-2xl hover:scale-105"
+                    >
+                      선호 동물 입력 및 수정
+                    </Link>
+                  )}
+                 
                   {/* <Link
                     to="/my-walking-course"
-                    className="font-normal text-black mb-3 text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-2xl hover:scale-105 transition-transform duration-200"
+                    className="mb-3 text-sm font-normal text-black transition-transform duration-200 sm:text-lg md:text-xl lg:text-2xl xl:text-2xl hover:scale-105"
                   >
                     나의 산책 코스
                   </Link> */}
                   {isLoggedIn && (
                     <div
-                      className="flex items-center justify-end w-full hover:scale-105 cursor-pointer mt-8"
+                      className="flex items-center justify-end w-full mt-8 cursor-pointer hover:scale-105"
                       onClick={handleLogout}
                     >
-                      <span className="text-black text-sm sm:text-base md:text-base lg:text-lg xl:text-xl font-medium">
+                      <span className="text-sm font-medium text-black sm:text-base md:text-base lg:text-lg xl:text-xl">
                         로그아웃
                       </span>
                       <img
@@ -248,7 +253,7 @@ const Header = () => {
 
         {/* 일반 헤더: 로그인/알림 아이콘 */}
         {/* 로그인이 되어 있지 않은 경우 회원가입 버튼 / 로그인이 되어 있는 경우 알림 버튼으로 구현 */}
-        <div className="hidden md:block text-2xl font-medium">
+        <div className="hidden text-2xl font-medium md:block">
           {!isLoggedIn ? (
             <Link to="/login" className="hover:text-gray-700">
               <span style={{ visibility: "hidden" }}>%</span>로그인
@@ -259,7 +264,7 @@ const Header = () => {
                 <img
                   src="/src/assets/alarm.svg"
                   alt="Alarm Icon"
-                  className="w-9 h-9 cursor-pointer"
+                  className="cursor-pointer w-9 h-9"
                 />
               </Link>
             </div>
@@ -269,7 +274,7 @@ const Header = () => {
         {/* 모바일 헤더 */}
         <button
           onClick={toggleSidebar}
-          className="md:hidden flex flex-1 justify-end"
+          className="flex justify-end flex-1 md:hidden"
         >
           <img src="/side.svg" alt="Side menu" className="w-12 h-16 cursor-pointer" />
         </button>
@@ -281,7 +286,7 @@ const Header = () => {
               className="fixed inset-0 bg-gray-800 bg-opacity-50"
               onClick={toggleSidebar}
             ></div>
-            <div className="fixed top-0 right-0 w-3/4 max-w-sm h-full bg-white shadow-lg z-50 flex flex-col">
+            <div className="fixed top-0 right-0 z-50 flex flex-col w-3/4 h-full max-w-sm bg-white shadow-lg">
               <div className="flex items-center justify-between px-6 py-5 bg-[#D7B8A3]">
                 <Link
                   to="/"
@@ -293,14 +298,14 @@ const Header = () => {
                   {!isLoggedIn ? (
                     <Link
                       to="/login"
-                      className="text-3xl font-semibold text-white pr-5 transition-transform hover:scale-105"
+                      className="pr-5 text-3xl font-semibold text-white transition-transform hover:scale-105"
                     >
                       로그인
                     </Link>
                   ) : (
                     <button
                       onClick={handleLogout}
-                      className="text-3xl font-semibold text-white pr-5 transition-colors hover:scale-105"
+                      className="pr-5 text-3xl font-semibold text-white transition-colors hover:scale-105"
                     >
                       로그아웃
                     </button>
@@ -317,7 +322,7 @@ const Header = () => {
                   </button>
                 </div>
               </div>
-              <nav className="flex-grow flex flex-col">
+              <nav className="flex flex-col flex-grow">
                 {[
                   {
                     name: "매칭",
@@ -366,14 +371,14 @@ const Header = () => {
                     >
                       {section.link === "#" ? (
                         <span
-                          className="p-5 block text-3xl transition-transform hover:scale-105 font-medium"
+                          className="block p-5 text-3xl font-medium transition-transform hover:scale-105"
                         >
                           {section.name}
                         </span>
                       ) : (
                         <Link
                           to={section.link}
-                          className="p-5 block text-3xl transition-transform hover:scale-105 font-medium"
+                          className="block p-5 text-3xl font-medium transition-transform hover:scale-105"
                         >
                           {section.name}
                         </Link>
@@ -385,7 +390,7 @@ const Header = () => {
                             <div key={index}>
                               <Link
                                 to={item.link}
-                                className="block pl-7 p-5 text-2xl transition-transform hover:scale-105"
+                                className="block p-5 text-2xl transition-transform pl-7 hover:scale-105"
                               >
                                 {item.name}
                               </Link>

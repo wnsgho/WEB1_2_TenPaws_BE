@@ -53,6 +53,7 @@ const MatchingPage = () => {
       try {
         const response = await axiosInstance.get('/api/v1/pets'); // API 호출
         setPets(response.data);
+        console.log(response.data)
       } catch (error) {
         console.error("동물 리스트를 불러오는 중 오류 발생:", error);
         // handleError(error);
@@ -97,6 +98,8 @@ const MatchingPage = () => {
       (!filters.size || pet.size === filters.size)
     );
   }) : [];
+
+  console.log(filteredPets);
   
   // 상세 페이지로 이동하는 링크 생성 함수
   const detailLink = (petId:number) => {
