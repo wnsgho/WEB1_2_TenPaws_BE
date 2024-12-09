@@ -77,7 +77,7 @@ public class SecurityConfig {
                             @Override
                             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                                 CorsConfiguration configuration = new CorsConfiguration();
-                                configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://15.164.103.160:8080"));
+                                configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://15.164.103.160", "http://15.164.103.160:8080"));
                                 //configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
                                 //configuration.setAllowedOrigins(Collections.singletonList("http://15.164.103.160:8080"));
                                 configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
