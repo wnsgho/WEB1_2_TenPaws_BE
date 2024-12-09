@@ -36,7 +36,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         }
 
         // 소셜 유저에 대한 새로운 토큰을 리다이렉트 URL에 포함하여 전송
-        response.sendRedirect("http://localhost:3000/auth/oauth-response/" + token + "/3600");
+        response.sendRedirect("http://15.164.103.160/auth/oauth-response/" + token + "/3600");
     }
 
     // 헤더에서 토큰을 추출하는 메소드
