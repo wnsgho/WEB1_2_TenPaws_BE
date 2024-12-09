@@ -295,7 +295,7 @@ const MyPageShelter: React.FC = () => {
               단체이름:
               <input
                 type="text"
-                name="name"
+                name="shelterName"
                 value={shelterInfo.shelterName}
                 onChange={editChange}
                 className="block w-full p-2 border rounded"
