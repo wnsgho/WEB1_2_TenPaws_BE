@@ -6,5 +6,6 @@ export default defineConfig({
   plugins: [react()],
   server : {
     port : 3000
-  }
+  },
+  base: '/' // 루트 디렉토리 명시적 설정
 })
