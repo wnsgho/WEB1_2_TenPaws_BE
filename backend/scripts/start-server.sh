@@ -21,6 +21,21 @@ chmod 777 /home/ubuntu/instagram-server/uploads || {
     exit 1
 }
 
+# Nginx 설정 파일 권한 확인
+echo "Nginx 설정 파일 권한 확인..."
+chmod 644 nginx.conf || {
+    echo "Nginx 설정 파일 권한 설정 실패"
+    exit 1
+}
+
+# 프론트엔드 빌드 디렉토리 확인 및 생성
+echo "프론트엔드 빌드 디렉토리 확인..."
+mkdir -p frontend/build
+if [ ! -d "frontend/build" ]; then
+    echo "프론트엔드 빌드 디렉토리 생성 실패"
+    exit 1
+fi
+
 # 현재 Docker 상태 확인
 echo "Docker 상태 확인..."
 docker info
@@ -62,6 +77,13 @@ docker-compose ps
 
 # 볼륨 마운트 상태 확인
 echo "볼륨 마운트 상태 확인..."
-docker inspect tenpaws-server_tenpaws-server_1 | grep Mounts -A 20
+docker inspect instagram-server_tenpaws-server_1 | grep Mounts -A 20
+
+# Nginx 컨테이너 상태 확인
+echo "Nginx 컨테이너 상태 확인..."
+docker inspect instagram-server_nginx_1 || {
+    echo "Nginx 컨테이너 상태 확인 실패"
+    exit 1
+}
 
 echo "-------------서버 배포 완료 $(date)-------------"
