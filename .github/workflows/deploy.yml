@@ -23,20 +23,38 @@ jobs:
           distribution: temurin  # Eclipse Temurin JDK 배포판 사용
           java-version: 17       # Java 17 버전 지정
 
+      # Step 2-1: Node.js 개발 환경 설정
+      - name: Node.js 18 버전 설치
+        uses: actions/setup-node@v4  # Node.js 설치를 위한 공식 액션
+        with:
+          node-version: '18'  # Node.js 18 버전 지정
+
+      # Step 2-2: 프론트엔드 의존성 설치 및 빌드
+      - name: 프론트엔드 빌드
+        run: |
+          cd frontend
+          echo "${{ secrets.FRONTEND_ENV }}" > .env
+          npm ci
+          npm install
+          npm run build
+          cd ..
+
       # Step 3: 애플리케이션 설정 파일들 생성
       - name: application.properties 파일들 만들기
         run: |
-          echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./src/main/resources/application.properties
-          mkdir -p ./src/test/resources
-          echo "${{ secrets.TEST_APPLICATION_PROPERTIES }}" > ./src/test/resources/application.properties
+          mkdir -p ./backend/src/main/resources
+          echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./backend/src/main/resources/application.properties
+          mkdir -p ./backend/src/test/resources
+          echo "${{ secrets.TEST_APPLICATION_PROPERTIES }}" > ./backend/src/test/resources/application.properties
 
       # Step 4: Gradle 빌드 스크립트 실행 권한 설정
       - name: gradlew 실행 권한 부여
-        run: chmod +x ./gradlew  # gradlew 파일에 실행 권한 추가
+        run: chmod +x ./backend/gradlew  # gradlew 파일에 실행 권한 추가
 
       # Step 5: 프로젝트 테스트 및 빌드
       - name: 테스트 및 빌드
-        run: ./gradlew clean build  # 기존 빌드 결과물 삭제 후 새로 빌드
+        working-directory: ./backend
+        run: ./gradlew clean build
 
       # Step 6: AWS 접근 권한 설정
       - name: AWS Resource에 접근할 수 있게 AWS credentials 설정
@@ -54,21 +72,22 @@ jobs:
 
       # Step 8: Docker 컨테이너(이미지) 빌드
       - name: Docker 이미지 생성
-        run: docker build -t instagram-server .  # Dockerfile을 사용하여 이미지 생성
+        working-directory: ./backend
+        run: docker build -t instagram-server .
 
       # Step 9: ECR 푸시를 위한 이미지 태깅
       - name: Docker 이미지에 Tag 붙이기
-        # ECR 레지스트리 주소를 사용하여 이미지 태깅
+        working-directory: ./backend
         run: docker tag instagram-server ${{ steps.login-ecr.outputs.registry }}/instagram-server:latest
 
       # Step 10: ECR에 이미지 푸시
       - name: ECR에 Docker 이미지 Push
-        # 태깅된 이미지를 ECR에 업로드
+        working-directory: ./backend
         run: docker push ${{ steps.login-ecr.outputs.registry }}/instagram-server:latest
 
       # Step 11: 배포 스크립트 실행 권한 설정 (scripts 디렉토리의 모든 파일에 실행 권한 부여)
       - name: 배포 스크립트 실행 권한 추가
-        run: chmod -R +x scripts/
+        run: chmod -R +x ./backend/scripts/
 
       # Step 12: docker-compose.yml 임시 생성
       - name: Generate docker-compose.yml
@@ -77,13 +96,23 @@ jobs:
           sed -i "s/MYSQL_USERNAME_PLACEHOLDER/${{ secrets.MYSQL_USERNAME }}/g" docker-compose.yml  
           sed -i "s/MYSQL_PASSWORD_PLACEHOLDER/${{ secrets.MYSQL_PASSWORD }}/g" docker-compose.yml  
 
+      # Step 12-1: Nginx 설정 파일 권한 설정
+      - name: Nginx 설정 파일 권한 설정
+        run: chmod 644 nginx.conf
+
       # Step 13: 배포 파일 압축
       - name: 압축하기
         # 배포에 필요한 설정 파일들을 tar.gz 형식으로 압축
         # - appspec.yml: CodeDeploy 설정 파일
         # - scripts: 배포 스크립트들이 있는 디렉토리
         # - docker-compose.yml: 컨테이너 구성 파일
-        run: tar -czvf $GITHUB_SHA.tar.gz appspec.yml scripts docker-compose.yml
+        # - frontend/build: 프론트엔드 빌드 결과물
+        # - nginx.conf: Nginx 설정 파일
+        run: |
+          cp ./backend/appspec.yml .
+          cp -r ./backend/scripts .
+          cp -r frontend/dist frontend/build  # Vite 빌드 결과물을 build 디렉토리로 복사
+          tar -czvf $GITHUB_SHA.tar.gz appspec.yml scripts docker-compose.yml frontend/build nginx.conf
 
       # Step 14: S3에 배포 파일 업로드
       - name: S3에 프로젝트 폴더 업로드
@@ -102,6 +131,7 @@ jobs:
 # 전체 배포 프로세스:
 # 1. GitHub에서 코드를 가져옴
 # 2. Java 환경 설정 및 애플리케이션 빌드
-# 3. Docker 이미지 생성 및 ECR 업로드
-# 4. 배포 설정 파일들을 S3에 업로드
-# 5. CodeDeploy를 통해 EC2 인스턴스에 배포
+# 3. Node.js 환경 설정 및 프론트엔드 빌드
+# 4. Docker 이미지 생성 및 ECR 업로드
+# 5. 배포 설정 파일들을 S3에 업로드
+# 6. CodeDeploy를 통해 EC2 인스턴스에 배포
