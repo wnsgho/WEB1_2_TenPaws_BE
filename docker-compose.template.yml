@@ -1,0 +1,61 @@
+version: "3.7"
+
+volumes:
+  mysql_data:
+  uploads_data:  # 파일 업로드를 위한 볼륨 추가
+
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./frontend/build:/usr/share/nginx/html
+    depends_on:
+      - tenpaws-server
+
+  tenpaws-server:
+    image: 761018890747.dkr.ecr.ap-northeast-2.amazonaws.com/instagram-server:latest
+    ports:
+      - 8080:8080
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://tenpaws-db:3306/tenpaws?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+      SPRING_DATASOURCE_USERNAME: MYSQL_USERNAME_PLACEHOLDER
+      SPRING_DATASOURCE_PASSWORD: MYSQL_PASSWORD_PLACEHOLDER
+    volumes:
+      - uploads_data:/home/ubuntu/instagram-server/uploads  # 업로드 디렉토리 마운트
+    depends_on:
+      - tenpaws-db
+    entrypoint: >
+      /bin/sh -c "  
+        while ! nc -z tenpaws-db 3306; do  
+          echo 'Waiting for MySQL Database to be available...'  
+          sleep 3  
+        done  
+        java -jar project.jar --spring.config.location=file:/home/ubuntu/instagram-server/src/main/resources/application.properties  
+      "
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
+
+  tenpaws-db:
+    image: mysql
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: MYSQL_PASSWORD_PLACEHOLDER
+      MYSQL_DATABASE: tenpaws
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      retries: 10
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
