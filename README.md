@@ -191,21 +191,20 @@ TENPAWS는 카카오 맵 API를 활용하여 사용자의 현재 위치에서 �
 | ![김동준](https://avatars.githubusercontent.com/u/176230828?v=4) | 김동준 (백엔드 팀장) | 백엔드 팀장 및 AWS 관리자, 공지사항, 문의, SSE 실시간 알림 기능 담당 | [GitHub](https://github.com/kimdongjoon-web) |
 | ![남현호](https://avatars.githubusercontent.com/u/143480257?v=4) | 남현호           | 프로젝트 기획 및 FAQ, WEBSOCKET 실시간 채팅 기능 담당 | [GitHub](https://github.com/namhyeonh0) |
 | ![김성겸](https://avatars.githubusercontent.com/u/177853925?v=4) | 김성겸           | 프로젝트 기획 및 회원, 관리자 기능 구현, OAUTH2를 통한 소셜 로그인 서비스 / JWT 시큐리티 기능 담당 | [GitHub](https://github.com/xxxkyeom) |
-| ![박규용](https://avatars.githubusercontent.com/u/119818275?v=4) | 박규용 (프론트엔드 팀장) | 프론트엔드 팀장, 서비스 UI/UX 설계 및 구현 담당 | [GitHub](https://github.com/GGICK) |
-| ![한지원](https://avatars.githubusercontent.com/u/145121488?v=4) | 한지원           | 반응형 UI 구현, 사용자 경험 향상 기능 담당 | [GitHub](https://github.com/gomsbft) |
-| ![차주영](https://avatars.githubusercontent.com/u/155400101?v=4) | 차주영           | 반응형 UI 구현, 사용자 경험 향상 기능 담당 | [GitHub](https://github.com/woodzverse) |
+| ![박규용](https://avatars.githubusercontent.com/u/119818275?v=4) | 박규용 (프론트엔드 팀장) | 프론트엔드 팀장 및 공지사항, 문의, FAQ, 채팅방, KAKAO 맵 API 기능 담당 | [GitHub](https://github.com/GGICK) |
+| ![한지원](https://avatars.githubusercontent.com/u/145121488?v=4) | 한지원           | 프로젝트 기획 및 반려동물 등록, 입양 신청, 선호 반려동물 등록, 마이페이지, 매칭 검색, 보호소 지도 기능 담당 | [GitHub](https://github.com/gomsbft) |
+| ![차주영](https://avatars.githubusercontent.com/u/155400101?v=4) | 차주영           | 프로젝트 기획 및 회원가입, 로그인, 소셜로그인, 메인페이지, AI 매칭, 알람 기능 담당 | [GitHub](https://github.com/woodzverse) |
 
 ### 백엔드 팀
 - **최준호** (PM): 프로젝트 관리와 GitHub 레포지토리 관리, Chat GPT를 활용한 반려동물 매칭 기능을 구현.
 - **김동준** (백엔드 팀장): 백엔드 팀을 이끌며, AWS 관리 및 공지사항, 문의, SSE 실시간 알림 기능을 구현.
 - **남현호**: 프로젝트 기획 및 FAQ 기능을 담당하며, WebSocket을 통한 실시간 채팅 기능을 구현.
-- **김성겸**: 프로젝트 기획 및 회원 및 관리자 기능을 담당하며, OAUTH2 및 JWT를 활용한 시큐리티 기능을 구현.
 - **김성겸**: 프로젝트 기획 및 회원&관리자 기능을 담당하며, OAUTH2 및 JWT를 활용한 시큐리티 기능을 구현.
 
 ### 프론트엔드 팀
-- **박규용** (프론트엔드 팀장): 전반적인 프론트엔드 구조를 이끌고 있습니다.
-- **한지원**: 반응형 UI 구현과 사용자 경험을 향상시키는 기능을 담당하였습니다.
-- **차주영**: 반응형 UI 구현과 사용자 경험을 향상시키는 기능을 담당하였습니다.
+- **박규용** (프론트엔드 팀장): 프론트엔드 팀을 이끌며, 공지사항, 문의, FAQ, 채팅방, KAKAO 맵 API 기능을 구현
+- **한지원**: 프로젝트 기획 및 반려동물 등록, 입양 신청, 선호 반려동물 등록, 마이페이지, 매칭 검색, 보호소 지도 기능을 구현
+- **차주영**: 프로젝트 기획 및 회원가입, 로그인, 소셜로그인, 메인페이지, AI 매칭, 알람 기능을 구현
 
 <br>
 
